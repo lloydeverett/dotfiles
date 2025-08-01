@@ -81,7 +81,8 @@ let mapleader = " "
 :nnoremap <C-h> <C-W>h
 :nnoremap <C-l> <C-W>l
 
-:nnoremap <leader><cr> <cmd>VimwikiTabnewLink<cr>
+:nnoremap <leader><c-cr> <cmd>VimwikiTabnewLink<cr>
+:nnoremap <leader><cr> <cmd>call vimwiki#base#follow_link('tab', 0, 0)<cr>
 
 nnoremap - <cmd>Oil<cr>
 nnoremap <leader>- <cmd>Oil<cr>
