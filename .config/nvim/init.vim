@@ -52,7 +52,8 @@ call plug#end()
 " Plug 'jceb/vim-orgmode'
 " Plug 'itchyny/lightline.vim'
 
-let g:airline_theme='base16_black_metal'
+" let g:airline_theme='base16_black_metal'
+let g:airline_theme='base16_darktooth'
 
 lua package.path = package.path .. ';' .. os.getenv('HOME') .. '/.config/nvim/?.lua'
 lua require('initlocal')
