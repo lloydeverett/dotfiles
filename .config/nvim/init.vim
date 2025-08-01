@@ -80,14 +80,16 @@ let mapleader = " "
 :nnoremap <C-h> <C-W>h
 :nnoremap <C-l> <C-W>l
 
+:nnoremap <leader><cr> <cmd>VimwikiTabnewLink<cr>
+
 nnoremap - <cmd>Oil<cr>
 nnoremap <leader>- <cmd>Oil<cr>
 
 nnoremap <leader><leader> <C-^>
 
 :tnoremap <Esc> <C-\><C-n>
-:noremap <leader><Tab> :bnext<cr>
-:noremap <leader><S-Tab> :bprev<cr>
+:noremap <leader><Tab> :tabnext<cr>
+:noremap <leader><S-Tab> :tabprev<cr>
 
 " :autocmd VimEnter * split | wincmd j | exe "Ranger" | wincmd k | exe "resize 50" | call feedkeys("\<ESC>")
 
