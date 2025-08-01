@@ -34,17 +34,18 @@ function _G.get_oil_winbar()
     return vim.api.nvim_buf_get_name(0)
   end
 end
+
 require("oil").setup({
   win_options = {
     winbar = "%!v:lua.get_oil_winbar()",
   },
 })
 
-vim.g.vimwiki_list = {{
-	path = '/Users/lloyd/webdav/wiki.mac',
-	syntax = 'markdown',
-	ext = 'md'
-}}
+-- vim.g.vimwiki_list = {{
+-- 	path = '/Users/lloyd/webdav/wiki.mac',
+-- 	syntax = 'markdown',
+-- 	ext = 'md'
+-- }}
 
-require("octo").setup()
+-- require("octo").setup()
 

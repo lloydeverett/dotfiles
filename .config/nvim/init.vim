@@ -33,9 +33,12 @@ call plug#begin()
     Plug 'preservim/vim-markdown'
     Plug 'tpope/vim-fugitive'
     Plug 'nvim-tree/nvim-web-devicons'
-    Plug 'pwntester/octo.nvim'
     Plug 'LukasPietzschmann/telescope-tabs'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
 call plug#end()
+" Plug 'pwntester/octo.nvim'
+" Plug 'famiu/feline.nvim'
 " Plug 'tpope/vim-sensible'
 " Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 " Plug 'francoiscabrol/ranger.vim'
@@ -49,7 +52,10 @@ call plug#end()
 " Plug 'jceb/vim-orgmode'
 " Plug 'itchyny/lightline.vim'
 
-lua package.path = package.path .. ';/Users/lloyd/environment/god/dotfiles/nvim/?.lua'
+let g:airline_theme='base16_black_metal'
+
+lua package.path = package.path .. ';' .. os.getenv('HOME') .. '/.config/nvim/?.lua'
+lua require('initlocal')
 lua require('initlua')
 
 " let g:NERDTreeWinPos = "right"
@@ -115,4 +121,6 @@ set expandtab autoindent tabstop=4 shiftwidth=4
 
 let g:vimwiki_emoji_enable = 1
 let g:vimwiki_folding = 'list'
+
+let g:airline#extensions#tabline#enabled = 1
 
