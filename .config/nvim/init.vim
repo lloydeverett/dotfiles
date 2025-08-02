@@ -14,10 +14,6 @@
 :nnoremap <A-k> <C-w>k
 :nnoremap <A-l> <C-w>l
 
-" Jump up or down half a page
-:nnoremap <C-J> <C-D>
-:nnoremap <C-K> <C-U>
-
 :set laststatus=0
 :set relativenumber
 :set nu rnu
@@ -46,6 +42,7 @@ call plug#begin()
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-vsnip'
     Plug 'hrsh7th/vim-vsnip'
+    Plug 'Shougo/deol.nvim'
 call plug#end()
 " Plug 'nvim-tree/nvim-web-devicons'
 " Plug 'pwntester/octo.nvim'
@@ -86,6 +83,10 @@ let mapleader = " "
 :nnoremap <leader>b <cmd>Telescope buffers<cr>
 :nnoremap <leader>h <cmd>Telescope help_tags<cr>
 :nnoremap <leader>t <cmd>Telescope telescope-tabs list_tabs<cr>
+
+:nnoremap <leader>. <cmd>call deol#start()<cr>
+
+:nnoremap <C-X> <cmd>VimwikiToggleListItem<cr>
 
 :nnoremap <C-j> <C-W>j
 :nnoremap <C-k> <C-W>k
@@ -138,4 +139,31 @@ let g:vimwiki_emoji_enable = 1
 let g:vimwiki_folding = 'list'
 
 let g:airline#extensions#tabline#enabled = 1
+
+autocmd FileType deol call s:deol_settings()
+function! s:deol_settings()
+  nnoremap <buffer> <C-n>  <Plug>(deol_next_prompt)
+  nnoremap <buffer> <C-p>  <Plug>(deol_previous_prompt)
+  nnoremap <buffer> <CR>   <Plug>(deol_execute_line)
+  nnoremap <buffer> A      <Plug>(deol_start_append_last)
+  nnoremap <buffer> I      <Plug>(deol_start_insert_first)
+  nnoremap <buffer> a      <Plug>(deol_start_append)
+  nnoremap <buffer> e      <Plug>(deol_edit)
+  nnoremap <buffer> i      <Plug>(deol_start_insert)
+  nnoremap <buffer> q      <Plug>(deol_quit)
+endfunction
+
+autocmd BufEnter deol-edit@default call s:deol_edit_settings()
+function! s:deol_edit_settings()
+  nnoremap <buffer> <CR>  <Plug>(deol_execute_line)
+  nnoremap <buffer> <BS>  <Plug>(deol_backspace)
+  nnoremap <buffer> <C-h> <Plug>(deol_backspace)
+  nnoremap <buffer> q     <Plug>(deol_quit)
+  nnoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
+  inoremap <buffer> <CR>  <Plug>(deol_execute_line)
+  inoremap <buffer> <BS>  <Plug>(deol_backspace)
+  inoremap <buffer> <C-h> <Plug>(deol_backspace)
+  inoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
+  inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
+endfunction
 
