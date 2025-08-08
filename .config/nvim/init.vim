@@ -131,6 +131,8 @@ set nocompatible
 filetype plugin on
 syntax on
 
+set autoread
+
 set foldlevelstart=99
 
 set expandtab autoindent tabstop=4 shiftwidth=4
