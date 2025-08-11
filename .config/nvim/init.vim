@@ -19,7 +19,7 @@
 :set nu rnu
 
 call plug#begin()
-    Plug 'vimwiki/vimwiki'
+    Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
     Plug 'stevearc/oil.nvim'
     Plug 'ellisonleao/gruvbox.nvim'
     Plug 'nvim-lua/plenary.nvim'
@@ -43,36 +43,17 @@ call plug#begin()
     Plug 'hrsh7th/cmp-vsnip'
     Plug 'hrsh7th/vim-vsnip'
     Plug 'Shougo/deol.nvim'
+    Plug 'tbabej/taskwiki'
+    Plug 'powerman/vim-plugin-AnsiEsc'
+    Plug 'preservim/tagbar'
+    Plug 'farseer90718/vim-taskwarrior'
 call plug#end()
-" Plug 'nvim-tree/nvim-web-devicons'
-" Plug 'pwntester/octo.nvim'
-" Plug 'famiu/feline.nvim'
-" Plug 'tpope/vim-sensible'
-" Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-" Plug 'francoiscabrol/ranger.vim'
-" Plug 'tpope/vim-vinegar'
-" Plug 'preservim/nerdtree'
-" Plug 'cweagans/vim-taskpaper'
-" Plug 'vimwiki/vimwiki'
-" Plug 'stevearc/oil.nvim'
-" Plug 'morhetz/gruvbox'
-" Plug 'mattn/calendar-vim'
-" Plug 'jceb/vim-orgmode'
-" Plug 'itchyny/lightline.vim'
 
-" let g:airline_theme='base16_black_metal'
 let g:airline_theme='base16_darktooth'
 
 lua package.path = package.path .. ';' .. os.getenv('HOME') .. '/.config/nvim/?.lua'
 lua require('initlocal')
 lua require('initlua')
-
-" let g:NERDTreeWinPos = "right"
-
-" :nnoremap <leader>n :NERDTreeFocus<CR>
-" :nnoremap <C-n> :NERDTree<CR>
-" :nnoremap <C-t> :NERDTreeToggle<CR>
-" :nnoremap <C-f> :NERDTreeFind<CR>
 
 nnoremap <SPACE> <Nop>
 let mapleader = " "
@@ -105,24 +86,6 @@ nnoremap <leader><leader> <C-^>
 :noremap <leader><Tab> :tabnext<cr>
 :noremap <leader><S-Tab> :tabprev<cr>
 
-" :autocmd VimEnter * split | wincmd j | exe "Ranger" | wincmd k | exe "resize 50" | call feedkeys("\<ESC>")
-
-" Start NERDTree and put the cursor back in the other window.
-" :autocmd VimEnter * NERDTree | wincmd p
-
-" Exit Vim if NERDTree is the only window remaining in the only tab.
-" :autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
-
-" nvim oil-ssh://[username@]hostname[:port]/[path]
-
-" g. to toggle oil hidden files
-
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setlocal syntax=markdown
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setl noai nocin nosi inde=
-" 
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setlocal syntax=markdown
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setl noai nocin nosi inde=
-
 :set nowrap
 
 :set hidden
@@ -132,6 +95,7 @@ filetype plugin on
 syntax on
 
 set autoread
+au CursorHold * checktime
 
 set foldlevelstart=99
 
@@ -168,4 +132,22 @@ function! s:deol_edit_settings()
   inoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
   inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
 endfunction
+
+" :autocmd VimEnter * split | wincmd j | exe "Ranger" | wincmd k | exe "resize 50" | call feedkeys("\<ESC>")
+
+" Start NERDTree and put the cursor back in the other window.
+" :autocmd VimEnter * NERDTree | wincmd p
+
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+" :autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
+
+" nvim oil-ssh://[username@]hostname[:port]/[path]
+
+" g. to toggle oil hidden files
+
+" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setlocal syntax=markdown
+" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setl noai nocin nosi inde=
+" 
+" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setlocal syntax=markdown
+" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setl noai nocin nosi inde=
 
