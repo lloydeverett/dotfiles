@@ -1,5 +1,19 @@
 
-alias vim=nvim
+set -o vi                                                # VI editing mode
+
+alias vim='nvim'
+alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
+alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
+alias ls='ls --color=auto'
+
+HISTSIZE=5000                                            # Number of history lines kept in memory
+SAVEHIST=5000                                            # Number of history lines saved to disk
+HISTFILE=~/.zsh_history                                  # File where history is saved
+setopt appendhistory                                     # Append new history lines to the history file instead of overwriting
+setopt sharehistory                                      # Share history across multiple terminals
+setopt incappendhistory                                  # Append history immediately, not just on shell exit
+
+setopt interactive_comments                              # Allow comments in the interactive shell
 
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
@@ -10,6 +24,12 @@ bindkey "^[OA" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 bindkey "^[OB" down-line-or-beginning-search
 
-alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
-alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
+setopt PROMPT_SUBST
+format_current_git_branch() {
+  local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  if [[ -n $branch ]]; then
+    echo "($branch)"
+  fi
+}
+PROMPT='%F{green}%n@%m%f %F{blue}%~%f $(format_current_git_branch) %# '
 

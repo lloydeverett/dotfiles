@@ -134,3 +134,9 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 vim.diagnostic.config({ virtual_text = true })
 
+require("telescope").setup({
+  defaults = {
+    path_display = { "truncate" },
+  },
+})
+
