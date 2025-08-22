@@ -5,6 +5,7 @@ alias vim='nvim'
 alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias ls='ls --color=auto'
+alias taskui='taskwarrior-tui'
 
 HISTSIZE=5000                                            # Number of history lines kept in memory
 SAVEHIST=5000                                            # Number of history lines saved to disk

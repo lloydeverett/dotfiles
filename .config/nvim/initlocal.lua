@@ -7,3 +7,9 @@
 -- 	ext = 'md'
 -- }}
 
+vim.g.vimwiki_list = {{
+	path = '/Users/lloyd/sync/wiki', 
+	syntax = 'markdown',
+	ext = 'md'
+}}
+

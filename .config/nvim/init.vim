@@ -1,22 +1,23 @@
-:set scrolloff=5
+set scrolloff=5
 
-:tnoremap <Esc> <C-\><C-n> :tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
-:tnoremap <A-h> <C-\><C-N><C-w>h
-:tnoremap <A-j> <C-\><C-N><C-w>j
-:tnoremap <A-k> <C-\><C-N><C-w>k
-:tnoremap <A-l> <C-\><C-N><C-w>l
-:inoremap <A-h> <C-\><C-N><C-w>h
-:inoremap <A-j> <C-\><C-N><C-w>j
-:inoremap <A-k> <C-\><C-N><C-w>k
-:inoremap <A-l> <C-\><C-N><C-w>l
-:nnoremap <A-h> <C-w>h
-:nnoremap <A-j> <C-w>j
-:nnoremap <A-k> <C-w>k
-:nnoremap <A-l> <C-w>l
+tnoremap <Esc> <C-\><C-n>
+tnoremap <C-e> <Esc>
+tnoremap <A-h> <C-\><C-N><C-w>h
+tnoremap <A-j> <C-\><C-N><C-w>j
+tnoremap <A-k> <C-\><C-N><C-w>k
+tnoremap <A-l> <C-\><C-N><C-w>l
+inoremap <A-h> <C-\><C-N><C-w>h
+inoremap <A-j> <C-\><C-N><C-w>j
+inoremap <A-k> <C-\><C-N><C-w>k
+inoremap <A-l> <C-\><C-N><C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
 
-:set laststatus=0
-:set relativenumber
-:set nu rnu
+set laststatus=0
+set relativenumber
+set nu rnu
 
 call plug#begin()
     Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
@@ -58,37 +59,39 @@ lua require('initlua')
 nnoremap <SPACE> <Nop>
 let mapleader = " "
 
-:nnoremap <leader>c <cmd>Telescope<cr>
-:nnoremap <leader>f <cmd>Telescope find_files<cr>
-:nnoremap <leader>g <cmd>Telescope live_grep<cr>
-:nnoremap <leader>b <cmd>Telescope buffers<cr>
-:nnoremap <leader>h <cmd>Telescope help_tags<cr>
-:nnoremap <leader>t <cmd>Telescope telescope-tabs list_tabs<cr>
+nnoremap <leader>c <cmd>Telescope<cr>
+nnoremap <leader>f <cmd>Telescope find_files<cr>
+nnoremap <leader>g <cmd>Telescope live_grep<cr>
+nnoremap <leader>b <cmd>Telescope buffers<cr>
+nnoremap <leader>h <cmd>Telescope help_tags<cr>
+nnoremap <leader>t <cmd>Telescope telescope-tabs list_tabs<cr>
 
-:nnoremap <leader>. <cmd>call deol#start()<cr>
+nnoremap <leader>. <cmd>call deol#start()<cr>
 
-:nnoremap <C-X> <cmd>VimwikiToggleListItem<cr>
+nnoremap <C-X> <cmd>VimwikiToggleListItem<cr>
 
-:nnoremap <C-j> <C-W>j
-:nnoremap <C-k> <C-W>k
-:nnoremap <C-h> <C-W>h
-:nnoremap <C-l> <C-W>l
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-h> <C-W>h
+nnoremap <C-l> <C-W>l
 
-:nnoremap <leader><c-cr> <cmd>VimwikiTabnewLink<cr>
-:nnoremap <leader><cr> <cmd>call vimwiki#base#follow_link('tab', 0, 0)<cr>
+nnoremap <leader><c-cr> <cmd>VimwikiTabnewLink<cr>
+nnoremap <leader><cr> <cmd>call vimwiki#base#follow_link('tab', 0, 0)<cr>
 
 nnoremap - <cmd>Oil<cr>
 nnoremap <leader>- <cmd>Oil<cr>
 
 nnoremap <leader><leader> <C-^>
 
-:tnoremap <Esc> <C-\><C-n>
-:noremap <leader><Tab> :tabnext<cr>
-:noremap <leader><S-Tab> :tabprev<cr>
+noremap <Esc> :noh<CR><Esc>
 
-:set nowrap
+tnoremap <Esc> <C-\><C-n>
+noremap <leader><Tab> :tabnext<cr>
+noremap <leader><S-Tab> :tabprev<cr>
 
-:set hidden
+set nowrap
+
+set hidden
 
 set nocompatible
 filetype plugin on
@@ -133,21 +136,19 @@ function! s:deol_edit_settings()
   inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
 endfunction
 
-" :autocmd VimEnter * split | wincmd j | exe "Ranger" | wincmd k | exe "resize 50" | call feedkeys("\<ESC>")
+hi def link markdownH1 GruvboxGreenBold
+hi def link markdownH2 GruvboxAquaBold
+hi def link markdownH3 GruvboxOrangeBold
 
-" Start NERDTree and put the cursor back in the other window.
-" :autocmd VimEnter * NERDTree | wincmd p
-
-" Exit Vim if NERDTree is the only window remaining in the only tab.
-" :autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
-
-" nvim oil-ssh://[username@]hostname[:port]/[path]
+hi def link VimwikiHeader1 GruvboxGreenBold
+hi def link VimwikiHeader2 GruvboxAquaBold
+hi def link VimwikiHeader3 GruvboxOrangeBold
 
 " g. to toggle oil hidden files
 
 " au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setlocal syntax=markdown
 " au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setl noai nocin nosi inde=
-" 
+"
 " au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setlocal syntax=markdown
 " au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setl noai nocin nosi inde=
 

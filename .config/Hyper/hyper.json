@@ -3,7 +3,7 @@
   "config": {
     "updateChannel": "canary",
     "fontSize": 16,
-    "fontFamily": "Menlo, \"DejaVu Sans Mono\", Consolas, \"Lucida Console\", monospace",
+    "fontFamily": "\"NK57 Monospace\", \"PT Mono\", Menlo, \"DejaVu Sans Mono\", Consolas, \"Lucida Console\", monospace",
     "fontWeight": "normal",
     "fontWeightBold": "bold",
     "lineHeight": 1,
