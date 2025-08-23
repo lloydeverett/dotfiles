@@ -8,12 +8,25 @@ fi
 
 JOB_NAME="$1"
 COMMAND="$2"
+PIDFILE="/tmp/cron_${JOB_NAME}.pid"
 LOG_DIR="$HOME/cron-logs"
 STDOUT_LOG="$LOG_DIR/${JOB_NAME}_stdout.log"
 STDERR_LOG="$LOG_DIR/${JOB_NAME}_stderr.log"
 MAX_LINES=1000
 
 mkdir -p "$LOG_DIR"
+
+# Check if PID file exists and if the process is running
+if [ -f "$PIDFILE" ]; then
+  PID=$(cat "$PIDFILE")
+  if kill -0 "$PID" 2>/dev/null; then
+    echo "Script already running with PID $PID. Exiting." >&2
+    exit 1
+  fi
+fi
+
+# Write current PID to the file
+echo $$ > "$PIDFILE"
 
 # Append heading to logs
 HEADING="=== Run started at $(date +"%Y-%m-%d %H:%M:%S") ==="
@@ -41,6 +54,9 @@ if [ "$EXIT_CODE" -ne 0 ]; then
     JOB_NAME_ENCODED=$(printf "$JOB_NAME" | jq -sRr @uri)
     open "raycast://extensions/maxnyby/raycast-notification/index?arguments=%7B%22type%22%3A%22failure%22%2C%22message%22%3A%22%22%2C%22title%22%3A%22Con%20Job%20Failed%3A%20${JOB_NAME_ENCODED}%22%7D"
 fi
+
+# Remove PID file on exit
+rm -f "$PIDFILE"
 
 exit 0
 
