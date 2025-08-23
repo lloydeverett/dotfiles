@@ -152,3 +152,7 @@ hi def link VimwikiHeader3 GruvboxOrangeBold
 " au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setlocal syntax=markdown
 " au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setl noai nocin nosi inde=
 
+set noswapfile
+set undofile
+set undodir=~/.local/share/nvim/undo//
+
