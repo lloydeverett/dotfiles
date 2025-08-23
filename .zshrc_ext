@@ -34,7 +34,7 @@ format_current_git_branch() {
 }
 PROMPT='%F{green}%n@%m%f %F{blue}%~%f $(format_current_git_branch) %# '
 
-# Termina emulator colors: Copied from vim gruvbox color scheme
+# Terminal emulator colors: Copied from vim gruvbox color scheme
 # colors.bg0               terminal_color_0       #282828
 # colors.neutral_red       terminal_color_1       #cc241d
 # colors.neutral_green     terminal_color_2       #98971a

@@ -1,0 +1,2 @@
+*/10 * * * * /Users/lloyd/cron-wrapper.sh task-sync /opt/homebrew/bin/task sync
+
