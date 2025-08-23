@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Unique identifier for the job -->
+    <key>Label</key>
+    <string>com.lloydeverett.tasksync</string>
+
+    <!-- Paths to watch for changes -->
+    <key>WatchPaths</key>
+    <array>
+        <string>/Users/lloyd/sync/wiki</string>
+    </array>
+
+    <!-- Command and its arguments to run on change -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/lloyd/cron-wrapper.sh</string>
+        <string>task-sync</string>
+        <string>/opt/homebrew/bin/task</string>
+        <string>sync</string>
+    </array>
+
+    <!-- Run the job when the plist is loaded (optional) -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!-- Optional: keep the job alive, not usually needed for WatchPaths -->
+    <key>KeepAlive</key>
+    <false/>
+</dict>
+</plist>
+
