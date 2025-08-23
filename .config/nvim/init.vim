@@ -154,5 +154,5 @@ hi def link VimwikiHeader3 GruvboxOrangeBold
 
 set noswapfile
 set undofile
-set undodir=~/.local/share/nvim/undo//
+set undodir=~/.local/share/nvim/undo/
 
