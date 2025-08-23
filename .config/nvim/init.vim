@@ -48,6 +48,7 @@ call plug#begin()
     Plug 'powerman/vim-plugin-AnsiEsc'
     Plug 'preservim/tagbar'
     Plug 'farseer90718/vim-taskwarrior'
+    Plug 'gabenespoli/vim-mutton'
 call plug#end()
 
 let g:airline_theme='base16_darktooth'
