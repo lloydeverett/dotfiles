@@ -2,7 +2,7 @@
   "$schema": "./schema.json",
   "config": {
     "updateChannel": "canary",
-    "fontSize": 16,
+    "fontSize": 18,
     "fontFamily": "\"NK57 Monospace\", \"PT Mono\", Menlo, \"DejaVu Sans Mono\", Consolas, \"Lucida Console\", monospace",
     "fontWeight": "normal",
     "fontWeightBold": "bold",
