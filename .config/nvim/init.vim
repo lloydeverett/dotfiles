@@ -61,7 +61,7 @@ call plug#begin()
     Plug 'gabenespoli/vim-mutton'
     Plug 'enricobacis/vim-airline-clock'
     Plug 'lambdalisue/vim-battery'
-    Plug 'altermo/nwm' " neovim window manager
+    " Plug 'altermo/nwm' " neovim window manager
 call plug#end()
 
 lua package.path = package.path .. ';' .. os.getenv('HOME') .. '/.config/nvim/?.lua'
@@ -146,11 +146,11 @@ function! s:deol_edit_settings()
   inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
 endfunction
 
-hi def link markdownH1 GruvboxGreenBold
-hi def link markdownH2 GruvboxAquaBold
+hi def link markdownH1 GruvboxAquaBold
+hi def link markdownH2 GruvboxGreenBold
 hi def link markdownH3 GruvboxOrangeBold
-hi def link VimwikiHeader1 GruvboxGreenBold
-hi def link VimwikiHeader2 GruvboxAquaBold
+hi def link VimwikiHeader1 GruvboxAquaBold
+hi def link VimwikiHeader2 GruvboxGreenBold
 hi def link VimwikiHeader3 GruvboxOrangeBold
 
 set noswapfile
