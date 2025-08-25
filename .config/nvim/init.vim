@@ -19,12 +19,22 @@ set laststatus=0
 set relativenumber
 set nu rnu
 
+let g:airline#extensions#tabline#enabled = 1
+
+let g:airline#extensions#battery#enabled = 1
+let g:battery#component_format = '%s %v'
+
 call plug#begin()
+    " Color schemes
+    Plug 'fxn/vim-monochrome'
+    Plug 'ellisonleao/gruvbox.nvim'
+    Plug 'ntk148v/komau.vim'
+    Plug 'davidosomething/vim-colors-meh'
+    Plug 'zekzekus/menguless'
+
     Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
     Plug 'stevearc/oil.nvim'
-    Plug 'ellisonleao/gruvbox.nvim'
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'lloydeverett/vim-taskpaper'
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
     Plug 'godlygeek/tabular'
     Plug 'preservim/vim-markdown'
@@ -49,9 +59,10 @@ call plug#begin()
     Plug 'preservim/tagbar'
     Plug 'farseer90718/vim-taskwarrior'
     Plug 'gabenespoli/vim-mutton'
+    Plug 'enricobacis/vim-airline-clock'
+    Plug 'lambdalisue/vim-battery'
+    Plug 'altermo/nwm' " neovim window manager
 call plug#end()
-
-let g:airline_theme='base16_darktooth'
 
 lua package.path = package.path .. ';' .. os.getenv('HOME') .. '/.config/nvim/?.lua'
 lua require('initlocal')
@@ -84,7 +95,7 @@ nnoremap <leader>- <cmd>Oil<cr>
 
 nnoremap <leader><leader> <C-^>
 
-noremap <Esc> :noh<CR><Esc>
+noremap <silent> <Esc> :noh<CR><Esc>
 
 tnoremap <Esc> <C-\><C-n>
 noremap <leader><Tab> :tabnext<cr>
@@ -107,8 +118,6 @@ set expandtab autoindent tabstop=4 shiftwidth=4
 
 let g:vimwiki_emoji_enable = 1
 let g:vimwiki_folding = 'list'
-
-let g:airline#extensions#tabline#enabled = 1
 
 autocmd FileType deol call s:deol_settings()
 function! s:deol_settings()
@@ -140,20 +149,38 @@ endfunction
 hi def link markdownH1 GruvboxGreenBold
 hi def link markdownH2 GruvboxAquaBold
 hi def link markdownH3 GruvboxOrangeBold
-
 hi def link VimwikiHeader1 GruvboxGreenBold
 hi def link VimwikiHeader2 GruvboxAquaBold
 hi def link VimwikiHeader3 GruvboxOrangeBold
 
-" g. to toggle oil hidden files
-
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setlocal syntax=markdown
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn} setl noai nocin nosi inde=
-"
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setlocal syntax=markdown
-" au BufRead,BufWinEnter,BufNewFile *.{md,mdx,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} setl noai nocin nosi inde=
-
 set noswapfile
 set undofile
 set undodir=~/.local/share/nvim/undo/
+
+set cursorline
+
+function s:global_highlight_config()
+  hi Normal ctermbg=NONE guibg=NONE
+  hi VimwikiBold guifg=#FF3D5B gui=bold
+  hi VimwikiItalic guifg=#FF6F91 gui=italic
+endfunction
+
+command Slay call s:slay()
+function! s:slay()
+  " colorscheme habamax
+  colorscheme monochrome
+  AirlineTheme base16_harmonic_dark
+  call s:global_highlight_config()
+endfunction
+
+command Slain call s:slain()
+function! s:slain()
+  colorscheme gruvbox
+  AirlineTheme base16_darktooth
+  call s:global_highlight_config()
+endfunction
+
+colorscheme gruvbox
+let g:airline_theme='base16_darktooth'
+call s:global_highlight_config()
 

@@ -22,7 +22,6 @@ require("gruvbox").setup({
   dim_inactive = false,
   transparent_mode = true,
 })
-vim.cmd("colorscheme gruvbox")
 
 function _G.get_oil_winbar()
   local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
