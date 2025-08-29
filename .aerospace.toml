@@ -51,8 +51,7 @@ if.app-name-regex-substring = ".*"
 
     alt-f = 'fullscreen'
 
-    alt-s = 'layout v_accordion' # 'layout stacking' in i3
-    alt-w = 'layout h_accordion' # 'layout tabbed' in i3
+    alt-w = 'layout v_accordion h_accordion' # accordion layout
     alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
 
     alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
@@ -75,6 +74,19 @@ if.app-name-regex-substring = ".*"
     alt-8 = 'workspace 8'
     alt-9 = 'workspace 9'
     alt-0 = 'workspace 10'
+    alt-s = 'workspace Spotify'
+    alt-z = 'workspace Zen'
+    alt-g = 'workspace Gmail'
+    alt-c = 'workspace Calendar'
+    alt-n = 'workspace Slack'
+    alt-m = 'workspace WhatsApp'
+
+    alt-cmd-s = 'exec-and-forget open /Applications/Spotify.app'
+    alt-cmd-z = 'exec-and-forget open /Applications/Zen.app'
+    alt-cmd-g = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Gmail.app'"""
+    alt-cmd-c = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Google Calendar.app'"""
+    alt-cmd-n = 'exec-and-forget open /Applications/Slack.app'
+    alt-cmd-m = 'exec-and-forget open /Applications/WhatsApp.app'
 
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
@@ -86,8 +98,12 @@ if.app-name-regex-substring = ".*"
     alt-shift-8 = 'move-node-to-workspace 8'
     alt-shift-9 = 'move-node-to-workspace 9'
     alt-shift-0 = 'move-node-to-workspace 10'
-
-    alt-shift-c = 'reload-config'
+    alt-shift-s = 'move-node-to-workspace Spotify'
+    alt-shift-z = 'move-node-to-workspace Zen'
+    alt-shift-g = 'move-node-to-workspace Gmail'
+    alt-shift-c = 'move-node-to-workspace Calendar'
+    alt-shift-n = 'move-node-to-workspace Slack'
+    alt-shift-m = 'move-node-to-workspace WhatsApp'
 
     alt-r = 'mode resize'
 
