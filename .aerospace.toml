@@ -84,7 +84,9 @@ if.app-name-regex-substring = ".*"
     alt-cmd-s = 'exec-and-forget open /Applications/Spotify.app'
     alt-cmd-z = 'exec-and-forget open /Applications/Zen.app'
     alt-cmd-g = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Gmail.app'"""
+    ctrl-alt-cmd-shift-g = 'exec-and-forget open /System/Applications/Mail.app'
     alt-cmd-c = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Google Calendar.app'"""
+    ctrl-alt-cmd-shift-c = 'exec-and-forget open /System/Applications/Calendar.app'
     alt-cmd-n = 'exec-and-forget open /Applications/Slack.app'
     alt-cmd-m = 'exec-and-forget open /Applications/WhatsApp.app'
 

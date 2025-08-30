@@ -20,9 +20,10 @@ set relativenumber
 set nu rnu
 
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#branch#enabled = 0
 
-let g:airline#extensions#battery#enabled = 1
-let g:battery#component_format = '%s %v'
+" let g:airline#extensions#battery#enabled = 1
+" let g:battery#component_format = '%s %v'
 
 call plug#begin()
     " Color schemes
@@ -59,8 +60,8 @@ call plug#begin()
     Plug 'preservim/tagbar'
     Plug 'farseer90718/vim-taskwarrior'
     Plug 'gabenespoli/vim-mutton'
-    Plug 'enricobacis/vim-airline-clock'
-    Plug 'lambdalisue/vim-battery'
+    " Plug 'enricobacis/vim-airline-clock' " airline clock
+    " Plug 'lambdalisue/vim-battery' " airline battery
     " Plug 'altermo/nwm' " neovim window manager
 call plug#end()
 
@@ -167,7 +168,6 @@ endfunction
 
 command Slay call s:slay()
 function! s:slay()
-  " colorscheme habamax
   colorscheme monochrome
   AirlineTheme base16_harmonic_dark
   call s:global_highlight_config()
