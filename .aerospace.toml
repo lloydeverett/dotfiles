@@ -59,7 +59,7 @@ if.app-name-regex-substring = ".*"
     alt-7 = 'workspace 7'
     alt-8 = 'workspace 8'
     alt-9 = 'workspace 9'
-    alt-0 = 'workspace 10'
+    alt-0 = 'workspace 0'
     alt-s = 'workspace Spotify'
     alt-z = 'workspace Zen'
     alt-g = 'workspace Gmail'
@@ -69,20 +69,17 @@ if.app-name-regex-substring = ".*"
 
     alt-cmd-ctrl-shift-space = 'workspace-back-and-forth'
 
-    alt-cmd-ctrl-shift-z = """exec-and-forget
-        WORKSPACE=$(aerospace list-workspaces --focused | head -n 1);
-        hs -c "new_window('Zen')";
-        sleep 0.2;
-        aerospace move-node-to-workspace ${WORKSPACE};
-        aerospace workspace ${WORKSPACE};
-    """
-    alt-cmd-ctrl-shift-enter = """exec-and-forget
-        WORKSPACE=$(aerospace list-workspaces --focused | head -n 1);
-        hs -c "new_window('Kitty')";
-        sleep 0.2;
-        aerospace move-node-to-workspace ${WORKSPACE};
-        aerospace workspace ${WORKSPACE};
-    """
+    # Before finding out we can send events directly to a particular application:
+    # alt-cmd-ctrl-shift-z = """exec-and-forget
+    #     WORKSPACE=$(aerospace list-workspaces --focused | head -n 1);
+    #     hs -c "new_window('Zen')";
+    #     sleep 0.2;
+    #     aerospace move-node-to-workspace ${WORKSPACE};
+    #     aerospace workspace ${WORKSPACE};
+    # """
+
+    alt-cmd-ctrl-shift-z = """exec-and-forget hs -c "new_window('Zen')" """
+    alt-cmd-ctrl-shift-enter = """exec-and-forget hs -c "new_window('Kitty')" """
 
     alt-cmd-shift-g = 'exec-and-forget open /System/Applications/Mail.app'
     alt-cmd-shift-c = 'exec-and-forget open /System/Applications/Calendar.app'
@@ -102,7 +99,7 @@ if.app-name-regex-substring = ".*"
     alt-shift-7 = 'move-node-to-workspace 7'
     alt-shift-8 = 'move-node-to-workspace 8'
     alt-shift-9 = 'move-node-to-workspace 9'
-    alt-shift-0 = 'move-node-to-workspace 10'
+    alt-shift-0 = 'move-node-to-workspace 0'
     alt-shift-s = 'move-node-to-workspace Spotify'
     alt-shift-z = 'move-node-to-workspace Zen'
     alt-shift-g = 'move-node-to-workspace Gmail'
