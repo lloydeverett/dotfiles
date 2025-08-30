@@ -18,20 +18,6 @@ if.app-name-regex-substring = ".*"
     run = "layout floating"
 
 [mode.main.binding]
-    # See: https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript
-    # alt-enter = '''exec-and-forget osascript -e '
-    # tell application "System Events"
-    #     tell process "kitty"
-    #         keystroke "n" using {command down}
-    #     end tell
-    # end tell'
-    # '''
-    # alt-enter = '''exec-and-forget osascript -e '
-    # tell application "Terminal"
-    #     do script
-    #     activate
-    # end tell'
-    # '''
 
     # i3 wraps focus by default
     alt-j =         'focus --boundaries-action wrap-around-the-workspace left'
@@ -81,14 +67,31 @@ if.app-name-regex-substring = ".*"
     alt-n = 'workspace Slack'
     alt-m = 'workspace WhatsApp'
 
-    alt-cmd-s = 'exec-and-forget open /Applications/Spotify.app'
-    alt-cmd-z = 'exec-and-forget open /Applications/Zen.app'
-    alt-cmd-g = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Gmail.app'"""
-    ctrl-alt-cmd-shift-g = 'exec-and-forget open /System/Applications/Mail.app'
-    alt-cmd-c = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Google Calendar.app'"""
-    ctrl-alt-cmd-shift-c = 'exec-and-forget open /System/Applications/Calendar.app'
-    alt-cmd-n = 'exec-and-forget open /Applications/Slack.app'
-    alt-cmd-m = 'exec-and-forget open /Applications/WhatsApp.app'
+    alt-cmd-ctrl-shift-space = 'workspace-back-and-forth'
+
+    alt-cmd-ctrl-shift-z = """exec-and-forget
+        WORKSPACE=$(aerospace list-workspaces --focused | head -n 1);
+        hs -c "new_window('Zen')";
+        sleep 0.2;
+        aerospace move-node-to-workspace ${WORKSPACE};
+        aerospace workspace ${WORKSPACE};
+    """
+    alt-cmd-ctrl-shift-enter = """exec-and-forget
+        WORKSPACE=$(aerospace list-workspaces --focused | head -n 1);
+        hs -c "new_window('Kitty')";
+        sleep 0.2;
+        aerospace move-node-to-workspace ${WORKSPACE};
+        aerospace workspace ${WORKSPACE};
+    """
+
+    alt-cmd-shift-g = 'exec-and-forget open /System/Applications/Mail.app'
+    alt-cmd-shift-c = 'exec-and-forget open /System/Applications/Calendar.app'
+
+    alt-cmd-ctrl-shift-s = 'exec-and-forget open /Applications/Spotify.app'
+    alt-cmd-ctrl-shift-g = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Gmail.app'"""
+    alt-cmd-ctrl-shift-c = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Google Calendar.app'"""
+    alt-cmd-ctrl-shift-n = 'exec-and-forget open /Applications/Slack.app'
+    alt-cmd-ctrl-shift-m = 'exec-and-forget open /Applications/WhatsApp.app'
 
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
@@ -107,13 +110,13 @@ if.app-name-regex-substring = ".*"
     alt-shift-n = 'move-node-to-workspace Slack'
     alt-shift-m = 'move-node-to-workspace WhatsApp'
 
-    alt-r = 'mode resize'
+    # alt-r = 'mode resize'
 
-[mode.resize.binding]
-    h = 'resize width -50'
-    j = 'resize height +50'
-    k = 'resize height -50'
-    l = 'resize width +50'
-    enter = 'mode main'
-    esc = 'mode main'
+# [mode.resize.binding]
+#     h = 'resize width -50'
+#     j = 'resize height +50'
+#     k = 'resize height -50'
+#     l = 'resize width +50'
+#     enter = 'mode main'
+#     esc = 'mode main'
 
