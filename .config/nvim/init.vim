@@ -60,6 +60,7 @@ call plug#begin()
     Plug 'preservim/tagbar'
     Plug 'farseer90718/vim-taskwarrior'
     Plug 'gabenespoli/vim-mutton'
+
     " Plug 'enricobacis/vim-airline-clock' " airline clock
     " Plug 'lambdalisue/vim-battery' " airline battery
     " Plug 'altermo/nwm' " neovim window manager
