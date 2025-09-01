@@ -23,11 +23,19 @@ function print_table(t, level)
   end
 end
 
-function sdbm_hash(str)
-  local hash = 0 for i = 1, #str do
-    hash = string.byte(str, i) + (hash << 6) + (hash << 16) - hash
-  end
-  return hash
+function is_whitespace(c)
+    return c == ' ' or c == '\t' or c =='\r' or c =='\n'
+end
+
+function trim_leading_whitespace(str)
+    local i = 1
+    while i <= #str do
+        local c = str:sub(i, i); i = i + 1
+        if not is_whitespace(c) then
+            return str:sub(i - 1)
+        end
+    end
+    return ''
 end
 
 --- end boilerplate util methods
@@ -86,13 +94,15 @@ local keyMap = {
     [28] = '8', ['8'] = 28,
     [25] = '9', ['9'] = 25,
     [29] = '0', ['0'] = 29,
+    [49] = '_', ['_'] = 49,
+    [36] = '$', ['$'] = 36,
 }
 
 function flags_to_str(t)
     local ret = ''
     for key, value in pairs(t) do
         if value then
-            ret = ret .. key .. '+'
+            ret = ret .. key .. '-'
         end
     end
     return ret
@@ -103,7 +113,7 @@ local keyTap = eventtap.new({eventTypes.keyDown}, function(event)
     local characters = event:getCharacters()
     local flags = flags_to_str(event:getFlags())
     if flags ~= '' then
-        recording = recording .. '^' .. flags
+        recording = recording .. '.' .. flags
     end
     if keyMap[keyCode] then
         recording = recording .. keyMap[keyCode]
@@ -118,7 +128,7 @@ end)
 
 function record()
     if recording == nil then
-        recording = ";;;"
+        recording = "-> "
         keyTap:start()
     else
         error("record called, but recording already in progress")
@@ -172,7 +182,7 @@ function parse(str, emit_function_outer)
     end
 
     local consume_modifier_sequence = function(seen_char, emit_function)
-        assert(seen_char == '^', "consume_modifier_sequence called with seen_char != '^'")
+        assert(seen_char == '.', "consume_modifier_sequence called with seen_char != '.'")
         local first = i - 1
 
         -- consume flags
@@ -181,18 +191,19 @@ function parse(str, emit_function_outer)
             ['ctrl'] = false,
             ['alt'] = false,
             ['cmd'] = false,
+            ['fn'] = false,
         }
-        local flag_pattern = "^(%a+)%+"
+        local flag_pattern = "^(%a+)%-"
         local flag_match = string.match(str, flag_pattern, i)
         if flag_match == nil then
-            error("parse failed: ^ sequence beginning at character " .. first .. " does not begin with a modifier (e.g. 'shift+')")
+            error("parse failed: . sequence beginning at character " .. first .. " does not begin with a modifier (e.g. 'shift-')")
         end
         while flag_match ~= nil do
             if flags[flag_match] == nil then
                 error('parse failed: unknown flag ' .. flag_match)
             end
             if flags[flag_match] == true then
-                error('parse failed: flag ' .. flag_match .. ' repeated in the same ^ sequence')
+                error('parse failed: flag ' .. flag_match .. ' repeated in the same . sequence')
             end
             assert(flags[flag_match] == false, 'consume_modifier_sequence has unexpected value in flags table')
             flags[flag_match] = true
@@ -202,7 +213,7 @@ function parse(str, emit_function_outer)
 
         -- consume key
         if i > #str then
-            error("parse failed: reached end of input before finding key for ^ sequence beginning at character " .. first)
+            error("parse failed: reached end of input before finding key for . sequence beginning at character " .. first)
         end
         local c = str:sub(i, i); i = i + 1
         local consume_key_emit_function = function(production)
@@ -219,11 +230,11 @@ function parse(str, emit_function_outer)
 
         -- consume ';'
         if i > #str then
-            error("parse failed: expected terminating ; at the end of ^ sequence but reached end of input")
+            error("parse failed: expected terminating ; at the end of . sequence but reached end of input")
         end
         c = str:sub(i, i); i = i + 1
         if c ~= ';' then
-            error("parse failed: expected terminating ; at the end of ^ sequence but found '" .. c .. "'")
+            error("parse failed: expected terminating ; at the end of . sequence but found '" .. c .. "'")
         end
     end
 
@@ -258,16 +269,32 @@ function parse(str, emit_function_outer)
         error("parse failed: unterminated > sequence beginning at character " .. first)
     end
 
-    local consume_stream = function(emit_function)
+    local consume_start_indicator = function()
         while i <= #str do
             local c = str:sub(i, i); i = i + 1
-            if c == '^' then
-                consume_modifier_sequence('^', emit_function)
+            if not is_whitespace(c) then
+                if string.match(str, "^%->", i - 1) ~= nil then
+                    i = i + 1
+                    return
+                else
+                    error("parse failed: expected start of stream indicator but found " .. c .. " (ordinal: " .. string.byte(c) .. ")")
+                end
+            end
+        end
+        error("parse failed: consumed only whitespace, no start of stream indicator '->' found")
+    end
+
+    local consume_stream = function(emit_function)
+        consume_start_indicator()
+        while i <= #str do
+            local c = str:sub(i, i); i = i + 1
+            if c == '.' then
+                consume_modifier_sequence('.', emit_function)
             elseif c == '>' or c == '@' then
                 consume_app_name(c, emit_function)
             elseif c == '#' then
                 consume_comment(c)
-            elseif c == ';' or c == ' ' or c == '\t' or c =='\r' or c =='\n' then
+            elseif c == ';' or is_whitespace(c) then
                 -- ignore
             else
                 consume_key(c, emit_function)
@@ -280,7 +307,20 @@ end
 
 function apply(str)
     local current_app_target = nil
+    local productions = {}
+
     parse(str, function(production)
+        table.insert(productions, production)
+    end)
+
+    local apply_productions = function(productions, index, apply_productions)
+        local production = productions[index]
+        if production == nil then
+            return
+        end
+
+        local next_delay = 0.075
+
         if production["app_directive"] ~= nil then
             local app_name = production["app_name"]
             local app_directive = production["app_directive"]
@@ -292,17 +332,18 @@ function apply(str)
                 else
                     current_app_target = hs.appfinder.appFromName(app_name)
                     if current_app_target == nil then
-                        error("apply failed: could not find app '" .. app_name .. "'")
+                        error("apply failed: could not target app '" .. app_name .. "'")
                     end
                     print('>' .. app_name)
                 end
             elseif app_directive == 'focus' then
                 local will_launch_app = hs.appfinder.appFromName(app_name) == nil
-                hs.application.launchOrFocus(app_name)
+                if not hs.application.launchOrFocus(app_name) then
+                    error("apply failed: could not focus or launch app '" .. app_name .. "'")
+                end
                 print('@' .. app_name)
                 if will_launch_app then
-                    print('sleeping for 250ms')
-                    os.execute("sleep 0.25")
+                    next_delay = 0.25
                 end
             else
                 assert(false, 'apply saw production with unknown app_directive')
@@ -311,9 +352,14 @@ function apply(str)
 
         if production["keycode"] ~= nil then
             print_table({ ['keypress'] = production })
-            hs.eventtap.keyStroke(production["modifiers"], production["keycode"], 100000, current_app_target)
+            hs.eventtap.keyStroke(production["modifiers"], production["keycode"], 1000000 * 0.001, current_app_target)
         end
-    end)
+
+        hs.timer.doAfter(next_delay, function()
+            apply_productions(productions, index + 1, apply_productions)
+        end)
+    end
+    apply_productions(productions, 1, apply_productions)
 end
 
 hs.hotkey.bind({"cmd", "shift", "alt", "ctrl"}, "Q", function()
@@ -323,7 +369,7 @@ hs.hotkey.bind({"cmd", "shift", "alt", "ctrl"}, "Q", function()
     else
         local full_result = record_done()
         -- regex to remove the last keypress event because it ended the macro
-        local result = string.match(full_result, "^(.+)%^[%w%+%[%]]+;$")
+        local result = string.match(full_result, "^(.+)%.[%w%-%[%]]+;$")
         hs.pasteboard.setContents(result)
         hs.alert.show("Saved to clipboard")
     end
@@ -331,12 +377,33 @@ end)
 
 hs.hotkey.bind({"cmd", "shift", "alt", "ctrl"}, "2", function()
     local str = hs.pasteboard.getContents()
-    if str:sub(1, #';;;') ~= ';;;' then
-        hs.alert.show("Clipboard does not look like a macro (does not start with ';;;')")
+    if trim_leading_whitespace(str):sub(1, #'->') ~= '->' then
+        hs.alert.show("Clipboard does not look like a macro (does not start with '->')")
         return
     end
     apply(str)
 end)
 
 --- end macros
+
+--- begin hs_pipe support
+
+function pipe_read()
+    local fh = assert(io.open(INPUT_FIFO, 'r'))
+    return fh:read('*all')
+end
+
+function pipe_echo()
+    local data = pipe_read()
+    if data:sub(#data, #data) == '\n' then
+        data = data:sub(1, #data - 1)
+    end
+    print(data)
+end
+
+function pipe_apply()
+    apply(pipe_read())
+end
+
+--- end hs_pipe support
 

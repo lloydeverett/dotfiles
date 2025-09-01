@@ -54,7 +54,6 @@ call plug#begin()
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-vsnip'
     Plug 'hrsh7th/vim-vsnip'
-    Plug 'Shougo/deol.nvim'
     Plug 'tbabej/taskwiki'
     Plug 'powerman/vim-plugin-AnsiEsc'
     Plug 'preservim/tagbar'
@@ -64,6 +63,7 @@ call plug#begin()
     " Plug 'enricobacis/vim-airline-clock' " airline clock
     " Plug 'lambdalisue/vim-battery' " airline battery
     " Plug 'altermo/nwm' " neovim window manager
+    " Plug 'Shougo/deol.nvim'
 call plug#end()
 
 lua package.path = package.path .. ';' .. os.getenv('HOME') .. '/.config/nvim/?.lua'
