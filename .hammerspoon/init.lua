@@ -46,9 +46,8 @@ function new_window(app_name)
     local app = hs.appfinder.appFromName(app_name)
     if app then
         hs.eventtap.keyStroke({"cmd"}, "N", 100000, app)
-    else
-        hs.application.launchOrFocus(app_name)
     end
+    hs.application.launchOrFocus(app_name)
 end
 
 --- end app launching

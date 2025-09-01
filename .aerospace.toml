@@ -22,10 +22,13 @@ if.app-name-regex-substring = ".*"
 [mode.main.binding]
 
     # i3 wraps focus by default
-    alt-j =         'focus --boundaries-action wrap-around-the-workspace left'
-    alt-k =         'focus --boundaries-action wrap-around-the-workspace down'
-    alt-l =         'focus --boundaries-action wrap-around-the-workspace up'
-    alt-semicolon = 'focus --boundaries-action wrap-around-the-workspace right'
+    # alt-j =         'focus --boundaries-action wrap-around-the-workspace left'
+    # alt-k =         'focus --boundaries-action wrap-around-the-workspace down'
+    # alt-l =         'focus --boundaries-action wrap-around-the-workspace up'
+    # alt-semicolon = 'focus --boundaries-action wrap-around-the-workspace right'
+
+    alt-j = 'exec-and-forget /opt/homebrew/bin/focus-next'
+    alt-k = 'exec-and-forget /opt/homebrew/bin/focus-prev'
 
     alt-shift-j = 'move left'
     alt-shift-k = 'move down'
