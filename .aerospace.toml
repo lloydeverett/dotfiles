@@ -83,12 +83,12 @@ if.app-name-regex-substring = ".*"
     alt-cmd-ctrl-shift-z = """exec-and-forget hs -c "new_window('Zen')" """
     alt-cmd-ctrl-shift-enter = """exec-and-forget hs -c "new_window('Kitty')" """
 
-    alt-cmd-shift-g = 'exec-and-forget open /System/Applications/Mail.app'
-    alt-cmd-shift-c = 'exec-and-forget open /System/Applications/Calendar.app'
+    # alt-cmd-shift-g = 'exec-and-forget open /System/Applications/Mail.app'
+    # alt-cmd-shift-c = 'exec-and-forget open /System/Applications/Calendar.app'
 
     alt-cmd-ctrl-shift-s = 'exec-and-forget open /Applications/Spotify.app'
-    alt-cmd-ctrl-shift-g = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Gmail.app'"""
-    alt-cmd-ctrl-shift-c = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Google Calendar.app'"""
+    alt-cmd-ctrl-shift-g = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Gmail.app' && open /System/Applications/Mail.app"""
+    alt-cmd-ctrl-shift-c = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Google Calendar.app' && open /System/Applications/Calendar.app"""
     alt-cmd-ctrl-shift-n = 'exec-and-forget open /Applications/Slack.app'
     alt-cmd-ctrl-shift-m = 'exec-and-forget open /Applications/WhatsApp.app'
 

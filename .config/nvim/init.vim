@@ -185,3 +185,5 @@ colorscheme gruvbox
 let g:airline_theme='base16_darktooth'
 call s:global_highlight_config()
 
+let @t = '0"%p$vhhd?\/v0dyypv$hr=Ä˝5:noh'
+
