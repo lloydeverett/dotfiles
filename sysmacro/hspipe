@@ -1,0 +1,7 @@
+#!/bin/bash
+
+file=$(mktemp -u)
+cat - > "$file"
+hs -c "INPUT_FIFO = '$file'; $1" <<< ''
+rm "$file"
+

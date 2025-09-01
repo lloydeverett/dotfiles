@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# invocation of gpp used by sysmacro
+# the mode specification -U mimics Tex (-T)
+# but removes the special meaning of "@"
+
+exec gpp \
+    -U "\\" "" "{" "}{" "}" "{" "}" "#" "" \
+    +cCCC "\\elide" "\\finish_elide" \
+    -s "@" \
+    --include "$HOME"/sysmacro/common.h \
+    "$@"
+

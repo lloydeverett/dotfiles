@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# apply macro via hspipeq
+exec hspipeq "pipe_apply();"
+
