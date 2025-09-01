@@ -4,6 +4,10 @@ require("hs.hotkey")
 require("hs.alert")
 require("hs.pasteboard")
 
+local STANDARD_DELAY = 0.075 -- 0.075 seconds
+local LONG_DELAY = 0.25 -- 0.25 seconds
+local KEYSTROKE_DURATION = 1000000 * 0.001 -- 0.001 seconds
+
 local eventtap = hs.eventtap
 local eventTypes = eventtap.event.types
 
@@ -45,7 +49,8 @@ end
 function new_window(app_name)
     local app = hs.appfinder.appFromName(app_name)
     if app then
-        hs.eventtap.keyStroke({"cmd"}, "N", 100000, app)
+        hs.eventtap.keyStroke({"cmd"}, "N", KEYSTROKE_DURATION, app)
+        os.execute('sleep ' .. LONG_DELAY) -- blocking sleep so that this method is synchronous
     end
     hs.application.launchOrFocus(app_name)
 end
@@ -318,7 +323,7 @@ function apply(str)
             return
         end
 
-        local next_delay = 0.075
+        local next_delay = STANDARD_DELAY
 
         if production["app_directive"] ~= nil then
             local app_name = production["app_name"]
@@ -342,7 +347,7 @@ function apply(str)
                 end
                 print('@' .. app_name)
                 if will_launch_app then
-                    next_delay = 0.25
+                    next_delay = LONG_DELAY
                 end
             else
                 assert(false, 'apply saw production with unknown app_directive')
@@ -351,7 +356,7 @@ function apply(str)
 
         if production["keycode"] ~= nil then
             print_table({ ['keypress'] = production })
-            hs.eventtap.keyStroke(production["modifiers"], production["keycode"], 1000000 * 0.001, current_app_target)
+            hs.eventtap.keyStroke(production["modifiers"], production["keycode"], KEYSTROKE_DURATION, current_app_target)
         end
 
         hs.timer.doAfter(next_delay, function()

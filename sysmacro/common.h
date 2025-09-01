@@ -1,13 +1,16 @@
 \elide
 
+\define{\hyper{x}}{.ctrl-alt-cmd-shift-\x;}
+
 \define{\insert{x}}{$i\x}
 
 \define{zen}{
-    .alt-z; @Zen; .cmd-t; hello_world
+    .alt-z; \hyper{z};
 }
 
-\define{whatsapp}{
-    .alt-m; @WhatsApp; .cmd-f; .cmd-a;[51] foo
+\define{\whatsapp{contact}}{
+    .alt-m; \hyper{m};
+    .cmd-f;.cmd-a;[51]; \contact
     .fn-[125];.fn-[125];.fn-[126];.fn-[126];.fn-[125];$
     .ctrl-2;.ctrl-1;
 }
