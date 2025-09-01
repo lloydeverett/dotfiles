@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+CURRENT_WINDOW="$(aerospace list-windows --focused |
+                      head -n 1 |
+                      cut -d '|' -f 1 |
+                      tr -d ' ')"
+
+WINDOWS_CONCAT="$(aerospace list-windows --workspace visible |
+                      cut -d '|' -f 1 |
+                      tr -d ' ')"
+
+WINDOWS=(${(f)WINDOWS_CONCAT})
+
+current_index=${WINDOWS[(ie)$CURRENT_WINDOW]}
+((other_index = current_index + $1 - 1))
+((other_index = other_index % ${#WINDOWS[@]}))
+((other_index = other_index < 0 ? -other_index : other_index))
+((other_index = other_index + 1))
+
+print $WINDOWS[$other_index]
+

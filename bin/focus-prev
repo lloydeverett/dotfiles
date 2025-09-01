@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+aerospace focus --window-id $(adjacent-window -1)
+
