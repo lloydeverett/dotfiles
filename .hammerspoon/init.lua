@@ -46,6 +46,10 @@ end
 
 --- begin app launching
 
+function launch_or_focus(app_name)
+    hs.application.launchOrFocus(app_name)
+end
+
 function new_window(app_name)
     local app = hs.appfinder.appFromName(app_name)
     if app then
