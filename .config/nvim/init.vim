@@ -36,6 +36,7 @@ call plug#begin()
     Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
     Plug 'stevearc/oil.nvim'
     Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
     Plug 'godlygeek/tabular'
     Plug 'preservim/vim-markdown'
@@ -56,9 +57,11 @@ call plug#begin()
     Plug 'hrsh7th/vim-vsnip'
     Plug 'tbabej/taskwiki'
     Plug 'powerman/vim-plugin-AnsiEsc'
-    Plug 'preservim/tagbar'
     Plug 'farseer90718/vim-taskwarrior'
-    Plug 'gabenespoli/vim-mutton'
+    " Plug 'preservim/tagbar'
+    " Plug 'gabenespoli/vim-mutton'
+
+    Plug 'jvgrootveld/telescope-zoxide'
 
     " Plug 'enricobacis/vim-airline-clock' " airline clock
     " Plug 'lambdalisue/vim-battery' " airline battery
@@ -73,14 +76,15 @@ lua require('initlua')
 nnoremap <SPACE> <Nop>
 let mapleader = " "
 
-nnoremap <leader>c <cmd>Telescope<cr>
+nnoremap <leader>: <cmd>Telescope<cr>
 nnoremap <leader>f <cmd>Telescope find_files<cr>
 nnoremap <leader>g <cmd>Telescope live_grep<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
 nnoremap <leader>h <cmd>Telescope help_tags<cr>
 nnoremap <leader>t <cmd>Telescope telescope-tabs list_tabs<cr>
+nnoremap <leader>cd <cmd>Telescope zoxide list previewer=false<cr>
 
-nnoremap <leader>. <cmd>call deol#start()<cr>
+" nnoremap <leader>. <cmd>call deol#start()<cr>
 
 nnoremap <C-X> <cmd>VimwikiToggleListItem<cr>
 
@@ -100,8 +104,12 @@ nnoremap <leader><leader> <C-^>
 noremap <silent> <Esc> :noh<CR><Esc>
 
 tnoremap <Esc> <C-\><C-n>
-noremap <leader><Tab> :tabnext<cr>
-noremap <leader><S-Tab> :tabprev<cr>
+nnoremap <leader><Tab> :tabnext<cr>
+nnoremap <leader><S-Tab> :tabprev<cr>
+
+nnoremap <leader>wp :e ~/sync/wiki/personal.md<cr>
+nnoremap <leader>wo :e ~/sync/wiki/work.md<cr>
+nnoremap <leader>ec :e ~/.config/nvim/init.vim<cr>
 
 set nowrap
 
@@ -121,32 +129,32 @@ set expandtab autoindent tabstop=4 shiftwidth=4
 let g:vimwiki_emoji_enable = 1
 let g:vimwiki_folding = 'list'
 
-autocmd FileType deol call s:deol_settings()
-function! s:deol_settings()
-  nnoremap <buffer> <C-n>  <Plug>(deol_next_prompt)
-  nnoremap <buffer> <C-p>  <Plug>(deol_previous_prompt)
-  nnoremap <buffer> <CR>   <Plug>(deol_execute_line)
-  nnoremap <buffer> A      <Plug>(deol_start_append_last)
-  nnoremap <buffer> I      <Plug>(deol_start_insert_first)
-  nnoremap <buffer> a      <Plug>(deol_start_append)
-  nnoremap <buffer> e      <Plug>(deol_edit)
-  nnoremap <buffer> i      <Plug>(deol_start_insert)
-  nnoremap <buffer> q      <Plug>(deol_quit)
-endfunction
+" autocmd FileType deol call s:deol_settings()
+" function! s:deol_settings()
+"   nnoremap <buffer> <C-n>  <Plug>(deol_next_prompt)
+"   nnoremap <buffer> <C-p>  <Plug>(deol_previous_prompt)
+"   nnoremap <buffer> <CR>   <Plug>(deol_execute_line)
+"   nnoremap <buffer> A      <Plug>(deol_start_append_last)
+"   nnoremap <buffer> I      <Plug>(deol_start_insert_first)
+"   nnoremap <buffer> a      <Plug>(deol_start_append)
+"   nnoremap <buffer> e      <Plug>(deol_edit)
+"   nnoremap <buffer> i      <Plug>(deol_start_insert)
+"   nnoremap <buffer> q      <Plug>(deol_quit)
+" endfunction
 
-autocmd BufEnter deol-edit@default call s:deol_edit_settings()
-function! s:deol_edit_settings()
-  nnoremap <buffer> <CR>  <Plug>(deol_execute_line)
-  nnoremap <buffer> <BS>  <Plug>(deol_backspace)
-  nnoremap <buffer> <C-h> <Plug>(deol_backspace)
-  nnoremap <buffer> q     <Plug>(deol_quit)
-  nnoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
-  inoremap <buffer> <CR>  <Plug>(deol_execute_line)
-  inoremap <buffer> <BS>  <Plug>(deol_backspace)
-  inoremap <buffer> <C-h> <Plug>(deol_backspace)
-  inoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
-  inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
-endfunction
+" autocmd BufEnter deol-edit@default call s:deol_edit_settings()
+" function! s:deol_edit_settings()
+"   nnoremap <buffer> <CR>  <Plug>(deol_execute_line)
+"   nnoremap <buffer> <BS>  <Plug>(deol_backspace)
+"   nnoremap <buffer> <C-h> <Plug>(deol_backspace)
+"   nnoremap <buffer> q     <Plug>(deol_quit)
+"   nnoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
+"   inoremap <buffer> <CR>  <Plug>(deol_execute_line)
+"   inoremap <buffer> <BS>  <Plug>(deol_backspace)
+"   inoremap <buffer> <C-h> <Plug>(deol_backspace)
+"   inoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
+"   inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
+" endfunction
 
 hi def link markdownH1 GruvboxAquaBold
 hi def link markdownH2 GruvboxGreenBold
@@ -167,19 +175,19 @@ function s:global_highlight_config()
   hi VimwikiItalic guifg=#FF6F91 gui=italic
 endfunction
 
-command Slay call s:slay()
-function! s:slay()
-  colorscheme monochrome
-  AirlineTheme base16_harmonic_dark
-  call s:global_highlight_config()
-endfunction
-
-command Slain call s:slain()
-function! s:slain()
-  colorscheme gruvbox
-  AirlineTheme base16_darktooth
-  call s:global_highlight_config()
-endfunction
+" command Slay call s:slay()
+" function! s:slay()
+"   colorscheme monochrome
+"   AirlineTheme base16_harmonic_dark
+"   call s:global_highlight_config()
+" endfunction
+"
+" command Slain call s:slain()
+" function! s:slain()
+"   colorscheme gruvbox
+"   AirlineTheme base16_darktooth
+"   call s:global_highlight_config()
+" endfunction
 
 colorscheme gruvbox
 let g:airline_theme='base16_darktooth'
