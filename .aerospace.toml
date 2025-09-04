@@ -34,8 +34,8 @@ if.app-name-regex-substring = ".*"
 
     alt-shift-j = 'move left'
     alt-shift-k = 'move down'
-    alt-shift-l = 'move up'
-    alt-shift-semicolon = 'move right'
+    # alt-shift-l = 'move up'
+    # alt-shift-semicolon = 'move right'
 
     # Consider using 'join-with' command as a 'split' replacement if you want to enable
     # normalizations
@@ -51,7 +51,7 @@ if.app-name-regex-substring = ".*"
 
     # Not supported, because this command is redundant in AeroSpace mental model.
     # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
-    #alt-space = 'focus toggle_tiling_floating'
+    # alt-space = 'focus toggle_tiling_floating'
 
     # `focus parent`/`focus child` are not yet supported, and it's not clear whether they
     # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
@@ -73,6 +73,27 @@ if.app-name-regex-substring = ".*"
     alt-c = 'workspace Calendar'
     alt-n = 'workspace Slack'
     alt-m = 'workspace WhatsApp'
+    alt-l = 'workspace Linear'
+    alt-p = 'workspace Planning'
+
+    alt-shift-1 = 'move-node-to-workspace 1'
+    alt-shift-2 = 'move-node-to-workspace 2'
+    alt-shift-3 = 'move-node-to-workspace 3'
+    alt-shift-4 = 'move-node-to-workspace 4'
+    alt-shift-5 = 'move-node-to-workspace 5'
+    alt-shift-6 = 'move-node-to-workspace 6'
+    alt-shift-7 = 'move-node-to-workspace 7'
+    alt-shift-8 = 'move-node-to-workspace 8'
+    alt-shift-9 = 'move-node-to-workspace 9'
+    alt-shift-0 = 'move-node-to-workspace 0'
+    alt-shift-s = 'move-node-to-workspace Spotify'
+    alt-shift-z = 'move-node-to-workspace Zen'
+    alt-shift-g = 'move-node-to-workspace Gmail'
+    alt-shift-c = 'move-node-to-workspace Calendar'
+    alt-shift-n = 'move-node-to-workspace Slack'
+    alt-shift-m = 'move-node-to-workspace WhatsApp'
+    alt-shift-l = 'move-node-to-workspace Linear'
+    alt-shift-p = 'move-node-to-workspace Planning'
 
     alt-cmd-ctrl-shift-space = 'workspace-back-and-forth'
 
@@ -96,23 +117,7 @@ if.app-name-regex-substring = ".*"
     alt-cmd-ctrl-shift-c = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Google Calendar.app' && open /System/Applications/Calendar.app"""
     alt-cmd-ctrl-shift-n = 'exec-and-forget open /Applications/Slack.app'
     alt-cmd-ctrl-shift-m = 'exec-and-forget open /Applications/WhatsApp.app'
-
-    alt-shift-1 = 'move-node-to-workspace 1'
-    alt-shift-2 = 'move-node-to-workspace 2'
-    alt-shift-3 = 'move-node-to-workspace 3'
-    alt-shift-4 = 'move-node-to-workspace 4'
-    alt-shift-5 = 'move-node-to-workspace 5'
-    alt-shift-6 = 'move-node-to-workspace 6'
-    alt-shift-7 = 'move-node-to-workspace 7'
-    alt-shift-8 = 'move-node-to-workspace 8'
-    alt-shift-9 = 'move-node-to-workspace 9'
-    alt-shift-0 = 'move-node-to-workspace 0'
-    alt-shift-s = 'move-node-to-workspace Spotify'
-    alt-shift-z = 'move-node-to-workspace Zen'
-    alt-shift-g = 'move-node-to-workspace Gmail'
-    alt-shift-c = 'move-node-to-workspace Calendar'
-    alt-shift-n = 'move-node-to-workspace Slack'
-    alt-shift-m = 'move-node-to-workspace WhatsApp'
+    alt-cmd-ctrl-shift-l = 'exec-and-forget open /Applications/Linear.app'
 
     # alt-r = 'mode resize'
 
