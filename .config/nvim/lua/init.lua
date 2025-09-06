@@ -1,4 +1,10 @@
 
+vim.g.vimwiki_list = {{
+  path = os.getenv('HOME') .. '/sync/wiki',
+  syntax = 'markdown',
+  ext = 'md'
+}}
+
 require("gruvbox").setup({
   terminal_colors = true, -- add neovim terminal colors
   undercurl = true,
@@ -29,7 +35,6 @@ function _G.get_oil_winbar()
   if dir then
     return vim.fn.fnamemodify(dir, ":~")
   else
-    -- If there is no current directory (e.g. over ssh), just show the buffer name
     return vim.api.nvim_buf_get_name(0)
   end
 end
@@ -40,13 +45,13 @@ require("oil").setup({
   },
 })
 
--- vim.g.vimwiki_list = {{
--- 	path = '/Users/lloyd/webdav/wiki.mac',
--- 	syntax = 'markdown',
--- 	ext = 'md'
--- }}
-
--- require("octo").setup()
+function open_terminal_in_buffer_dir()
+    local dir = vim.fn.expand("%:p:h")
+    if dir:find("oil://", 1, true) == 1 then
+      dir = dir:sub(#"oil://" + 1)
+    end
+    vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
+end
 
 require("mason").setup()
 
@@ -103,7 +108,7 @@ cmp.setup({
     { name = 'buffer' },
   })
 )
-equire("cmp_git").setup() ]]-- 
+equire("cmp_git").setup() ]]--
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ '/', '?' }, {
@@ -126,10 +131,6 @@ cmp.setup.cmdline(':', {
 
 -- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
--- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
---   capabilities = capabilities
--- }
 
 vim.diagnostic.config({ virtual_text = true })
 
