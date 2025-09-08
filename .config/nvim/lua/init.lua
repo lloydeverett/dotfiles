@@ -26,7 +26,7 @@ require("gruvbox").setup({
   palette_overrides = {},
   overrides = {},
   dim_inactive = false,
-  transparent_mode = true,
+  transparent_mode = false,
 })
 
 function _G.get_oil_winbar()
@@ -53,9 +53,6 @@ function open_terminal_in_buffer_dir()
     vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
 end
 
-require("mason").setup()
-
-require("mason-lspconfig").setup()
 
 -- Set up nvim-cmp.
 local cmp = require'cmp'
@@ -129,14 +126,43 @@ cmp.setup.cmdline(':', {
   matching = { disallow_symbol_nonprefix_matching = false }
 })
 
--- Set up lspconfig.
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-vim.diagnostic.config({ virtual_text = true })
-
 require("telescope").setup({
   defaults = {
     path_display = { "truncate" },
   },
 })
+
+vim.diagnostic.config({ virtual_text = true })
+
+local lspconfig = require('lspconfig')
+lspconfig.sourcekit.setup({})
+vim.api.nvim_create_autocmd('LspAttach', {
+    desc = 'LSP Actions',
+    callback = function(args)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, {noremap = true, silent = true})
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {noremap = true, silent = true})
+    end,
+})
+
+require("mason").setup()
+
+require("mason-lspconfig").setup()
+
+if vim.g.neovide then
+  vim.o.guifont = "0xProto:h17"
+  vim.g.neovide_cursor_animation_length = 0.0
+  vim.g.neovide_scroll_animation_length = 0.15
+  -- vim.g.neovide_scroll_animation_far_lines = 0
+  vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
+  vim.keymap.set('v', '<D-c>', '"+y')    -- Copy
+  vim.keymap.set('n', '<D-v>', '"+P')    -- Paste normal mode
+  vim.keymap.set('v', '<D-v>', '"+P')    -- Paste visual mode
+  vim.keymap.set('t', '<D-v>', '"+P')    -- Paste terminal mode
+  vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
+  vim.keymap.set('i', '<D-v>', '<C-R>+') -- Paste insert mode
+else
+  require('neoscroll').setup({
+      easing = "quadratic"
+  })
+end
 

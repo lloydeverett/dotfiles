@@ -16,7 +16,6 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 # Mouse follows focus when focused monitor changes
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# default to floating
 [[on-window-detected]]
 if.app-name-regex-substring = ".*"
     run = "layout floating"
@@ -37,8 +36,6 @@ if.app-name-regex-substring = ".*"
     # alt-shift-l = 'move up'
     # alt-shift-semicolon = 'move right'
 
-    # Consider using 'join-with' command as a 'split' replacement if you want to enable
-    # normalizations
     alt-h = 'split horizontal'
     alt-v = 'split vertical'
 
@@ -48,14 +45,6 @@ if.app-name-regex-substring = ".*"
     alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
 
     alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
-
-    # Not supported, because this command is redundant in AeroSpace mental model.
-    # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
-    # alt-space = 'focus toggle_tiling_floating'
-
-    # `focus parent`/`focus child` are not yet supported, and it's not clear whether they
-    # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
-    # alt-a = 'focus parent'
 
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
@@ -97,20 +86,10 @@ if.app-name-regex-substring = ".*"
 
     alt-cmd-ctrl-shift-space = 'workspace-back-and-forth'
 
-    # Before finding out we can send events directly to a particular application:
-    # alt-cmd-ctrl-shift-z = """exec-and-forget
-    #     WORKSPACE=$(aerospace list-workspaces --focused | head -n 1);
-    #     hs -c "new_window('Zen')";
-    #     sleep 0.2;
-    #     aerospace move-node-to-workspace ${WORKSPACE};
-    #     aerospace workspace ${WORKSPACE};
-    # """
-
     alt-cmd-ctrl-shift-z = """exec-and-forget hs -c "new_window('Zen')" """
     alt-cmd-ctrl-shift-enter = """exec-and-forget hs -c "new_window('Kitty')" """
-
-    # alt-cmd-shift-g = 'exec-and-forget open /System/Applications/Mail.app'
-    # alt-cmd-shift-c = 'exec-and-forget open /System/Applications/Calendar.app'
+    alt-cmd-ctrl-shift-f = """exec-and-forget hs -c "new_window('Finder')" """
+    alt-cmd-ctrl-shift-v = """exec-and-forget open /Applications/Neovide.app --new"""
 
     alt-cmd-ctrl-shift-s = 'exec-and-forget open /Applications/Spotify.app'
     alt-cmd-ctrl-shift-g = """exec-and-forget open '/Users/lloyd/Applications/Chrome Apps.localized/Gmail.app' && open /System/Applications/Mail.app"""
@@ -119,8 +98,8 @@ if.app-name-regex-substring = ".*"
     alt-cmd-ctrl-shift-m = 'exec-and-forget open /Applications/WhatsApp.app'
     alt-cmd-ctrl-shift-l = 'exec-and-forget open /Applications/Linear.app'
 
-    # alt-r = 'mode resize'
-
+#     alt-r = 'mode resize'
+#
 # [mode.resize.binding]
 #     h = 'resize width -50'
 #     j = 'resize height +50'

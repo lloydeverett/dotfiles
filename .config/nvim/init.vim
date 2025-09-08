@@ -1,20 +1,4 @@
 set scrolloff=5
-
-tnoremap <Esc> <C-\><C-n>
-tnoremap <C-e> <Esc>
-tnoremap <A-h> <C-\><C-N><C-w>h
-tnoremap <A-j> <C-\><C-N><C-w>j
-tnoremap <A-k> <C-\><C-N><C-w>k
-tnoremap <A-l> <C-\><C-N><C-w>l
-inoremap <A-h> <C-\><C-N><C-w>h
-inoremap <A-j> <C-\><C-N><C-w>j
-inoremap <A-k> <C-\><C-N><C-w>k
-inoremap <A-l> <C-\><C-N><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
-
 set laststatus=0
 set relativenumber
 set nu rnu
@@ -44,7 +28,6 @@ call plug#begin()
     Plug 'neovim/nvim-lspconfig'
     Plug 'mason-org/mason.nvim'
     Plug 'mason-org/mason-lspconfig.nvim'
-    Plug 'neovim/nvim-lspconfig'
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
@@ -56,12 +39,28 @@ call plug#begin()
     Plug 'powerman/vim-plugin-AnsiEsc'
     Plug 'farseer90718/vim-taskwarrior'
     Plug 'jvgrootveld/telescope-zoxide'
+    Plug 'karb94/neoscroll.nvim'
 call plug#end()
 
 nnoremap <SPACE> <Nop>
 let mapleader = " "
 
 lua require('init')
+
+tnoremap <Esc> <C-\><C-n>
+tnoremap <C-e> <Esc>
+tnoremap <A-h> <C-\><C-N><C-w>h
+tnoremap <A-j> <C-\><C-N><C-w>j
+tnoremap <A-k> <C-\><C-N><C-w>k
+tnoremap <A-l> <C-\><C-N><C-w>l
+inoremap <A-h> <C-\><C-N><C-w>h
+inoremap <A-j> <C-\><C-N><C-w>j
+inoremap <A-k> <C-\><C-N><C-w>k
+inoremap <A-l> <C-\><C-N><C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
 
 nnoremap <leader>: <cmd>Telescope<cr>
 nnoremap <leader>f <cmd>Telescope find_files<cr>
@@ -137,9 +136,23 @@ set undodir=~/.local/share/nvim/undo/
 set cursorline
 
 function s:global_highlight_config()
-  hi Normal ctermbg=NONE guibg=NONE
+  hi Normal ctermbg=NONE guibg=#1D1F20
   hi VimwikiBold guifg=#FF3D5B gui=bold
   hi VimwikiItalic guifg=#FF6F91 gui=italic
+endfunction
+
+let s:saved_theme = []
+let g:airline_theme_patch_func = 'AirlineThemePatch'
+function! AirlineThemePatch(palette)
+    " let a:palette.colors.airline_term = []
+    for colors in values(a:palette)
+        if has_key(colors, 'airline_c') && len(s:saved_theme) ==# 0
+            let s:saved_theme = colors.airline_c
+        endif
+        if has_key(colors, 'airline_term')
+            let colors.airline_term = s:saved_theme
+        endif
+    endfor
 endfunction
 
 colorscheme gruvbox
