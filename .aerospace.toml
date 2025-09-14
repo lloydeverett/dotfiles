@@ -87,7 +87,8 @@ if.app-name-regex-substring = ".*"
     alt-cmd-ctrl-shift-space = 'workspace-back-and-forth'
 
     alt-cmd-ctrl-shift-z = """exec-and-forget hs -c "new_window('Zen')" """
-    alt-cmd-ctrl-shift-enter = """exec-and-forget hs -c "new_window('Kitty')" """
+    # alt-cmd-ctrl-shift-enter = """exec-and-forget hs -c "new_window('Kitty')" """
+    alt-cmd-ctrl-shift-enter = """exec-and-forget hs -c "new_window('Ghostty')" """
     alt-cmd-ctrl-shift-f = """exec-and-forget hs -c "new_window('Finder')" """
     alt-cmd-ctrl-shift-v = """exec-and-forget open /Applications/Neovide.app --new"""
 

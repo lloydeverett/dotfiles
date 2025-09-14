@@ -126,11 +126,39 @@ cmp.setup.cmdline(':', {
   matching = { disallow_symbol_nonprefix_matching = false }
 })
 
-require("telescope").setup({
+local telescope = require("telescope")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+telescope.setup({
   defaults = {
     path_display = { "truncate" },
   },
+  extensions = {
+    zoxide = {},
+  },
 })
+telescope.load_extension("zoxide")
+vim.keymap.set("n", "<leader>e", function()
+  telescope.extensions.zoxide.list({
+    previewer = false,
+    attach_mappings = function(prompt_bufnr, map)
+      local open_with_oil = function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection and selection.value then
+          -- Open the selected directory with :e (or :Oil)
+          vim.cmd("e " .. vim.fn.fnameescape(selection.value))
+          -- Or if you want to use Oil plugin instead, use:
+          -- vim.cmd("Oil " .. vim.fn.fnameescape(selection.value))
+        end
+      end
+      -- Replace default select action with open_with_oil
+      map("i", "<CR>", open_with_oil)
+      map("n", "<CR>", open_with_oil)
+      return true
+    end,
+  })
+end, { noremap = true, silent = true })
 
 vim.diagnostic.config({ virtual_text = true })
 
@@ -148,18 +176,28 @@ require("mason").setup()
 
 require("mason-lspconfig").setup()
 
+local font_size = 16.5
+function update_font_size()
+  vim.o.guifont = "0xProto:h" .. font_size
+end
 if vim.g.neovide then
-  vim.o.guifont = "0xProto:h17"
+  update_font_size()
   vim.g.neovide_cursor_animation_length = 0.0
   vim.g.neovide_scroll_animation_length = 0.15
-  -- vim.g.neovide_scroll_animation_far_lines = 0
-  vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
-  vim.keymap.set('v', '<D-c>', '"+y')    -- Copy
-  vim.keymap.set('n', '<D-v>', '"+P')    -- Paste normal mode
-  vim.keymap.set('v', '<D-v>', '"+P')    -- Paste visual mode
-  vim.keymap.set('t', '<D-v>', '"+P')    -- Paste terminal mode
-  vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
-  vim.keymap.set('i', '<D-v>', '<C-R>+') -- Paste insert mode
+  vim.keymap.set('v', '<D-c>', '"+y')             -- copy
+  vim.keymap.set('n', '<D-v>', '"+p')             -- paste normal mode
+  vim.keymap.set('v', '<D-v>', '"+p')             -- paste visual mode
+  vim.keymap.set('c', '<D-v>', '<C-R>+')          -- paste command mode
+  vim.keymap.set('t', '<D-v>', '<C-\\><C-n>"+pi') -- paste terminal mode
+  vim.keymap.set('i', '<D-v>', '<Esc>"+pi')       -- paste insert mode
+  vim.keymap.set('n', '<D-->', function()         -- zoom out
+      font_size = font_size - 1
+      update_font_size()
+  end, { noremap = true, silent = true })
+  vim.keymap.set('n', '<D-=>', function()         -- zoom in
+      font_size = font_size + 1
+      update_font_size()
+  end, { noremap = true, silent = true })
 else
   require('neoscroll').setup({
       easing = "quadratic"

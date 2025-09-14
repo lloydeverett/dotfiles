@@ -102,7 +102,7 @@ nnoremap <leader><S-Tab> :tabprev<cr>
 
 nnoremap <leader>wp :e ~/sync/wiki/personal.md<cr>
 nnoremap <leader>wo :e ~/sync/wiki/work.md<cr>
-nnoremap <leader>ec :e ~/.config/nvim/init.vim<cr>
+nnoremap <leader>cc :e ~/.config/nvim/init.vim<cr>
 
 set nowrap
 
