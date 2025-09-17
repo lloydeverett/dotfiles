@@ -199,8 +199,24 @@ if vim.g.neovide then
       update_font_size()
   end, { noremap = true, silent = true })
 else
-  require('neoscroll').setup({
-      easing = "quadratic"
-  })
+  local cinnamon = require('cinnamon')
+  cinnamon.setup({})
+  vim.keymap.set("n", "<C-U>", function() cinnamon.scroll("<C-U>") end)
+  vim.keymap.set("n", "<C-D>", function() cinnamon.scroll("<C-D>") end)
+  vim.keymap.set("n", "{", function()  cinnamon.scroll("{", { mode = "window" }) end)
+  vim.keymap.set("n", "}", function() cinnamon.scroll("}", { mode = "window" }) end)
+  vim.keymap.set("n", "G", function() cinnamon.scroll("G", { mode = "window", max_delta = { time = 250 } }) end)
+  vim.keymap.set("n", "gg", function() cinnamon.scroll("gg", { mode = "window", max_delta = { time = 250 } }) end)
 end
+
+require("aerial").setup({
+  -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+  on_attach = function(bufnr)
+    -- Jump forwards/backwards with '{' and '}'
+    vim.keymap.set("n", "[[", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+    vim.keymap.set("n", "]]", "<cmd>AerialNext<CR>", { buffer = bufnr })
+  end,
+})
+-- You probably also want to set a keymap to toggle aerial
+vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
 

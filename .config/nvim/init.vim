@@ -39,7 +39,8 @@ call plug#begin()
     Plug 'powerman/vim-plugin-AnsiEsc'
     Plug 'farseer90718/vim-taskwarrior'
     Plug 'jvgrootveld/telescope-zoxide'
-    Plug 'karb94/neoscroll.nvim'
+    Plug 'declancm/cinnamon.nvim'
+    Plug 'stevearc/aerial.nvim'
 call plug#end()
 
 nnoremap <SPACE> <Nop>
