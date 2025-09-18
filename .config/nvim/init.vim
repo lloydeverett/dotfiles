@@ -41,6 +41,7 @@ call plug#begin()
     Plug 'jvgrootveld/telescope-zoxide'
     Plug 'declancm/cinnamon.nvim'
     Plug 'stevearc/aerial.nvim'
+    Plug 'MunifTanjim/nui.nvim'
 call plug#end()
 
 nnoremap <SPACE> <Nop>

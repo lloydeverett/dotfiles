@@ -220,3 +220,37 @@ require("aerial").setup({
 -- You probably also want to set a keymap to toggle aerial
 vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
 
+local Split = require("nui.split")
+local NuiTree = require("nui.tree")
+local event = require("nui.utils.autocmd").event
+
+local split = Split({
+  relative = "editor",
+  position = "bottom",
+  size = "20%",
+})
+
+
+-- mount/open the component
+vim.keymap.set("n", "<leader>n", function()
+    split:mount()
+    local m_node = NuiTree.Node({ text = "b" }, {
+          NuiTree.Node({ text = "b-1" }),
+          NuiTree.Node({ text = { "b-2", "b-3" } }),
+    })
+    m_node:expand()
+    local tree = NuiTree({
+      bufnr = split.bufnr,
+      nodes = {
+        NuiTree.Node({ text = "a" }),
+        m_node,
+      },
+    })
+    tree:render()
+end)
+
+-- unmount component when cursor leaves buffer
+split:on(event.BufLeave, function()
+  split:unmount()
+end)
+
