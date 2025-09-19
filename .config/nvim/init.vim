@@ -42,12 +42,15 @@ call plug#begin()
     Plug 'declancm/cinnamon.nvim'
     Plug 'stevearc/aerial.nvim'
     Plug 'MunifTanjim/nui.nvim'
+    Plug 'karb94/neoscroll.nvim'
+    Plug 'folke/twilight.nvim'
 call plug#end()
 
 nnoremap <SPACE> <Nop>
 let mapleader = " "
 
 lua require('init')
+lua require('treectl')
 
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-e> <Esc>
@@ -117,12 +120,7 @@ syntax on
 set autoread
 au CursorHold * checktime
 
-set foldlevelstart=99
-
 set expandtab autoindent tabstop=4 shiftwidth=4
-
-let g:vimwiki_emoji_enable = 1
-let g:vimwiki_folding = 'list'
 
 hi def link markdownH1 GruvboxAquaBold
 hi def link markdownH2 GruvboxGreenBold
@@ -163,4 +161,28 @@ call s:global_highlight_config()
 
 " macro to generate markdown title based on filename
 let @t = '0"%p$vhhd?\/v0dyypv$hr=Ä˝5:noh'
+
+let g:vimwiki_emoji_enable = 1
+
+" let g:vimwiki_folding = 'expr:quick'
+" set foldlevelstart=99
+" let g:vimwiki_folding = 'custom'
+" let g:vimwiki_fold_blank_lines = 0  " set to 1 to fold blank lines
+" let g:vimwiki_header_type = '#'     " set to '=' for wiki syntax
+" setlocal foldlevel=1
+" setlocal foldenable
+" setlocal foldmethod=expr
+" setlocal foldexpr=Fold(v:lnum)
+"  function! Fold(lnum)
+"    let fold_level = strlen(matchstr(getline(a:lnum), '^' . l:vimwiki_header_type . '\+'))
+"    if (fold_level)
+"      return '>' . fold_level  " start a fold level
+"    endif
+"    if getline(a:lnum) =~? '\v^\s*$'
+"      if (strlen(matchstr(getline(a:lnum + 1), '^' . l:vimwiki_header_type . '\+')) > 0 && !g:vimwiki_fold_blank_lines)
+"        return '-1' " don't fold last blank line before header
+"      endif
+"    endif
+"    return '=' " return previous fold level
+"  endfunction
 
