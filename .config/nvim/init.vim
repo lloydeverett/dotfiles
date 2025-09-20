@@ -6,6 +6,8 @@ set nu rnu
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#branch#enabled = 0
 
+let g:airline_section_z = '%2p%% %1l/%1L %1c'
+
 call plug#begin()
     " -- begin color schemes
     Plug 'fxn/vim-monochrome'
