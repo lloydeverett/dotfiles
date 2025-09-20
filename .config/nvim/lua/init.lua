@@ -1,4 +1,3 @@
-
 vim.g.vimwiki_list = {{
   path = os.getenv('HOME') .. '/sync/wiki',
   syntax = 'markdown',
