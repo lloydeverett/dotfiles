@@ -220,19 +220,6 @@ local function show_tree()
       end
     end, map_options)
 
-    -- collapse all nodes
-    -- vim.keymap.set("n", "H", function()
-    --   local updated = false
-    --
-    --   for _, node in pairs(tree.nodes.by_id) do
-    --     updated = node:collapse() or updated
-    --   end
-    --
-    --   if updated then
-    --     tree:render()
-    --   end
-    -- end, map_options)
-
     -- expand current node
     vim.keymap.set("n", "L", function()
       local node = tree:get_node()
@@ -241,19 +228,6 @@ local function show_tree()
         tree:render()
       end
     end, map_options)
-
-    -- expand all nodes
-    -- vim.keymap.set("n", "L", function()
-    --   local updated = false
-    --
-    --   for _, node in pairs(tree.nodes.by_id) do
-    --     updated = node:expand() or updated
-    --   end
-    --
-    --   if updated then
-    --     tree:render()
-    --   end
-    -- end, map_options)
 
     -- add new node under current node
     vim.keymap.set("n", "a", function()
