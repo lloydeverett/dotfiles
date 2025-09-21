@@ -1,9 +1,8 @@
-local Split = require("nui.split")
 local NuiTree = require("nui.tree")
 local NuiLine = require("nui.line")
 local event = require("nui.utils.autocmd").event
 
--- example provider implementation --------------------------------------------
+-- sample provider implementation ---------------------------------------------
 
 local empty_provider = {
   get_children = function(n) return {} end,       -- return list of child nodes
@@ -71,6 +70,8 @@ local function lazy_node_expand(n)
     -- TODO: reach out to data provider
     -- TODO: return value? does n:expand have a return value?
     -- TODO: actually call this below?
+    -- TODO: sanity check for leaking memory, by seeing if memory accumulates
+    --       when toggling a huge list
 end
 
 local function lazy_node_collapse(tree, n)
@@ -80,41 +81,111 @@ local function lazy_node_collapse(tree, n)
     end
     -- TODO: return value? does n:collapse have a return value?
     -- TODO: actually call this below?
+    -- TODO: sanity check for leaking memory, by seeing if memory accumulates
+    --       when toggling a huge list
+end
+
+-- TODO: function for labels, defaulting to just the label field
+--       but using a label function on the provider if one exists
+
+-- node init ------------------------------------------------------------------
+
+local function init_nodes()
+  return {
+    create_node("note", {
+      create_node("make your own notes here"),
+      create_node("can be based on files in ~/.treenote"),
+      create_node("and then each file in there looks like an expanded tree"),
+    }),
+    create_node("fs", {
+      create_node("/"),
+      create_node("~/", {
+        create_node("b-1-a"),
+        create_node("b-2-b"),
+      }),
+    }),
+    create_node("application"),
+    create_node("task"),
+    create_node("www", {
+      create_node("tab"),
+      create_node("bookmark"),
+    }),
+    create_node("llm"),
+    create_node("steampipe"),
+    create_node("zoxide"),
+    create_node("slack"),
+    create_node("email"),
+    create_node("shell", {
+      create_node("~/.bin"),
+      create_node("env"),
+      create_node("alias"),
+      create_node("bin"),
+      create_node("path"),
+      create_node("job"),
+    }),
+    create_node("music"),
+    create_node("git"),
+    create_node("vim", {
+      create_node("buffer"),
+      create_node("window"),
+      create_node("tab"),
+      create_node("register"),
+      create_node("symbol"),
+      create_node("mark"),
+      create_node("plugin"),
+    }),
+    create_node("raycast"),
+    create_node("kubectl"),
+    create_node("window"),
+    create_node("calendar", {
+      create_node("2024"),
+      create_node("2025", {
+        create_node("01 [January]", {
+            create_node("events"),
+            create_node("days")
+        }),
+      }),
+      create_node("2026"),
+    }),
+    create_node("systemd"),
+    create_node("os", {
+      create_node("details", {
+        create_node("battery: xx%"),
+      }),
+      create_node("storage"),
+      create_node("process"),
+      create_node("netstat"),
+    }),
+    create_node("brew"),
+    create_node("db", {
+      create_node("sqlite"),
+      create_node("postgres"),
+      create_node("mysql"),
+    }),
+    create_node("dictionary", {
+      create_node("english"),
+    }),
+    create_node("treectl"),
+    create_node("tz"),
+    create_node("wikipedia")
+  }
 end
 
 -- rendering & bindings -------------------------------------------------------
 
+vim.g.buf_suffix = 0
+
 local function show_tree()
+    local winid = vim.api.nvim_get_current_win()
 
-    local split = Split({
-      relative = "editor",
-      position = "bottom",
-      size = "40%",
-    })
-
-    split:mount()
-
-    -- quit
-    split:map("n", "q", function()
-      split:unmount()
-    end, { noremap = true })
+    local bufnr = vim.api.nvim_create_buf(true, true)
+    vim.api.nvim_buf_set_name(bufnr, "treectl#" .. vim.g.buf_suffix)
+    vim.g.buf_suffix = vim.g.buf_suffix + 1
+    vim.api.nvim_win_set_buf(winid, bufnr)
 
     local tree = NuiTree({
-      winid = split.winid,
-      nodes = {
-        create_node("a"),
-        create_node("b", {
-          create_node("b-1"),
-          create_node("b-2", {
-            create_node("b-1-a"),
-            create_node("b-2-b"),
-          }),
-        }),
-        create_node("c", {
-          create_node("c-1"),
-          create_node("c-2"),
-        }),
-      },
+      winid = winid,
+      nodes = init_nodes(),
       prepare_node = function(node)
         local line = NuiLine()
 
@@ -123,7 +194,7 @@ local function show_tree()
         if lazy_node_has_children(node) then
           line:append(node:is_expanded() and "- " or "+ ", "SpecialChar")
         else
-          line:append("  ")
+          line:append("- ", "LineNr")
         end
 
         line:append(node.text)
@@ -132,16 +203,16 @@ local function show_tree()
       end,
     })
 
-    local map_options = { noremap = true, nowait = true }
+    local map_options = { noremap = true, nowait = true, buffer = true }
 
     -- print current node
-    split:map("n", "<CR>", function()
+    vim.keymap.set("n", "<CR>", function()
       local node = tree:get_node()
       print(vim.inspect(node))
     end, map_options)
 
     -- collapse current node
-    split:map("n", "h", function()
+    vim.keymap.set("n", "H", function()
       local node = tree:get_node()
 
       if node:collapse() then
@@ -150,20 +221,20 @@ local function show_tree()
     end, map_options)
 
     -- collapse all nodes
-    split:map("n", "H", function()
-      local updated = false
-
-      for _, node in pairs(tree.nodes.by_id) do
-        updated = node:collapse() or updated
-      end
-
-      if updated then
-        tree:render()
-      end
-    end, map_options)
+    -- vim.keymap.set("n", "H", function()
+    --   local updated = false
+    --
+    --   for _, node in pairs(tree.nodes.by_id) do
+    --     updated = node:collapse() or updated
+    --   end
+    --
+    --   if updated then
+    --     tree:render()
+    --   end
+    -- end, map_options)
 
     -- expand current node
-    split:map("n", "l", function()
+    vim.keymap.set("n", "L", function()
       local node = tree:get_node()
 
       if node:expand() then
@@ -172,7 +243,7 @@ local function show_tree()
     end, map_options)
 
     -- expand all nodes
-    -- split:map("n", "L", function()
+    -- vim.keymap.set("n", "L", function()
     --   local updated = false
     --
     --   for _, node in pairs(tree.nodes.by_id) do
@@ -185,7 +256,7 @@ local function show_tree()
     -- end, map_options)
 
     -- add new node under current node
-    split:map("n", "a", function()
+    vim.keymap.set("n", "a", function()
       local node = tree:get_node()
       tree:add_node(
         create_node("d", {
@@ -197,7 +268,7 @@ local function show_tree()
     end, map_options)
 
     -- delete current node
-    split:map("n", "d", function()
+    vim.keymap.set("n", "d", function()
       local node = tree:get_node()
       tree:remove_node(node:get_id())
       tree:render()
