@@ -1,3 +1,7 @@
+
+-- TODO: for lazy nodes, sanity check for leaking memory, by seeing if memory accumulates
+--       when toggling a huge list
+
 math.randomseed(os.time())
 
 local NuiTree = require("nui.tree")
@@ -6,73 +10,32 @@ local event = require("nui.utils.autocmd").event
 local create_node = require("nodeutils").create_node
 local create_lazy_node = require("nodeutils").create_lazy_node
 local modfs = require("modfs")
+local uiutils = require("uiutils")
 
--- sample provider implementations --------------------------------------------
+-- sample provider implementations ------------------------------------------------------
 
 local empty_provider = {
-  get_children = function(n) return {} end,       -- return list of child nodes
-  has_children = function(n) return false end,    -- true if node has children
+  -- will be called to supply children when opts.lazy == true:
+  get_children = function(self, n) return {} end,     -- return list of child nodes
+  has_children = function(self, n) return false end,  -- true if node has children
+  -- will be called if text == nil:
+  text = function(self, n) return "" end,             -- text to display
+  slug = function(self, n) return "" end,             -- contribution to node path
+  is_stable = function(self, n) return "" end,        -- node has deterministic path?
 }
 
 local dummy_provider = {
-  get_children = function(n) return {
+  get_children = function(self, n) return {
     create_node("foo"),
     create_node("bar"),
   } end,
-  has_children = function(n) return true end,
+  has_children = function(self, n) return true end,
+  text = function(self, n) return "dummy_node" end,
+  slug = function(self, n) return "dummy_node" end,
+  is_stable = function(self, n) return true end,
 }
 
--- lazily supply tree nodes ---------------------------------------------------
-
-local function is_node_lazy(n)
-    return n.opts ~= nil and n.opts.lazy == true
-end
-
-local function lazy_node_get_provider(n)
-    if not is_node_lazy(n) then
-        return nil
-    end
-    return n.opts.provider
-end
-
-local function lazy_node_has_children(n)
-    local provider = lazy_node_get_provider(n)
-    if provider == nil then
-        return n:has_children()
-    end
-    return provider:has_children(n)
-end
-
-local function lazy_node_expand(tree, n)
-    local provider = lazy_node_get_provider(n)
-    if provider ~= nil then
-        for index, child_node in ipairs(provider:get_children(n)) do
-            tree:add_node(child_node, n:get_id())
-        end
-    end
-    n:expand()
-    -- TODO: sanity check for leaking memory, by seeing if memory accumulates
-    --       when toggling a huge list
-    -- TODO: node path tracking + notion of stable paths
-end
-
-local function lazy_node_collapse(tree, n)
-    n:collapse()
-    if is_node_lazy(n) then
-        for index, child_id in ipairs(n:get_child_ids()) do
-            tree:remove_node(child_id)
-        end
-    end
-    -- TODO: sanity check for leaking memory, by seeing if memory accumulates
-    --       when toggling a huge list
-    -- TODO: node path tracking + notion of stable paths
-end
-
--- TODO: function for labels, defaulting to just the label field
---       but using a label function on the provider if one exists
---       maybe check if label is nil, and if so then use that function
-
--- node init ------------------------------------------------------------------
+-- node init ----------------------------------------------------------------------------
 
 local function init_nodes()
   return {
@@ -93,6 +56,7 @@ local function init_nodes()
     create_node("steampipe"),
     create_node("zoxide"),
     create_node("slack"),
+    create_node("man"),
     create_node("email"),
     create_node("shell", {
       create_node("~/.bin"),
@@ -104,6 +68,7 @@ local function init_nodes()
     }),
     create_node("music"),
     create_node("git"),
+    create_node("gh"),
     create_node("vim", {
       create_node("buffer"),
       create_node("window"),
@@ -148,9 +113,17 @@ local function init_nodes()
     create_node("tz"),
     create_node("weather"),
     create_node("unicode"),
+    create_node("whatsapp"),
+    create_node("takeout"),
     create_node("places"),
+    create_node("docker"),
+    create_node("podman"),
     create_node("palette"),
     create_node("gradient"),
+    create_node("youtube"),
+    create_node("rng", {
+      create_node("uuidv4 = "),
+    }),
     create_node("syntax", {
       create_node("C"),
       create_node("C++"),
@@ -160,7 +133,7 @@ local function init_nodes()
   }
 end
 
--- rendering & bindings -------------------------------------------------------
+-- rendering & bindings -----------------------------------------------------------------
 
 vim.g.buf_suffix = 0
 
@@ -181,13 +154,13 @@ local function show_tree()
 
         line:append(string.rep("  ", node:get_depth() - 1))
 
-        if lazy_node_has_children(node) then
+        if uiutils.lazy_node_has_children(node) then
           line:append(node:is_expanded() and "- " or "+ ", "SpecialChar")
         else
           line:append("- ", "LineNr")
         end
 
-        line:append(node.text)
+        line:append(uiutils.node_get_text(node))
 
         return line
       end,
@@ -210,14 +183,14 @@ local function show_tree()
     -- collapse current node
     vim.keymap.set("n", "H", function()
       local node = tree:get_node()
-      lazy_node_collapse(tree, node)
+      uiutils.lazy_node_collapse(tree, node)
       tree:render()
     end, map_options)
 
     -- expand current node
     vim.keymap.set("n", "L", function()
       local node = tree:get_node()
-      lazy_node_expand(tree, node)
+      uiutils.lazy_node_expand(tree, node)
       tree:render()
     end, map_options)
 

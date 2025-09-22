@@ -166,6 +166,8 @@ let @t = '0"%p$vhhd?\/v0dyypv$hr=Ä˝5:noh'
 
 let g:vimwiki_emoji_enable = 1
 
+xnoremap p "_dP
+
 " let g:vimwiki_folding = 'expr:quick'
 " set foldlevelstart=99
 " let g:vimwiki_folding = 'custom'

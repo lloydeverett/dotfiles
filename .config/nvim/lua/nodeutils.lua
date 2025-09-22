@@ -11,20 +11,20 @@ function M.uuid()
   end)
 end
 
-function M.create_node_with_id(label, id, children, opts, details)
-    return NuiTree.Node({ text = label, id = id, opts = opts, details = details }, children)
+function M.create_node_with_id(text, id, children, opts, details)
+    return NuiTree.Node({ text = text, id = id, opts = opts, details = details }, children)
 end
 
-function M.create_node(label, children, opts, details)
-    return M.create_node_with_id(label, M.uuid(), children, opts, details)
+function M.create_node(text, children, opts, details)
+    return M.create_node_with_id(text, M.uuid(), children, opts, details)
 end
 
-function M.create_lazy_node(label, provider, details)
-    return M.create_node(label, {}, { lazy = true, provider = provider }, details)
+function M.create_lazy_node(text, provider, details)
+    return M.create_node(text, {}, { lazy = true, provider = provider }, details)
 end
 
-function M.create_lazy_node_with_id(label, id, provider, details)
-    return M.create_node_with_id(label, id, {}, {
+function M.create_lazy_node_with_id(text, id, provider, details)
+    return M.create_node_with_id(text, id, {}, {
         lazy = true,
         provider = provider
     }, details)
