@@ -181,7 +181,7 @@ function update_font_size()
 end
 if vim.g.neovide then
   update_font_size()
-  vim.o.guifont = "0xProto:h17"
+  vim.o.guifont = "0xProto:h16"
   vim.g.neovide_cursor_animation_length = 0.0
   vim.g.neovide_scroll_animation_length = 0.15
   vim.keymap.set('v', '<D-c>', '"+y')             -- copy
@@ -203,8 +203,8 @@ else
   cinnamon.setup({})
   vim.keymap.set("n", "<C-U>", function() cinnamon.scroll("<C-U>") end)
   vim.keymap.set("n", "<C-D>", function() cinnamon.scroll("<C-D>") end)
-  vim.keymap.set("n", "{", function()  cinnamon.scroll("{", { mode = "window" }) end)
-  vim.keymap.set("n", "}", function() cinnamon.scroll("}", { mode = "window" }) end)
+  -- vim.keymap.set("n", "{", function()  cinnamon.scroll("{", { mode = "window" }) end)
+  -- vim.keymap.set("n", "}", function() cinnamon.scroll("}", { mode = "window" }) end)
   vim.keymap.set("n", "G", function() cinnamon.scroll("G", { mode = "window", max_delta = { time = 250 } }) end)
   vim.keymap.set("n", "gg", function() cinnamon.scroll("gg", { mode = "window", max_delta = { time = 250 } }) end)
 end

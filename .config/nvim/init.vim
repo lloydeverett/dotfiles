@@ -8,6 +8,8 @@ let g:airline#extensions#branch#enabled = 0
 
 let g:airline_section_z = '%2p%% %1l/%1L %1c'
 
+let g:vim_markdown_folding_disabled = 1
+
 call plug#begin()
     " -- begin color schemes
     Plug 'fxn/vim-monochrome'
@@ -23,6 +25,7 @@ call plug#begin()
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
     Plug 'godlygeek/tabular'
     Plug 'preservim/vim-markdown'
+    Plug 'preservim/nerdtree'
     Plug 'tpope/vim-fugitive'
     Plug 'LukasPietzschmann/telescope-tabs'
     Plug 'vim-airline/vim-airline'
@@ -52,7 +55,7 @@ nnoremap <SPACE> <Nop>
 let mapleader = " "
 
 lua require('init')
-lua require('treectl')
+lua require('treectl.treectl')
 
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-e> <Esc>
@@ -168,8 +171,11 @@ let g:vimwiki_emoji_enable = 1
 
 xnoremap p "_dP
 
+set foldmethod=indent
+set foldlevelstart=99
+autocmd FileType markdown setlocal foldlevelstart=99
+
 " let g:vimwiki_folding = 'expr:quick'
-" set foldlevelstart=99
 " let g:vimwiki_folding = 'custom'
 " let g:vimwiki_fold_blank_lines = 0  " set to 1 to fold blank lines
 " let g:vimwiki_header_type = '#'     " set to '=' for wiki syntax
