@@ -169,6 +169,16 @@ function M.current_node(tree)
     return node
 end
 
+function M.find_node(nodes, node_id)
+    local index = nil
+    for i, node in ipairs(nodes) do
+        if node:get_id() == node_id then
+            return i
+        end
+    end
+    return nil
+end
+
 function M.place_cursor_on_prev_top_level_node(tree)
     local ancestors = M.node_ancestors(tree, M.current_node(tree))
     local row, col = M.current_cursor_pos()
@@ -181,14 +191,7 @@ function M.place_cursor_on_prev_top_level_node(tree)
     end
 
     local toplevel_nodes = tree:get_nodes()
-    local index = nil
-    for i, node in ipairs(toplevel_nodes) do
-        if node:get_id() == toplevel_node_id then
-            index = i
-            break
-        end
-    end
-
+    local index = M.find_node(toplevel_nodes, toplevel_node_id)
     if index == nil then
         return
     end
@@ -202,19 +205,10 @@ end
 
 function M.place_cursor_on_next_top_level_node(tree)
     local ancestors = M.node_ancestors(tree, M.current_node(tree))
-    local row, col = M.current_cursor_pos()
     local toplevel_node_id = ancestors[#ancestors]
-    local toplevel_node, toplevel_node_start, toplevel_node_end = tree:get_node(toplevel_node_id)
 
     local toplevel_nodes = tree:get_nodes()
-    local index = nil
-    for i, node in ipairs(toplevel_nodes) do
-        if node:get_id() == toplevel_node_id then
-            index = i
-            break
-        end
-    end
-
+    local index = M.find_node(toplevel_nodes, toplevel_node_id)
     if index == nil then
         return
     end
@@ -224,6 +218,54 @@ function M.place_cursor_on_next_top_level_node(tree)
     end
 
     M.place_cursor_on_node(tree, toplevel_nodes[index])
+end
+
+function M.place_cursor_on_parent_or_prev_open_top_level_node(tree)
+    local ancestors = M.node_ancestors(tree, M.current_node(tree))
+    local row, col = M.current_cursor_pos()
+
+    if #ancestors == 1 then
+        local toplevel_nodes = tree:get_nodes()
+        local index = M.find_node(toplevel_nodes, ancestors[1])
+        if index == nil then
+            return
+        end
+        while true do
+            index = index - 1
+            if index < 1 then
+                M.place_cursor_on_node(tree, toplevel_nodes[1])
+                return
+            end
+            if toplevel_nodes[index]:is_expanded() then
+                M.place_cursor_on_node(tree, toplevel_nodes[index])
+                return
+            end
+        end
+    elseif #ancestors > 1 then
+        M.place_cursor_on_node(tree, tree:get_node(ancestors[2]))
+    end
+end
+
+function M.place_cursor_on_next_open_top_level_node(tree)
+    local ancestors = M.node_ancestors(tree, M.current_node(tree))
+    local toplevel_node_id = ancestors[#ancestors]
+    local toplevel_nodes = tree:get_nodes()
+
+    local index = M.find_node(toplevel_nodes, ancestors[1])
+    if index == nil then
+        return
+    end
+    while true do
+        index = index + 1
+        if index > #toplevel_nodes then
+            M.place_cursor_on_node(tree, toplevel_nodes[#toplevel_nodes])
+            return
+        end
+        if toplevel_nodes[index]:is_expanded() then
+            M.place_cursor_on_node(tree, toplevel_nodes[index])
+            return
+        end
+    end
 end
 
 function M.node_ancestors(tree, node)
@@ -238,7 +280,7 @@ function M.node_ancestors(tree, node)
 end
 
 function M.preserve_cursor_selection(tree, callback)
-    selection_ancestor_ids  = M.node_ancestors(tree, M.current_node(tree))
+    local selection_ancestor_ids  = M.node_ancestors(tree, M.current_node(tree))
 
     -- do some work that may disrupt cursor position
     -- typically this would involve a call to tree:render()

@@ -261,6 +261,16 @@ local function show_tree()
         uiutils.place_cursor_on_prev_top_level_node(tree)
     end, map_options)
 
+    -- parent, or previous open top level node if at top level
+    vim.keymap.set("n", "[[", function()
+        uiutils.place_cursor_on_parent_or_prev_open_top_level_node(tree)
+    end, map_options)
+
+    -- next open top level node
+    vim.keymap.set("n", "]]", function()
+        uiutils.place_cursor_on_next_open_top_level_node(tree)
+    end, map_options)
+
     -- TODO traverse up tree and then to prev *open* top level node with [[
 
     -- TODO traverse to next *open* top level node with ]]
