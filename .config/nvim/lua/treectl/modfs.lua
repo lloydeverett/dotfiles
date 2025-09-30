@@ -105,7 +105,7 @@ return function()
 
     local M = {}
 
-    M._show_hidden = false
+    M._show_hidden = vim.g["treectl#modfs#show_hidden_by_default"] or false
     function M.set_show_hidden(value)
         M._show_hidden = value
     end
