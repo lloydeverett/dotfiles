@@ -1,16 +1,12 @@
 math.randomseed(os.time())
 
 local NuiTree = require("nui.tree")
-local NuiLine = require("nui.line")
-local event = require("nui.utils.autocmd").event
 local luautils = require("treectl.luautils")
 local nodeutils = require("treectl.nodeutils")
 local uiutils = require("treectl.uiutils")
 local modfs_init = require("treectl.modfs")
 
-local create_separator_line_node = nodeutils.create_separator_line_node
 local create_node = nodeutils.create_node
-local create_lazy_node = nodeutils.create_lazy_node
 
 -- sample provider implementations ------------------------------------------------------
 

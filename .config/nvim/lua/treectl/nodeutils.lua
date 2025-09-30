@@ -1,5 +1,4 @@
 local NuiTree = require("nui.tree")
-local random = math.random
 
 local M = {}
 
