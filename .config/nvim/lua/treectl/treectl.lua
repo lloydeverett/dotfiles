@@ -70,8 +70,6 @@ local function init_nodes()
     local root = {}
     luautils.insert_all(root, modules.modfs.root_nodes())
     table.insert(root, create_node("todo", {
-        create_node("up tree / prev expanded top-level node with [["),
-        create_node("next expanded top-level node with ]]"),
         create_node("display ../ as a hidden file"),
         create_node("shift + enter to zoom if current node has stable path"),
         create_node("popup for node preview + keybindings on enter"),
