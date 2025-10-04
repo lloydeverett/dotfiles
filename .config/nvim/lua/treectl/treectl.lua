@@ -16,9 +16,13 @@ local function init_nodes()
     }
 
     local root = {}
+    table.insert(root, node("Shift-H = collapse   . = toggle           ? = toggle help            Shift-L = expand               ", {}, {}, { help = true, bare = true }))
+    table.insert(root, node("} = next top-level   { = prev top-level   ]] = next open top-level   [[ = up or prev open top-level ", {}, {}, { help = true, bare = true }))
+    table.insert(root, node("g. = toggle hidden files                                                                            ", {}, {}, { help = true, bare = true }))
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())
     table.insert(root, node("todo", {
+        node("todo: scratch buffers that display as text with refs in insert mode, but in normal mode refs resolve to tree nodes and render as tree nodes"),
         node("help mode that unhides nodes that have been marked with an opt that designates them as help-only"),
         node("you could also have an opt for 'comment' label suffixes that are only rendered when in help mode"),
         node("shift + enter to zoom if current node has stable path -- although it'd be nice to zoom into a folder without it necessarily having a fixed placement in the tree, so work that out too"),
@@ -86,7 +90,6 @@ local function init_nodes()
       node("postgres"),
       node("mysql"),
     }))
-    table.insert(root, node("treectl"))
     table.insert(root, node("weather"))
     table.insert(root, node("takeout"))
     table.insert(root, node("places"))
@@ -95,6 +98,7 @@ local function init_nodes()
     table.insert(root, node("reference", {
         node("palette"),
         node("gradient"),
+        node("treectl"),
         node("unicode"),
         node("english"),
         node("tz"),

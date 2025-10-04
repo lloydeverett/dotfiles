@@ -19,7 +19,7 @@ end
 function M.map(array, transformation)
     local result = {}
     for i, v in ipairs(array) do
-        result[i] = transformation(v)
+        result[i] = transformation(v, i)
     end
     return result
 end

@@ -8,7 +8,7 @@ local M = {}
 
 M.empty_provider = {
     -- will be called to supply children when opts.lazy == true:
-    create_children = function(self, n) return {} end, -- return list of child nodes
+    create_children = function(self, n) return {} end,   -- return list of child nodes
     allows_expand = function(self, n) return false end,  -- true to show expand toggle
     refresh_children = function(self, n, current_children) return nil end,
             -- function used for niche case when we wish to (e.g. in a keybinding) update
@@ -21,8 +21,7 @@ M.empty_provider = {
             --     * implementation may assume node is currently expanded
     -- will be called if text == nil:
     text = function(self, n) return "" end,             -- text to display
-    slug = function(self, n) return "" end,             -- contribution to node path
-    is_stable = function(self, n) return "" end,        -- node has deterministic path?
+    path = function(self, n) return nil end,            -- stable path to node; otherwise return nil
 }
 
 M.dummy_provider = {
@@ -33,8 +32,7 @@ M.dummy_provider = {
     allows_expand = function(self, n) return true end,
     refresh_children = function(self, n, current_children) return nil end,
     text = function(self, n) return "dummy_node" end,
-    slug = function(self, n) return "dummy_node" end,
-    is_stable = function(self, n) return true end,
+    path = function(self, n) return nil end,
 }
 
 M.stress_test_provider = {
@@ -48,8 +46,7 @@ M.stress_test_provider = {
     allows_expand = function(self, n) return true end,
     refresh_children = function(self, n, current_children) return nil end,
     text = function(self, n) return "stress_test_node" end,
-    slug = function(self, n) return "stress_test_node" end,
-    is_stable = function(self, n) return true end,
+    path = function(self, n) return nil end,
 }
 
 -- helpers to define new providers ------------------------------------------------------
@@ -62,8 +59,7 @@ function M.simple_provider(create_children_fn)
         allows_expand = function(self, n) return true end,
         refresh_children = function(self, n, current_children) return nil end,
         text = function(self, n) return n.text end,
-        slug = function(self, n) return n.text end,
-        is_stable = function(self, n) return false end, -- safer to assume not, caller can override if need be
+        path = function(self, n) return nil end,
     }
 end
 

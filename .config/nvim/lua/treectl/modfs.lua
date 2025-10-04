@@ -2,10 +2,13 @@ local nodes = require("treectl.nodes")
 local luautils = require("treectl.luautils")
 local nvimutils = require("treectl.nvimutils")
 
+local help_suffix_treectl_dir = " - displays contents of ~/.treectl when present"
+local help_suffix_zoxide = " - displays frequent cd directories when zoxide is on the $PATH"
+local home_path = nvimutils.home_path()
+
 return function()
 local M = {}
 
-local home_path = luautils.path_concat(os.getenv("HOME"), "")
 local cwd = luautils.path_concat(vim.fn.getcwd(), "")
 
 M._show_hidden = vim.g["treectl#modfs#show_hidden_by_default"] or false
@@ -77,12 +80,8 @@ local function init_file_provider()
           return n.details.filename, highlight
       end,
 
-      slug = function(self, n)
-          return n.details.filename
-      end,
-
-      is_stable = function(self, n)
-          return true
+      path = function(self, n)
+          return n.details.path
       end,
 
       refresh_children = function(self, n, current_children)
@@ -109,12 +108,12 @@ local function init_file_provider()
     }
 end
 
-local function create_directory_node(provider, label, path)
+local function create_directory_node(provider, label, path, help_suffix)
     return nodes.lazy_node(
         label,
         provider,
         { path = path, filename = nil, is_directory = true },
-        { hl = "directory" })
+        { hl = "directory", help_suffix = help_suffix })
 end
 
 M._directory_provider = init_file_provider()
@@ -128,31 +127,28 @@ function M.root_nodes()
 end
 
 if cwd ~= home_path and cwd ~= "/" then
-    local text = cwd
-    if cwd:sub(1, #home_path) == home_path then
-        text = "~/" .. cwd:sub(#home_path + 1)
-    end
-    table.insert(M._root_nodes, create_directory_node(M._directory_provider, text, cwd))
+    local text = nvimutils.try_shorten_path(cwd)
+    table.insert(M._root_nodes, create_directory_node(M._directory_provider, text, cwd, " - current working directory"))
 end
 
-table.insert(M._root_nodes, create_directory_node(M._directory_provider, "~/", home_path))
-table.insert(M._root_nodes, create_directory_node(M._directory_provider, "/", "/"))
+table.insert(M._root_nodes, create_directory_node(M._directory_provider, "~/", home_path, " - home directory"))
+table.insert(M._root_nodes, create_directory_node(M._directory_provider, "/", "/", " - root directory"))
 
 if nvimutils.resolve_type(home_path .. ".treectl") == "directory" then
-    table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl"))
+    table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl", help_suffix_treectl_dir))
 else
     table.insert(M._root_nodes, nodes.node("t/", {}, {}, {
-        label = "t/ - displays contents of ~/.treectl when present",
+        label = "t/" .. help_suffix_treectl_dir,
         help = true
     }))
 end
 
 if false then -- vim.fn.executable("zoxide") == 1 then
     -- TODO implement
-    table.insert(M._root_nodes, nodes.node("z/", {}, {}, { hl = "directory" }))
+    table.insert(M._root_nodes, nodes.node("z/", {}, {}, { hl = "directory", help_suffix = help_suffix_zoxide }))
 else
     table.insert(M._root_nodes, nodes.node("z/", {}, {}, {
-        label = "z/ - displays frequent cd directories when zoxide is on the $PATH",
+        label = "z/" .. help_suffix_zoxide,
         help = true
     }))
 end

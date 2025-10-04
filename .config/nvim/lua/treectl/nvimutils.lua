@@ -1,8 +1,21 @@
-local uv = vim.loop
-
 local luautils = require("treectl.luautils")
 
+local uv = vim.loop
+
 local M = {}
+
+M._home_path = luautils.path_concat(os.getenv("HOME"), "")
+
+function M.home_path()
+    return M._home_path
+end
+
+function M.try_shorten_path(path)
+    if path:sub(1, #M._home_path) == M._home_path then
+        return "~/" .. path:sub(#M._home_path + 1)
+    end
+    return path
+end
 
 function M.resolve_type(path)
     local stat = uv.fs_stat(path)
