@@ -100,6 +100,8 @@ nnoremap _ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
 nnoremap <leader>_ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
 nnoremap + <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
 nnoremap <leader>+ <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
+nnoremap ) <cmd>split<cr><cmd>wincmd j<cr><cmd>terminal timr-tui<cr>
+nnoremap <leader>) <cmd>split<cr><cmd>wincmd j<cr><cmd>terminal timr-tui<cr>
 
 " close terminal as soon as shell exits
 autocmd TermClose * if !v:event.status | exe 'bdelete! '..expand('<abuf>') | endif
