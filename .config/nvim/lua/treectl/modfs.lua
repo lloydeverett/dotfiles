@@ -141,17 +141,18 @@ table.insert(M._root_nodes, create_directory_node(M._directory_provider, "/", "/
 if nvimutils.resolve_type(home_path .. ".treectl") == "directory" then
     table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl"))
 else
-    -- TODO opts s.t. this only displays in help mode
-    table.insert(M._root_nodes, nodes.node("t/", {}, {}, { hl = "comment" }))
+    table.insert(M._root_nodes, nodes.node("t/", {}, {}, {
+        label = "t/ - displays contents of ~/.treectl when present",
+        help = true
+    }))
 end
 
 if false then -- vim.fn.executable("zoxide") == 1 then
     -- TODO implement
     table.insert(M._root_nodes, nodes.node("z/", {}, {}, { hl = "directory" }))
 else
-    -- TODO opts s.t. this only displays in help mode
     table.insert(M._root_nodes, nodes.node("z/", {}, {}, {
-        label = "z/ - frequent dirs; requires 'zoxide' installation",
+        label = "z/ - displays frequent cd directories when zoxide is on the $PATH",
         help = true
     }))
 end
