@@ -7,9 +7,6 @@ local uiutils = require("treectl.uiutils")
 local modfs_init = require("treectl.modfs")
 local modnvim_init = require("treectl.modnvim")
 
-local node = nodes.node
-local bare_help_node = nodes.bare_help_node
-
 local function init_nodes()
     local modules = {
         modfs = modfs_init(),
@@ -17,100 +14,108 @@ local function init_nodes()
     }
 
     local root = {}
-    table.insert(root, bare_help_node("? = toggle help      Shift-H = collapse   Shift-L = expand              . = toggle                     "))
-    table.insert(root, bare_help_node("} = next top-level   { = prev top-level   ]] = next open top-level      [[ = up or prev open top-level "))
-    table.insert(root, bare_help_node("g. = toggle hidden   ⏎ = default action   Shift+⏎ = actions & preview   _ = zoom into                  "))
-    table.insert(root, bare_help_node("- = zoom up                                                                                            "))
+    table.insert(root, nodes.bare_help_node("? = toggle help      Shift-H = collapse   Shift-L = expand              . = toggle                     "))
+    table.insert(root, nodes.bare_help_node("} = next top-level   { = prev top-level   ]] = next open top-level      [[ = up or prev open top-level "))
+    table.insert(root, nodes.bare_help_node("g. = toggle hidden   ⏎ = default action   Shift+⏎ = actions & preview   _ = zoom into                  "))
+    table.insert(root, nodes.bare_help_node("- = zoom up                                                                                            "))
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())
-    table.insert(root, node("todo", {
-        node("todo: scratch buffers that display as text with refs in insert mode, but in normal mode refs resolve to tree nodes and render as tree nodes"),
-        node("build git support into fs module"),
-        node("shift + enter to zoom if current node has stable path -- although it'd be nice to zoom into a folder without it necessarily having a fixed placement in the tree, so work that out too"),
-        node("maybe uri syntax along the lines of: provider-name://arbitrary/path/defined/by/provider; where provdier can return path for node or resolve a path"),
-        node("and, if the provider wants, it can use its parent node to help it figure out the path when asked to return a path, but it might not need to in the filesystem case"),
-        node("popup for node preview + keybindings on enter"),
-        node("optionally display preview + keybindings in a split too"),
-        node("allow searching by opening a scratch buffer filled with cached fully expanded node contents that links back to the real tree " ..
+    table.insert(root, nodes.node("pin", {
+      nodes.node("pin nodes from other subtrees here"),
+    }, {}, { hl = "GruvboxPurple" }))
+    table.insert(root, nodes.node("note", {
+      nodes.node("make your own notes here"),
+      nodes.node("can be based on files in ~/.treenote"),
+      nodes.node("and then each file in there looks like an expanded tree"),
+    }, {}, { hl = "GruvboxPurple" }))
+    table.insert(root, nodes.node("task", {}, {}, { hl = "GruvboxPurple" }))
+    table.insert(root, nodes.node("calendar", {
+      nodes.node("2024"),
+      nodes.node("2025", {
+        nodes.node("01 [January]", {
+            nodes.node("events"),
+            nodes.node("days")
+        }),
+      }),
+      nodes.node("2026"),
+    }, {}, { hl = "GruvboxPurple" }))
+    table.insert(root, nodes.node("timer", {
+        nodes.node("Start 5min", {}, {}, { hl = "GruvboxPurple", indicator = "action" }),
+        nodes.node("Start 15min", {}, {}, { hl = "GruvboxPurple", indicator = "action" }),
+        nodes.node("Start...", {}, {}, { hl = "GruvboxPurple", indicator = "action" }),
+    }, {}, { hl = "GruvboxPurple" }))
+    table.insert(root, nodes.node("todo", {
+        nodes.node("clearlist gradients as part of note function?"),
+        nodes.node("maybe also ties in with pomodoro / calendar?"),
+        nodes.node("todo: scratch buffers that display as text with refs in insert mode, but in normal mode refs resolve to tree nodes and render as tree nodes"),
+        nodes.node("build git support into fs module"),
+        nodes.node("shift + enter to zoom if current node has stable path -- although it'd be nice to zoom into a folder without it necessarily having a fixed placement in the tree, so work that out too"),
+        nodes.node("maybe uri syntax along the lines of: provider-name://arbitrary/path/defined/by/provider; where provdier can return path for node or resolve a path"),
+        nodes.node("and, if the provider wants, it can use its parent node to help it figure out the path when asked to return a path, but it might not need to in the filesystem case"),
+        nodes.node("popup for node preview + keybindings on enter"),
+        nodes.node("optionally display preview + keybindings in a split too"),
+        nodes.node("allow searching by opening a scratch buffer filled with cached fully expanded node contents that links back to the real tree " ..
                     "(although some nodes you don't need to use a cache, e.g. calendar, because you can just expand all the data anyway)"),
     }))
-    table.insert(root, node("note", {
-      node("make your own notes here"),
-      node("can be based on files in ~/.treenote"),
-      node("and then each file in there looks like an expanded tree"),
+    table.insert(root, nodes.node("www", {
+      nodes.node("tab"),
+      nodes.node("bookmark"),
     }))
-    table.insert(root, node("task"))
-    table.insert(root, node("www", {
-      node("tab"),
-      node("bookmark"),
+    table.insert(root, nodes.node("llm"))
+    table.insert(root, nodes.node("steampipe"))
+    table.insert(root, nodes.node("matrix", {
+        nodes.node("slack"),
+        nodes.node("whatsapp"),
     }))
-    table.insert(root, node("llm"))
-    table.insert(root, node("steampipe"))
-    table.insert(root, node("matrix", {
-        node("slack"),
-        node("whatsapp"),
+    table.insert(root, nodes.node("man"))
+    table.insert(root, nodes.node("email"))
+    table.insert(root, nodes.node("shell", {
+      nodes.node("env"),
+      nodes.node("alias"),
+      nodes.node("bin"),
+      nodes.node("path"),
+      nodes.node("job"),
     }))
-    table.insert(root, node("man"))
-    table.insert(root, node("email"))
-    table.insert(root, node("shell", {
-      node("env"),
-      node("alias"),
-      node("bin"),
-      node("path"),
-      node("job"),
-    }))
-    table.insert(root, node("music"))
-    table.insert(root, node("git"))
-    table.insert(root, node("gh"))
-    table.insert(root, node("raycast"))
-    table.insert(root, node("kubectl"))
-    table.insert(root, node("window"))
-    table.insert(root, node("calendar", {
-      node("2024"),
-      node("2025", {
-        node("01 [January]", {
-            node("events"),
-            node("days")
-        }),
+    table.insert(root, nodes.node("music"))
+    table.insert(root, nodes.node("git"))
+    table.insert(root, nodes.node("gh"))
+    table.insert(root, nodes.node("raycast"))
+    table.insert(root, nodes.node("kubectl"))
+    table.insert(root, nodes.node("window"))
+    table.insert(root, nodes.node("systemd"))
+    table.insert(root, nodes.node("os", {
+      nodes.node("details", {
+        nodes.node("battery: xx%"),
       }),
-      node("2026"),
+      nodes.node("storage"),
+      nodes.node("process"),
+      nodes.node("netstat"),
+      nodes.node("application")
     }))
-    table.insert(root, node("systemd"))
-    table.insert(root, node("os", {
-      node("details", {
-        node("battery: xx%"),
-      }),
-      node("storage"),
-      node("process"),
-      node("netstat"),
-      node("application")
+    table.insert(root, nodes.node("brew"))
+    table.insert(root, nodes.node("db", {
+      nodes.node("sqlite"),
+      nodes.node("postgres"),
+      nodes.node("mysql"),
     }))
-    table.insert(root, node("brew"))
-    table.insert(root, node("db", {
-      node("sqlite"),
-      node("postgres"),
-      node("mysql"),
-    }))
-    table.insert(root, node("weather"))
-    table.insert(root, node("takeout"))
-    table.insert(root, node("places"))
-    table.insert(root, node("docker"))
-    table.insert(root, node("podman"))
-    table.insert(root, node("reference", {
-        node("palette"),
-        node("gradient"),
-        node("treectl"),
-        node("unicode"),
-        node("english"),
-        node("tz"),
-        node("syntax", {
-            node("C"),
-            node("C++"),
-            node("Swift"),
+    table.insert(root, nodes.node("takeout"))
+    table.insert(root, nodes.node("docker"))
+    table.insert(root, nodes.node("podman"))
+    table.insert(root, nodes.node("reference", {
+        nodes.node("palette"),
+        nodes.node("gradient"),
+        nodes.node("treectl"),
+        nodes.node("unicode"),
+        nodes.node("english"),
+        nodes.node("tz"),
+        nodes.node("syntax", {
+            nodes.node("C"),
+            nodes.node("C++"),
+            nodes.node("Swift"),
         }),
     }))
-    table.insert(root, node("youtube"))
-    table.insert(root, node("wikipedia"))
+    table.insert(root, nodes.node("youtube"))
+    table.insert(root, nodes.node("wikipedia"))
 
     return root, modules
 end

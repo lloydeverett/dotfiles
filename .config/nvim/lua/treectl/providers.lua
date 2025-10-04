@@ -1,13 +1,10 @@
 local nodes = require("treectl.nodes")
 
-local node = nodes.node
-
 local M = {}
 
 -- interface reference and sample implementations ---------------------------------------
 
 M.empty_provider = {
-    -- will be called to supply children when opts.lazy == true:
     create_children = function(self, n) return {} end,   -- return list of child nodes
     allows_expand = function(self, n) return false end,  -- true to show expand toggle
     refresh_children = function(self, n, current_children) return nil end,
@@ -19,15 +16,14 @@ M.empty_provider = {
             --       this is the responsibility of the caller if necessary
             --     * expected to return a subset or superset of current_children
             --     * implementation may assume node is currently expanded
-    -- will be called if text == nil:
-    text = function(self, n) return "" end,             -- text to display
-    path = function(self, n) return nil end,            -- stable path to node; otherwise return nil
+    text = function(self, n) return "empty_node" end,   -- text to display (used if text == nil)
+    path = function(self, n) return nil end,            -- stable path to node; otherwise return nil (used if opts.path == nil)
 }
 
 M.dummy_provider = {
     create_children = function(self, n) return {
-      node("foo"),
-      node("bar"),
+      nodes.node("foo"),
+      nodes.node("bar"),
     } end,
     allows_expand = function(self, n) return true end,
     refresh_children = function(self, n, current_children) return nil end,
@@ -39,7 +35,7 @@ M.stress_test_provider = {
     create_children = function(self, n)
         local result = {}
         for i = 1, 20000 do
-            table.insert(result, node("foo." .. i))
+            table.insert(result, nodes.node("foo." .. i))
         end
         return result
     end,
@@ -58,7 +54,7 @@ function M.simple_provider(create_children_fn)
         end,
         allows_expand = function(self, n) return true end,
         refresh_children = function(self, n, current_children) return nil end,
-        text = function(self, n) return n.text end,
+        text = function(self, n) return nil end,
         path = function(self, n) return nil end,
     }
 end

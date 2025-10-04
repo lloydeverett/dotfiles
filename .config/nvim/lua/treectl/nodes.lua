@@ -34,6 +34,12 @@ function M.gen_id()
 end
 
 function M.node_with_id(text, id, children, details, opts)
+    if details == nil then
+        details = {}
+    end
+    if opts == nil then
+        opts = {}
+    end
     return NuiTree.Node({ text = text, id = id, opts = opts, details = details }, children)
 end
 
@@ -61,7 +67,7 @@ function M.help_node(text, details, opts)
 end
 
 function M.bare_help_node(text, details, opts)
-    opts = insert_opts(opts, { help = true, bare = true })
+    opts = insert_opts(opts, { help = true, indicator = "none" })
     return M.node(text, {}, details, opts)
 end
 

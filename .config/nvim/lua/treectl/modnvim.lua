@@ -3,9 +3,6 @@ local providers = require("treectl.providers")
 local luautils = require("treectl.luautils")
 local nvimutils = require("treectl.nvimutils")
 
-local node = nodes.node
-local lazy_node = nodes.lazy_node
-
 return function()
 local M = {}
 
@@ -16,7 +13,7 @@ function M.root_nodes()
     return M._root_nodes
 end
 
-table.insert(M._root_nodes, lazy_node(
+table.insert(M._root_nodes, nodes.lazy_node(
     "buffer",
     providers.simple_provider(function()
         return luautils.map(nvimutils.list_open_buffers(), function(b)
@@ -24,14 +21,14 @@ table.insert(M._root_nodes, lazy_node(
             if display_name == "" then
                 display_name = "[No Name]"
             end
-            return node({ { "" .. b.bufnr, "Number" }, " ", display_name }, {})
+            return nodes.node({ { "" .. b.bufnr, "Number" }, " ", display_name }, {})
         end)
     end),
     {},
     { hl = "DiagnosticInfo", help_suffix = " - lists open buffers" })
 )
 
-table.insert(M._root_nodes, lazy_node(
+table.insert(M._root_nodes, nodes.lazy_node(
     "recent",
     providers.simple_provider(function()
         local files = luautils.filter(vim.v.oldfiles, function(f)
@@ -45,7 +42,7 @@ table.insert(M._root_nodes, lazy_node(
 
         return luautils.map(files, function(f, i)
             local shortened_path = nvimutils.try_shorten_path(f)
-            return node({ { "" .. (i - 1), "Number" }, " ", shortened_path }, {})
+            return nodes.node({ { "" .. (i - 1), "Number" }, " ", shortened_path }, {})
         end)
     end),
     {},
@@ -56,7 +53,7 @@ local function styled_node(str, children, help_suffix)
     if children == nil then
         children = {}
     end
-    return node(str, children, {}, { hl = "DiagnosticInfo", help_suffix = help_suffix })
+    return nodes.node(str, children, {}, { hl = "DiagnosticInfo", help_suffix = help_suffix })
 end
 
 table.insert(M._root_nodes, styled_node("neovim", {
