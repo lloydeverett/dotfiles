@@ -7,7 +7,7 @@ local uiutils = require("treectl.uiutils")
 local modfs_init = require("treectl.modfs")
 local modvim_init = require("treectl.modvim")
 
-local create_node = nodes.create_node
+local node = nodes.node
 
 local function init_nodes()
     local modules = {
@@ -18,94 +18,94 @@ local function init_nodes()
     local root = {}
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modvim.root_nodes())
-    table.insert(root, create_node("todo", {
-        create_node("help mode that unhides nodes that have been marked with an opt that designates them as help-only"),
-        create_node("you could also have an opt for 'comment' label suffixes that are only rendered when in help mode"),
-        create_node("shift + enter to zoom if current node has stable path -- although it'd be nice to zoom into a folder without it necessarily having a fixed placement in the tree, so work that out too"),
-        create_node("maybe uri syntax along the lines of: provider-name://arbitrary/path/defined/by/provider; where provdier can return path for node or resolve a path"),
-        create_node("and, if the provider wants, it can use its parent node to help it figure out the path when asked to return a path, but it might not need to in the filesystem case"),
-        create_node("popup for node preview + keybindings on enter"),
-        create_node("optionally display preview + keybindings in a split too"),
-        create_node("allow searching by opening a scratch buffer filled with cached fully expanded node contents that links back to the real tree " ..
+    table.insert(root, node("todo", {
+        node("help mode that unhides nodes that have been marked with an opt that designates them as help-only"),
+        node("you could also have an opt for 'comment' label suffixes that are only rendered when in help mode"),
+        node("shift + enter to zoom if current node has stable path -- although it'd be nice to zoom into a folder without it necessarily having a fixed placement in the tree, so work that out too"),
+        node("maybe uri syntax along the lines of: provider-name://arbitrary/path/defined/by/provider; where provdier can return path for node or resolve a path"),
+        node("and, if the provider wants, it can use its parent node to help it figure out the path when asked to return a path, but it might not need to in the filesystem case"),
+        node("popup for node preview + keybindings on enter"),
+        node("optionally display preview + keybindings in a split too"),
+        node("allow searching by opening a scratch buffer filled with cached fully expanded node contents that links back to the real tree " ..
                     "(although some nodes you don't need to use a cache, e.g. calendar, because you can just expand all the data anyway)"),
     }))
-    table.insert(root, create_node("note", {
-      create_node("make your own notes here"),
-      create_node("can be based on files in ~/.treenote"),
-      create_node("and then each file in there looks like an expanded tree"),
+    table.insert(root, node("note", {
+      node("make your own notes here"),
+      node("can be based on files in ~/.treenote"),
+      node("and then each file in there looks like an expanded tree"),
     }))
-    table.insert(root, create_node("application"))
-    table.insert(root, create_node("task"))
-    table.insert(root, create_node("www", {
-      create_node("tab"),
-      create_node("bookmark"),
+    table.insert(root, node("application"))
+    table.insert(root, node("task"))
+    table.insert(root, node("www", {
+      node("tab"),
+      node("bookmark"),
     }))
-    table.insert(root, create_node("llm"))
-    table.insert(root, create_node("steampipe"))
-    table.insert(root, create_node("matrix", {
-        create_node("slack"),
-        create_node("whatsapp"),
+    table.insert(root, node("llm"))
+    table.insert(root, node("steampipe"))
+    table.insert(root, node("matrix", {
+        node("slack"),
+        node("whatsapp"),
     }))
-    table.insert(root, create_node("man"))
-    table.insert(root, create_node("email"))
-    table.insert(root, create_node("shell", {
-      create_node("env"),
-      create_node("alias"),
-      create_node("bin"),
-      create_node("path"),
-      create_node("job"),
+    table.insert(root, node("man"))
+    table.insert(root, node("email"))
+    table.insert(root, node("shell", {
+      node("env"),
+      node("alias"),
+      node("bin"),
+      node("path"),
+      node("job"),
     }))
-    table.insert(root, create_node("music"))
-    table.insert(root, create_node("git"))
-    table.insert(root, create_node("gh"))
-    table.insert(root, create_node("raycast"))
-    table.insert(root, create_node("kubectl"))
-    table.insert(root, create_node("window"))
-    table.insert(root, create_node("calendar", {
-      create_node("2024"),
-      create_node("2025", {
-        create_node("01 [January]", {
-            create_node("events"),
-            create_node("days")
+    table.insert(root, node("music"))
+    table.insert(root, node("git"))
+    table.insert(root, node("gh"))
+    table.insert(root, node("raycast"))
+    table.insert(root, node("kubectl"))
+    table.insert(root, node("window"))
+    table.insert(root, node("calendar", {
+      node("2024"),
+      node("2025", {
+        node("01 [January]", {
+            node("events"),
+            node("days")
         }),
       }),
-      create_node("2026"),
+      node("2026"),
     }))
-    table.insert(root, create_node("systemd"))
-    table.insert(root, create_node("os", {
-      create_node("details", {
-        create_node("battery: xx%"),
+    table.insert(root, node("systemd"))
+    table.insert(root, node("os", {
+      node("details", {
+        node("battery: xx%"),
       }),
-      create_node("storage"),
-      create_node("process"),
-      create_node("netstat"),
+      node("storage"),
+      node("process"),
+      node("netstat"),
     }))
-    table.insert(root, create_node("brew"))
-    table.insert(root, create_node("db", {
-      create_node("sqlite"),
-      create_node("postgres"),
-      create_node("mysql"),
+    table.insert(root, node("brew"))
+    table.insert(root, node("db", {
+      node("sqlite"),
+      node("postgres"),
+      node("mysql"),
     }))
-    table.insert(root, create_node("treectl"))
-    table.insert(root, create_node("weather"))
-    table.insert(root, create_node("takeout"))
-    table.insert(root, create_node("places"))
-    table.insert(root, create_node("docker"))
-    table.insert(root, create_node("podman"))
-    table.insert(root, create_node("reference", {
-        create_node("palette"),
-        create_node("gradient"),
-        create_node("unicode"),
-        create_node("english"),
-        create_node("tz"),
-        create_node("syntax", {
-            create_node("C"),
-            create_node("C++"),
-            create_node("Swift"),
+    table.insert(root, node("treectl"))
+    table.insert(root, node("weather"))
+    table.insert(root, node("takeout"))
+    table.insert(root, node("places"))
+    table.insert(root, node("docker"))
+    table.insert(root, node("podman"))
+    table.insert(root, node("reference", {
+        node("palette"),
+        node("gradient"),
+        node("unicode"),
+        node("english"),
+        node("tz"),
+        node("syntax", {
+            node("C"),
+            node("C++"),
+            node("Swift"),
         }),
     }))
-    table.insert(root, create_node("youtube"))
-    table.insert(root, create_node("wikipedia"))
+    table.insert(root, node("youtube"))
+    table.insert(root, node("wikipedia"))
 
     return root, modules
 end
@@ -220,8 +220,8 @@ local function show_tree()
     -- vim.keymap.set("n", "a", function()
     --   local node = uiutils.current_node(tree)
     --   tree:add_node(
-    --     create_node("d", {
-    --       create_node("d-1"),
+    --     node("d", {
+    --       node("d-1"),
     --     }),
     --     node:get_id()
     --   )

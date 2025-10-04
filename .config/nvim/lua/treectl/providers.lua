@@ -1,6 +1,6 @@
 local nodes = require("treectl.nodes")
 
-local create_node = nodes.create_node
+local node = nodes.node
 
 local M = {}
 
@@ -27,8 +27,8 @@ M.empty_provider = {
 
 M.dummy_provider = {
     create_children = function(self, n) return {
-      create_node("foo"),
-      create_node("bar"),
+      node("foo"),
+      node("bar"),
     } end,
     allows_expand = function(self, n) return true end,
     refresh_children = function(self, n, current_children) return nil end,
@@ -41,7 +41,7 @@ M.stress_test_provider = {
     create_children = function(self, n)
         local result = {}
         for i = 1, 20000 do
-            table.insert(result, create_node("foo." .. i))
+            table.insert(result, node("foo." .. i))
         end
         return result
     end,

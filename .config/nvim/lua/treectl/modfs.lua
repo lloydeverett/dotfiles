@@ -34,7 +34,7 @@ local function sort_files_in_display_order(files)
 end
 
 local function node_from_file(provider, file)
-    return nodes.create_lazy_node(nil, provider, {
+    return nodes.lazy_node(nil, provider, {
         path = file.path,
         filename = file.name,
         is_directory = file.resolved_type == "directory",
@@ -109,7 +109,7 @@ local function init_file_provider()
 end
 
 local function create_directory_node(provider, label, path)
-    return nodes.create_lazy_node(
+    return nodes.lazy_node(
         label,
         provider,
         { path = path, filename = nil, is_directory = true },
@@ -141,15 +141,15 @@ if luautils.resolve_type(home_path .. ".treectl") == "directory" then
     table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl"))
 else
     -- TODO opts s.t. this only displays in help mode
-    table.insert(M._root_nodes, nodes.create_node("t/", {}, {}, { hl = "comment" }))
+    table.insert(M._root_nodes, nodes.node("t/", {}, {}, { hl = "comment" }))
 end
 
 if false then -- vim.fn.executable("zoxide") == 1 then
     -- TODO implement
-    table.insert(M._root_nodes, nodes.create_node("z/", {}, {}, { hl = "directory" }))
+    table.insert(M._root_nodes, nodes.node("z/", {}, {}, { hl = "directory" }))
 else
     -- TODO opts s.t. this only displays in help mode
-    table.insert(M._root_nodes, nodes.create_node("z/", {}, {}, {
+    table.insert(M._root_nodes, nodes.node("z/", {}, {}, {
         label = "z/ - frequent dirs; requires 'zoxide' installation",
         help = true
     }))

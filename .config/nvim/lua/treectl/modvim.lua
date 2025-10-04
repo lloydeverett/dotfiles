@@ -2,8 +2,8 @@ local nodes = require("treectl.nodes")
 local providers = require("treectl.providers")
 local luautils = require("treectl.luautils")
 
-local create_node = nodes.create_node
-local create_lazy_node = nodes.create_lazy_node
+local node = nodes.node
+local lazy_node = nodes.lazy_node
 
 return function()
 local M = {}
@@ -13,7 +13,7 @@ function M.root_nodes()
     return M._root_nodes
 end
 
-table.insert(M._root_nodes, create_lazy_node(
+table.insert(M._root_nodes, lazy_node(
     "buffer",
     providers.simple_provider(function()
         return luautils.map(luautils.list_open_buffers(), function(b)
@@ -21,7 +21,7 @@ table.insert(M._root_nodes, create_lazy_node(
             if display_name == "" then
                 display_name = "[No Name]"
             end
-            return create_node("" .. b.bufnr, {}, {}, {
+            return node("" .. b.bufnr, {}, {}, {
                 label = { display_name, " ", { "" .. b.bufnr, "Number" } }
             })
         end)
@@ -30,17 +30,17 @@ table.insert(M._root_nodes, create_lazy_node(
     { hl = "DiagnosticInfo" })
 )
 
-table.insert(M._root_nodes, create_node("recent", {}, {}, { hl = "DiagnosticInfo" }))
+table.insert(M._root_nodes, node("recent", {}, {}, { hl = "DiagnosticInfo" }))
 
-table.insert(M._root_nodes, create_node("vim", {
-    create_node("buffer"),
-    create_node("window"),
-    create_node("hi"),
-    create_node("tab"),
-    create_node("register"),
-    create_node("symbol"),
-    create_node("mark"),
-    create_node("plugin"),
+table.insert(M._root_nodes, node("vim", {
+    node("buffer"),
+    node("window"),
+    node("hi"),
+    node("tab"),
+    node("register"),
+    node("symbol"),
+    node("mark"),
+    node("plugin"),
 }))
 
 return M

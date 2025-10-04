@@ -97,6 +97,5 @@ function M.list_open_buffers()
     return result
 end
 
-
 return M
 
