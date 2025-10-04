@@ -8,6 +8,7 @@ local modfs_init = require("treectl.modfs")
 local modnvim_init = require("treectl.modnvim")
 
 local node = nodes.node
+local bare_help_node = nodes.bare_help_node
 
 local function init_nodes()
     local modules = {
@@ -16,15 +17,15 @@ local function init_nodes()
     }
 
     local root = {}
-    table.insert(root, node("Shift-H = collapse   . = toggle           ? = toggle help            Shift-L = expand               ", {}, {}, { help = true, bare = true }))
-    table.insert(root, node("} = next top-level   { = prev top-level   ]] = next open top-level   [[ = up or prev open top-level ", {}, {}, { help = true, bare = true }))
-    table.insert(root, node("g. = toggle hidden files                                                                            ", {}, {}, { help = true, bare = true }))
+    table.insert(root, bare_help_node("? = toggle help      Shift-H = collapse   Shift-L = expand              . = toggle                     "))
+    table.insert(root, bare_help_node("} = next top-level   { = prev top-level   ]] = next open top-level      [[ = up or prev open top-level "))
+    table.insert(root, bare_help_node("g. = toggle hidden   ⏎ = default action   Shift+⏎ = actions & preview   _ = zoom into                  "))
+    table.insert(root, bare_help_node("- = zoom up                                                                                            "))
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())
     table.insert(root, node("todo", {
         node("todo: scratch buffers that display as text with refs in insert mode, but in normal mode refs resolve to tree nodes and render as tree nodes"),
-        node("help mode that unhides nodes that have been marked with an opt that designates them as help-only"),
-        node("you could also have an opt for 'comment' label suffixes that are only rendered when in help mode"),
+        node("build git support into fs module"),
         node("shift + enter to zoom if current node has stable path -- although it'd be nice to zoom into a folder without it necessarily having a fixed placement in the tree, so work that out too"),
         node("maybe uri syntax along the lines of: provider-name://arbitrary/path/defined/by/provider; where provdier can return path for node or resolve a path"),
         node("and, if the provider wants, it can use its parent node to help it figure out the path when asked to return a path, but it might not need to in the filesystem case"),
@@ -38,7 +39,6 @@ local function init_nodes()
       node("can be based on files in ~/.treenote"),
       node("and then each file in there looks like an expanded tree"),
     }))
-    table.insert(root, node("application"))
     table.insert(root, node("task"))
     table.insert(root, node("www", {
       node("tab"),
@@ -83,6 +83,7 @@ local function init_nodes()
       node("storage"),
       node("process"),
       node("netstat"),
+      node("application")
     }))
     table.insert(root, node("brew"))
     table.insert(root, node("db", {

@@ -24,9 +24,7 @@ table.insert(M._root_nodes, lazy_node(
             if display_name == "" then
                 display_name = "[No Name]"
             end
-            return node("" .. b.bufnr, {}, {}, {
-                label = { { "" .. b.bufnr, "Number" }, " ", display_name }
-            })
+            return node({ { "" .. b.bufnr, "Number" }, " ", display_name }, {})
         end)
     end),
     {},
@@ -46,10 +44,8 @@ table.insert(M._root_nodes, lazy_node(
         files = { unpack(files, 1, M._max_recents) }
 
         return luautils.map(files, function(f, i)
-            local shortened_path = nvimutils.try_shorten_path(f, i)
-            return node(shortened_path, {}, {}, {
-                label = { { "" .. (i - 1), "Number" }, " ", shortened_path }
-            })
+            local shortened_path = nvimutils.try_shorten_path(f)
+            return node({ { "" .. (i - 1), "Number" }, " ", shortened_path }, {})
         end)
     end),
     {},

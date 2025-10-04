@@ -125,7 +125,7 @@ function M.line_append_content(line, content, hl)
             elseif type(segment) == "table" then
                 line:append(segment[1], segment[2])
             else
-                print("ignoring invalid node label segment:", segment)
+                print("ignoring invalid node text segment:", segment)
             end
         end
     else
@@ -153,11 +153,7 @@ function M.node_append_display_text(n, line, render_opts)
         elseif n:get_parent_id() == nil then
             hl = "Define"
         end
-        if n.opts ~= nil and n.opts.label ~= nil then
-            content = n.opts.label
-        else
-            content = n.text
-        end
+        content = n.text
     end
 
     M.line_append_content(line, content, hl)

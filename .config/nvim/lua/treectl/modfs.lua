@@ -108,9 +108,9 @@ local function init_file_provider()
     }
 end
 
-local function create_directory_node(provider, label, path, help_suffix)
+local function create_directory_node(provider, text, path, help_suffix)
     return nodes.lazy_node(
-        label,
+        text,
         provider,
         { path = path, filename = nil, is_directory = true },
         { hl = "directory", help_suffix = help_suffix })
@@ -137,20 +137,14 @@ table.insert(M._root_nodes, create_directory_node(M._directory_provider, "/", "/
 if nvimutils.resolve_type(home_path .. ".treectl") == "directory" then
     table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl", help_suffix_treectl_dir))
 else
-    table.insert(M._root_nodes, nodes.node("t/", {}, {}, {
-        label = "t/" .. help_suffix_treectl_dir,
-        help = true
-    }))
+    table.insert(M._root_nodes, nodes.help_node("t/" .. help_suffix_treectl_dir))
 end
 
 if false then -- vim.fn.executable("zoxide") == 1 then
     -- TODO implement
     table.insert(M._root_nodes, nodes.node("z/", {}, {}, { hl = "directory", help_suffix = help_suffix_zoxide }))
 else
-    table.insert(M._root_nodes, nodes.node("z/", {}, {}, {
-        label = "z/" .. help_suffix_zoxide,
-        help = true
-    }))
+    table.insert(M._root_nodes, nodes.help_node("z/" .. help_suffix_zoxide))
 end
 
 return M

@@ -1,15 +1,20 @@
 local NuiTree = require("nui.tree")
 
-local function insert_lazy_opts(provider, opts)
+local function insert_opts(opts, additions)
     local new_opts = {}
     if opts ~= nil then
         for k, v in pairs(opts) do
             new_opts[k] = v
         end
     end
-    new_opts.lazy = true
-    new_opts.provider = provider
+    for k, v in pairs(additions) do
+        new_opts[k] = v
+    end
     return new_opts
+end
+
+local function insert_lazy_opts(opts, provider)
+    return insert_opts(opts, { lazy = true, provider = provider })
 end
 
 local function random8()
@@ -41,13 +46,23 @@ function M.create_separator_node()
 end
 
 function M.lazy_node(text, provider, details, opts)
-    opts = insert_lazy_opts(provider, opts)
+    opts = insert_lazy_opts(opts, provider)
     return M.node(text, {}, details, opts)
 end
 
 function M.lazy_node_with_id(text, id, provider, details, opts)
-    opts = insert_lazy_opts(provider, opts)
+    opts = insert_lazy_opts(opts, provider)
     return M.node_with_id(text, id, {}, details, opts)
+end
+
+function M.help_node(text, details, opts)
+    opts = insert_opts(opts, { help = true })
+    return M.node(text, {}, details, opts)
+end
+
+function M.bare_help_node(text, details, opts)
+    opts = insert_opts(opts, { help = true, bare = true })
+    return M.node(text, {}, details, opts)
 end
 
 return M
