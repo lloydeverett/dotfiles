@@ -1,9 +1,14 @@
 local NuiLine = require("nui.line")
+local luautils = require("treectl.luautils")
 
 local M = {}
 
 function M.is_node_lazy(n)
     return n.opts ~= nil and n.opts.lazy == true
+end
+
+function M.is_node_help(n)
+    return n.opts ~= nil and n.opts.help == true
 end
 
 function M.is_node_text_dynamic(n)
@@ -18,11 +23,11 @@ function M.get_provider(n)
     return n.opts.provider
 end
 
-function M.node_has_children(n)
+function M.node_allows_expand(n)
     if M.is_node_lazy(n) then
         local provider = M.get_provider(n)
         if provider ~= nil then
-            return provider:has_children(n)
+            return provider:allows_expand(n)
         else
             return false
         end
@@ -72,7 +77,7 @@ function M.node_refresh_children(tree, n)
     end
 
     local provider = M.get_provider(n)
-    if not provider:has_children(n) then
+    if not provider:allows_expand(n) then
         return
     end
 
@@ -108,42 +113,86 @@ function M.node_refresh_all_children_for_provider(tree, provider)
     end
 end
 
-function M.node_get_text(n)
+function M.line_append_content(line, content, hl)
+    if type(content) == "string" then
+        line:append(content, hl)
+    elseif type(content) == "table" then
+        -- looks like a sequence; concatenate parts
+        for i, segment in ipairs(content) do
+            -- could be a plain string or a [text, hl] specifying hl override; handle either
+            if type(segment) == "string" then
+                line:append(segment, hl)
+            elseif type(segment) == "table" then
+                line:append(segment[1], segment[2])
+            else
+                print("ignoring invalid node label segment:", segment)
+            end
+        end
+    else
+        line:append("unknown", "ErrorMsg")
+    end
+end
+
+function M.node_append_display_text(n, line, render_opts)
+    local content = nil
+    local hl = nil
+
     if M.is_node_text_dynamic(n) then
         local provider = M.get_provider(n)
         if provider ~= nil then
-            return provider:text(n)
+            content, hl = provider:text(n)
         else
-            return "nil", "ErrorMsg"
+            content = "nil"
+            hl = "ErrorMsg"
+        end
+    else
+        if n.opts ~= nil and n.opts.hl ~= nil then
+            hl = n.opts.hl
+        elseif n.opts ~= nil and n.opts.help then
+            hl = "Comment"
+        elseif n:get_parent_id() == nil then
+            hl = "Define"
+        end
+        if n.opts ~= nil and n.opts.label ~= nil then
+            content = n.opts.label
+        else
+            content = n.text
         end
     end
 
-    if n.opts ~= nil and n.opts.hl ~= nil then
-        return n.text, n.opts.hl
-    elseif n:get_parent_id() == nil then
-        return n.text, "Define"
-    end
+    M.line_append_content(line, content, hl)
 
-    return n.text
+    if n.opts ~= nil and n.opts.help_suffix ~= nil and render_opts ~= nil and render_opts.show_help then
+        M.line_append_content(line, n.opts.help_suffix, "Comment")
+    end
 end
 
-function M.node_get_nui_line(n)
+function M.node_get_nui_line(n, render_opts)
     local line = NuiLine()
 
     if n.opts ~= nil and n.opts.separator then
         return line
     end
 
-    line:append(string.rep("  ", n:get_depth() - 1))
-
-    if M.node_has_children(n) then
-      line:append(n:is_expanded() and "- " or "+ ", "SpecialChar")
-    else
-      line:append("- ", "LineNr")
+    if n.opts ~= nil and n.opts.help and not (render_opts ~= nil and render_opts.show_help) then
+        return {} -- skip render
     end
 
-    text, text_color = M.node_get_text(n)
-    line:append(text, text_color)
+    line:append(string.rep("  ", n:get_depth() - 1))
+
+    if n.opts ~= nil and n.opts.bare then
+       line:append("  ")
+    else
+        if M.node_allows_expand(n) then
+          line:append(n:is_expanded() and "- " or "+ ", "SpecialChar")
+        elseif n.opts ~= nil and n.opts.help then
+          line:append("* ", "LineNr")
+        else
+          line:append("- ", "LineNr")
+        end
+    end
+
+    M.node_append_display_text(n, line, render_opts)
 
     return line
 end
@@ -179,6 +228,17 @@ function M.find_node(nodes, node_id)
     return nil
 end
 
+function M.node_ancestors(tree, node)
+    local node_id = node:get_id()
+    local node_ancestor_ids = { node_id }
+    local current_ancestor = node
+    while current_ancestor:get_parent_id() ~= nil do
+        table.insert(node_ancestor_ids, current_ancestor:get_parent_id())
+        current_ancestor = tree:get_node(current_ancestor:get_parent_id())
+    end
+    return node_ancestor_ids
+end
+
 function M.place_cursor_on_prev_top_level_node(tree)
     local ancestors = M.node_ancestors(tree, M.current_node(tree))
     local row, col = M.current_cursor_pos()
@@ -190,7 +250,9 @@ function M.place_cursor_on_prev_top_level_node(tree)
         return
     end
 
-    local toplevel_nodes = tree:get_nodes()
+    local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
+        return (not M.is_node_help(n)) or n:get_id() == toplevel_node_id
+    end)
     local index = M.find_node(toplevel_nodes, toplevel_node_id)
     if index == nil then
         return
@@ -207,7 +269,9 @@ function M.place_cursor_on_next_top_level_node(tree)
     local ancestors = M.node_ancestors(tree, M.current_node(tree))
     local toplevel_node_id = ancestors[#ancestors]
 
-    local toplevel_nodes = tree:get_nodes()
+    local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
+        return (not M.is_node_help(n)) or n:get_id() == toplevel_node_id
+    end)
     local index = M.find_node(toplevel_nodes, toplevel_node_id)
     if index == nil then
         return
@@ -225,7 +289,9 @@ function M.place_cursor_on_parent_or_prev_open_top_level_node(tree)
     local row, col = M.current_cursor_pos()
 
     if #ancestors == 1 then
-        local toplevel_nodes = tree:get_nodes()
+        local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
+            return (not M.is_node_help(n)) or n:get_id() == ancestors[1]
+        end)
         local index = M.find_node(toplevel_nodes, ancestors[1])
         if index == nil then
             return
@@ -248,10 +314,10 @@ end
 
 function M.place_cursor_on_next_open_top_level_node(tree)
     local ancestors = M.node_ancestors(tree, M.current_node(tree))
-    local toplevel_node_id = ancestors[#ancestors]
-    local toplevel_nodes = tree:get_nodes()
-
-    local index = M.find_node(toplevel_nodes, ancestors[1])
+    local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
+        return (not M.is_node_help(n)) or n:get_id() == ancestors[#ancestors]
+    end)
+    local index = M.find_node(toplevel_nodes, ancestors[#ancestors])
     if index == nil then
         return
     end
@@ -266,17 +332,6 @@ function M.place_cursor_on_next_open_top_level_node(tree)
             return
         end
     end
-end
-
-function M.node_ancestors(tree, node)
-    local node_id = node:get_id()
-    local node_ancestor_ids = { node_id }
-    local current_ancestor = node
-    while current_ancestor:get_parent_id() ~= nil do
-        table.insert(node_ancestor_ids, current_ancestor:get_parent_id())
-        current_ancestor = tree:get_node(current_ancestor:get_parent_id())
-    end
-    return node_ancestor_ids
 end
 
 function M.preserve_cursor_selection(tree, callback)

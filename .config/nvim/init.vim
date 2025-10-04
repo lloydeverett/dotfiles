@@ -17,6 +17,7 @@ call plug#begin()
     Plug 'ntk148v/komau.vim'
     Plug 'davidosomething/vim-colors-meh'
     Plug 'zekzekus/menguless'
+    Plug 'EdenEast/nightfox.nvim'
     " -- end color schemes
     Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
     Plug 'stevearc/oil.nvim'
@@ -48,7 +49,8 @@ call plug#begin()
     Plug 'stevearc/aerial.nvim'
     Plug 'MunifTanjim/nui.nvim'
     Plug 'karb94/neoscroll.nvim'
-    Plug 'folke/twilight.nvim'
+    " Plug 'nvzone/volt'
+    " Plug 'nvzone/timerly'
 call plug#end()
 
 nnoremap <SPACE> <Nop>

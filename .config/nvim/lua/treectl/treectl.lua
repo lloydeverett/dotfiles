@@ -2,72 +2,28 @@ math.randomseed(os.time())
 
 local NuiTree = require("nui.tree")
 local luautils = require("treectl.luautils")
-local nodeutils = require("treectl.nodeutils")
+local nodes = require("treectl.nodes")
 local uiutils = require("treectl.uiutils")
 local modfs_init = require("treectl.modfs")
+local modvim_init = require("treectl.modvim")
 
-local create_node = nodeutils.create_node
-
--- sample provider implementations ------------------------------------------------------
-
-local empty_provider = {
-  -- will be called to supply children when opts.lazy == true:
-  create__children = function(self, n) return {} end, -- return list of child nodes
-  has_children = function(self, n) return false end,  -- true to show expand toggle
-  refresh_children = function(self, n, current_children) return nil end,
-          -- function used for niche case when we wish to (e.g. in a keybinding) update
-          -- the immediate rendered children without triggering a collapse + expand
-          -- note that:
-          --     * may simply return nil if unused to make this a no-op
-          --     * the implementation is not expected to recurse down the tree;
-          --       this is the responsibility of the caller if necessary
-          --     * expected to return a subset or superset of current_children
-          --     * implementation may assume node is currently expanded
-  -- will be called if text == nil:
-  text = function(self, n) return "" end,             -- text to display
-  slug = function(self, n) return "" end,             -- contribution to node path
-  is_stable = function(self, n) return "" end,        -- node has deterministic path?
-}
-
-local dummy_provider = {
-  create__children = function(self, n) return {
-    create_node("foo"),
-    create_node("bar"),
-  } end,
-  has_children = function(self, n) return true end,
-  refresh_children = function(self, n, current_children) return nil end,
-  text = function(self, n) return "dummy_node" end,
-  slug = function(self, n) return "dummy_node" end,
-  is_stable = function(self, n) return true end,
-}
-
-local stress_test_provider = {
-  create__children = function(self, n)
-      result = {}
-      for i = 1, 20000 do
-          table.insert(result, create_node("foo." .. i))
-      end
-      return result
-  end,
-  has_children = function(self, n) return true end,
-  refresh_children = function(self, n, current_children) return nil end,
-  text = function(self, n) return "stress_test_node" end,
-  slug = function(self, n) return "stress_test_node" end,
-  is_stable = function(self, n) return true end,
-}
-
--- node init ----------------------------------------------------------------------------
+local create_node = nodes.create_node
 
 local function init_nodes()
     local modules = {
-        modfs = modfs_init()
+        modfs = modfs_init(),
+        modvim = modvim_init(),
     }
 
     local root = {}
     luautils.insert_all(root, modules.modfs.root_nodes())
+    luautils.insert_all(root, modules.modvim.root_nodes())
     table.insert(root, create_node("todo", {
-        create_node("display ../ as a hidden file"),
-        create_node("shift + enter to zoom if current node has stable path"),
+        create_node("help mode that unhides nodes that have been marked with an opt that designates them as help-only"),
+        create_node("you could also have an opt for 'comment' label suffixes that are only rendered when in help mode"),
+        create_node("shift + enter to zoom if current node has stable path -- although it'd be nice to zoom into a folder without it necessarily having a fixed placement in the tree, so work that out too"),
+        create_node("maybe uri syntax along the lines of: provider-name://arbitrary/path/defined/by/provider; where provdier can return path for node or resolve a path"),
+        create_node("and, if the provider wants, it can use its parent node to help it figure out the path when asked to return a path, but it might not need to in the filesystem case"),
         create_node("popup for node preview + keybindings on enter"),
         create_node("optionally display preview + keybindings in a split too"),
         create_node("allow searching by opening a scratch buffer filled with cached fully expanded node contents that links back to the real tree " ..
@@ -102,15 +58,6 @@ local function init_nodes()
     table.insert(root, create_node("music"))
     table.insert(root, create_node("git"))
     table.insert(root, create_node("gh"))
-    table.insert(root, create_node("vim", {
-      create_node("buffer"),
-      create_node("window"),
-      create_node("tab"),
-      create_node("register"),
-      create_node("symbol"),
-      create_node("mark"),
-      create_node("plugin"),
-    }))
     table.insert(root, create_node("raycast"))
     table.insert(root, create_node("kubectl"))
     table.insert(root, create_node("window"))
@@ -163,23 +110,24 @@ local function init_nodes()
     return root, modules
 end
 
--- rendering & bindings -----------------------------------------------------------------
-
-vim.g.current_treectl_buf_suffix = 1
-vim.g.treectl_main_bufnr = nil
+local g_buf_suffix = "treectl#state#current_buf_suffix"
+local g_main_bufnr = "treectl#state#main_bufnr"
+vim.g[g_buf_suffix] = 1
+vim.g[g_main_bufnr] = nil
 
 local function show_tree()
 
-    local winid = vim.api.nvim_get_current_win()
+    local show_help = vim.g["treectl#show_help_by_default"] or false
 
+    local winid = vim.api.nvim_get_current_win()
     local bufnr = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(winid, bufnr)
-    if vim.g.treectl_main_bufnr == nil then
+    if vim.g[g_main_bufnr] == nil then
         vim.api.nvim_buf_set_name(bufnr, "treectl#0")
-        vim.g.treectl_main_bufnr = bufnr
+        vim.g[g_main_bufnr] = bufnr
     else
-        vim.api.nvim_buf_set_name(bufnr, "treectl#" .. vim.g.current_treectl_buf_suffix)
-        vim.g.current_treectl_buf_suffix = vim.g.current_treectl_buf_suffix + 1
+        vim.api.nvim_buf_set_name(bufnr, "treectl#" .. vim.g[g_buf_suffix])
+        vim.g[g_buf_suffix] = vim.g[g_buf_suffix] + 1
     end
 
     local nodes, modules = init_nodes()
@@ -188,7 +136,7 @@ local function show_tree()
       winid = winid,
       nodes = nodes,
       prepare_node = function(node)
-          return uiutils.node_get_nui_line(node)
+          return uiutils.node_get_nui_line(node, { show_help = show_help })
       end,
     })
 
@@ -204,14 +152,17 @@ local function show_tree()
     vim.keymap.set("n", "g.", function()
         uiutils.preserve_cursor_selection(tree, function()
             modules.modfs.toggle_show_hidden()
-            uiutils.node_refresh_all_children_for_provider(tree, modules.modfs.provider())
+            uiutils.node_refresh_all_children_for_provider(tree, modules.modfs.directory_provider())
             tree:render()
         end)
     end, map_options)
 
     -- toggle help
     vim.keymap.set("n", "?", function()
-        print("TODO helpstring")
+        uiutils.preserve_cursor_selection(tree, function()
+            show_help = not show_help
+            tree:render()
+        end)
     end, map_options)
 
     -- print current node
@@ -265,10 +216,6 @@ local function show_tree()
         uiutils.place_cursor_on_next_open_top_level_node(tree)
     end, map_options)
 
-    -- TODO traverse up tree and then to prev *open* top level node with [[
-
-    -- TODO traverse to next *open* top level node with ]]
-
     -- add new node under current node
     -- vim.keymap.set("n", "a", function()
     --   local node = uiutils.current_node(tree)
@@ -293,11 +240,11 @@ local function show_tree()
 end
 
 vim.keymap.set("n", "<leader>n", function()
-    if vim.g.treectl_main_bufnr ~= nil and vim.api.nvim_buf_is_loaded(vim.g.treectl_main_bufnr) then
+    if vim.g[g_main_bufnr] ~= nil and vim.api.nvim_buf_is_loaded(vim.g[g_main_bufnr]) then
         local winid = vim.api.nvim_get_current_win()
-        vim.api.nvim_win_set_buf(winid, vim.g.treectl_main_bufnr)
+        vim.api.nvim_win_set_buf(winid, vim.g[g_main_bufnr])
     else
-        vim.g.treectl_main_bufnr = nil
+        vim.g[g_main_bufnr] = nil
         show_tree()
     end
 end)

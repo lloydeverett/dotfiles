@@ -8,6 +8,24 @@ function M.insert_all(tbl, elements)
     end
 end
 
+function M.filter(array, predicate)
+    local result = {}
+    for i, v in ipairs(array) do
+        if predicate(v) then
+            table.insert(result, v)
+        end
+    end
+    return result
+end
+
+function M.map(array, transformation)
+    local result = {}
+    for i, v in ipairs(array) do
+        result[i] = transformation(v)
+    end
+    return result
+end
+
 function M.path_concat(base, suffix)
     if base:sub(-1) == "/" then
         return base .. suffix
@@ -64,6 +82,21 @@ function M.list_directory(path, opts)
 
     return results
 end
+
+function M.list_open_buffers()
+    local buffers = vim.api.nvim_list_bufs()
+    local result = {}
+
+    for _, bufnr in ipairs(buffers) do
+        if vim.api.nvim_buf_is_loaded(bufnr) then
+            local name = vim.api.nvim_buf_get_name(bufnr)
+            table.insert(result, { bufnr = bufnr, name = name })
+        end
+    end
+
+    return result
+end
+
 
 return M
 

@@ -1,5 +1,22 @@
-local nodeutils = require("treectl.nodeutils")
+local nodes = require("treectl.nodes")
 local luautils = require("treectl.luautils")
+
+return function()
+local M = {}
+
+local home_path = luautils.path_concat(os.getenv("HOME"), "")
+local cwd = luautils.path_concat(vim.fn.getcwd(), "")
+
+M._show_hidden = vim.g["treectl#modfs#show_hidden_by_default"] or false
+function M.set_show_hidden(value)
+    M._show_hidden = value
+end
+function M.toggle_show_hidden()
+    M._show_hidden = not M._show_hidden
+end
+function M.show_hidden()
+    return M._show_hidden
+end
 
 local function sort_files_in_display_order(files)
     local result = {}
@@ -17,7 +34,7 @@ local function sort_files_in_display_order(files)
 end
 
 local function node_from_file(provider, file)
-    return nodeutils.create_lazy_node(nil, provider, {
+    return nodes.create_lazy_node(nil, provider, {
         path = file.path,
         filename = file.name,
         is_directory = file.resolved_type == "directory",
@@ -25,7 +42,7 @@ local function node_from_file(provider, file)
     })
 end
 
-local function init_provider(M)
+local function init_file_provider()
     return {
       create_children = function(self, n)
           if not n.details.is_directory then
@@ -41,7 +58,7 @@ local function init_provider(M)
           return result
       end,
 
-      has_children = function(self, n)
+      allows_expand = function(self, n)
           return n.details.is_directory
       end,
 
@@ -92,59 +109,52 @@ local function init_provider(M)
 end
 
 local function create_directory_node(provider, label, path)
-    return nodeutils.create_lazy_node(
+    return nodes.create_lazy_node(
         label,
         provider,
         { path = path, filename = nil, is_directory = true },
         { hl = "directory" })
 end
 
-return function()
-    local home_path = luautils.path_concat(os.getenv("HOME"), "")
-    local cwd = luautils.path_concat(vim.fn.getcwd(), "")
+M._directory_provider = init_file_provider()
+function M.directory_provider()
+    return M._directory_provider
+end
 
-    local M = {}
+M._root_nodes = {}
+function M.root_nodes()
+    return M._root_nodes
+end
 
-    M._show_hidden = vim.g["treectl#modfs#show_hidden_by_default"] or false
-    function M.set_show_hidden(value)
-        M._show_hidden = value
+if cwd ~= home_path and cwd ~= "/" then
+    local text = cwd
+    if cwd:sub(1, #home_path) == home_path then
+        text = "~/" .. cwd:sub(#home_path + 1)
     end
-    function M.toggle_show_hidden()
-        M.set_show_hidden(not M._show_hidden)
-    end
-    function M.show_hidden()
-        return M._show_hidden
-    end
+    table.insert(M._root_nodes, create_directory_node(M._directory_provider, text, cwd))
+end
 
-    M._provider = init_provider(M)
-    function M.provider()
-        return M._provider
-    end
+table.insert(M._root_nodes, create_directory_node(M._directory_provider, "~/", home_path))
+table.insert(M._root_nodes, create_directory_node(M._directory_provider, "/", "/"))
 
-    M._root_nodes = {}
-    if cwd ~= home_path and cwd ~= "/" then
-        local text = cwd
-        if cwd:sub(1, #home_path) == home_path then
-            text = "~/" .. cwd:sub(#home_path + 1)
-        end
-        table.insert(M._root_nodes, create_directory_node(M._provider, text, cwd))
-    end
-    table.insert(M._root_nodes, create_directory_node(M._provider, "~/", home_path))
-    table.insert(M._root_nodes, create_directory_node(M._provider, "/", "/"))
+if luautils.resolve_type(home_path .. ".treectl") == "directory" then
+    table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl"))
+else
+    -- TODO opts s.t. this only displays in help mode
+    table.insert(M._root_nodes, nodes.create_node("t/", {}, {}, { hl = "comment" }))
+end
 
-    if luautils.resolve_type(home_path .. ".treectl") == "directory" then
-        table.insert(M._root_nodes, create_directory_node(M._provider, "t/", home_path .. ".treectl"))
-    end
+if false then -- vim.fn.executable("zoxide") == 1 then
+    -- TODO implement
+    table.insert(M._root_nodes, nodes.create_node("z/", {}, {}, { hl = "directory" }))
+else
+    -- TODO opts s.t. this only displays in help mode
+    table.insert(M._root_nodes, nodes.create_node("z/", {}, {}, {
+        label = "z/ - frequent dirs; requires 'zoxide' installation",
+        help = true
+    }))
+end
 
-    if vim.fn.executable("zoxide") == 1 then
-        -- TODO implement
-        table.insert(M._root_nodes, nodeutils.create_node("z/", {}, {}, { hl = "directory" }))
-    end
-
-    function M.root_nodes()
-        return M._root_nodes
-    end
-
-    return M
+return M
 end
 
