@@ -119,7 +119,7 @@ function M.line_append_content(line, content, hl)
     elseif type(content) == "table" then
         -- looks like a sequence; concatenate parts
         for i, segment in ipairs(content) do
-            -- could be a plain string or a [text, hl] specifying hl override; handle either
+            -- could be a plain string or a { str, hl } table specifying hl override; handle either
             if type(segment) == "string" then
                 line:append(segment, hl)
             elseif type(segment) == "table" then

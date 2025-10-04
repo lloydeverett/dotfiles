@@ -5,19 +5,19 @@ local luautils = require("treectl.luautils")
 local nodes = require("treectl.nodes")
 local uiutils = require("treectl.uiutils")
 local modfs_init = require("treectl.modfs")
-local modvim_init = require("treectl.modvim")
+local modnvim_init = require("treectl.modnvim")
 
 local node = nodes.node
 
 local function init_nodes()
     local modules = {
         modfs = modfs_init(),
-        modvim = modvim_init(),
+        modnvim = modnvim_init(),
     }
 
     local root = {}
     luautils.insert_all(root, modules.modfs.root_nodes())
-    luautils.insert_all(root, modules.modvim.root_nodes())
+    luautils.insert_all(root, modules.modnvim.root_nodes())
     table.insert(root, node("todo", {
         node("help mode that unhides nodes that have been marked with an opt that designates them as help-only"),
         node("you could also have an opt for 'comment' label suffixes that are only rendered when in help mode"),

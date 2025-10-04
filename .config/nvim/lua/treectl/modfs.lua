@@ -1,5 +1,6 @@
 local nodes = require("treectl.nodes")
 local luautils = require("treectl.luautils")
+local nvimutils = require("treectl.nvimutils")
 
 return function()
 local M = {}
@@ -48,7 +49,7 @@ local function init_file_provider()
           if not n.details.is_directory then
               return {}
           end
-          local files = sort_files_in_display_order(luautils.list_directory(n.details.path, {
+          local files = sort_files_in_display_order(nvimutils.list_directory(n.details.path, {
               omit_hidden = not M.show_hidden()
           }))
           local result = {}
@@ -85,7 +86,7 @@ local function init_file_provider()
       end,
 
       refresh_children = function(self, n, current_children)
-          local files = sort_files_in_display_order(luautils.list_directory(n.details.path, {
+          local files = sort_files_in_display_order(nvimutils.list_directory(n.details.path, {
               omit_hidden = not M.show_hidden()
           }))
 
@@ -137,7 +138,7 @@ end
 table.insert(M._root_nodes, create_directory_node(M._directory_provider, "~/", home_path))
 table.insert(M._root_nodes, create_directory_node(M._directory_provider, "/", "/"))
 
-if luautils.resolve_type(home_path .. ".treectl") == "directory" then
+if nvimutils.resolve_type(home_path .. ".treectl") == "directory" then
     table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl"))
 else
     -- TODO opts s.t. this only displays in help mode

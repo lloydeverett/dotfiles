@@ -1,6 +1,7 @@
 local nodes = require("treectl.nodes")
 local providers = require("treectl.providers")
 local luautils = require("treectl.luautils")
+local nvimutils = require("treectl.nvimutils")
 
 local node = nodes.node
 local lazy_node = nodes.lazy_node
@@ -16,7 +17,7 @@ end
 table.insert(M._root_nodes, lazy_node(
     "buffer",
     providers.simple_provider(function()
-        return luautils.map(luautils.list_open_buffers(), function(b)
+        return luautils.map(nvimutils.list_open_buffers(), function(b)
             local display_name = b.name
             if display_name == "" then
                 display_name = "[No Name]"
