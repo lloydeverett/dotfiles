@@ -62,5 +62,10 @@ function M.help_node(text, opts)
     return M.node(text, opts)
 end
 
+function M.debug_node(text, opts)
+    opts = insert_opts(opts, { debug = true })
+    return M.node(text, opts)
+end
+
 return M
 

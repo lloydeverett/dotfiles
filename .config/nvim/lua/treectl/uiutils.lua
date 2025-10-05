@@ -11,6 +11,19 @@ function M.is_node_text_dynamic(n)
     return n.text == nil
 end
 
+function M.node_get_path(n)
+    if n.opts.path ~= nil then
+        return n.opts.path
+    end
+    if n.opts.provider ~= nil then
+        local path = n.opts.provider:path(n)
+        if path ~= nil then
+            return path
+        end
+    end
+    return "∅"
+end
+
 function M.node_allows_expand(n)
     if M.is_node_lazy(n) then
         local provider = n.opts.provider
@@ -139,6 +152,8 @@ function M.node_append_display_text(n, line, render_opts)
             hl = n.opts.hl
         elseif n.opts.help then
             hl = "Comment"
+        elseif n.opts.debug then
+            hl = "SpecialChar"
         elseif n:get_parent_id() == nil then
             hl = "Define"
         end
@@ -150,6 +165,11 @@ function M.node_append_display_text(n, line, render_opts)
     if n.opts.help_suffix ~= nil and render_opts ~= nil and render_opts.show_help then
         M.line_append_content(line, n.opts.help_suffix, "Comment")
     end
+
+    if not n.opts.debug and not n.opts.help and render_opts ~= nil and render_opts.show_debug then
+        line:append(" ")
+        line:append("[" .. M.node_get_path(n) .. "]", "SpecialChar")
+    end
 end
 
 function M.node_get_nui_line(n, render_opts)
@@ -159,7 +179,10 @@ function M.node_get_nui_line(n, render_opts)
         return line
     end
 
-    if  n.opts.help and not (render_opts ~= nil and render_opts.show_help) then
+    if n.opts.help and not (render_opts ~= nil and render_opts.show_help) then
+        return {} -- skip render
+    end
+    if n.opts.debug and not (render_opts ~= nil and render_opts.show_debug) then
         return {} -- skip render
     end
 

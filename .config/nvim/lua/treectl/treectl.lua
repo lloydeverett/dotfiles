@@ -14,10 +14,11 @@ local function init_nodes()
     }
 
     local root = {}
+    table.insert(root, nodes.debug_node("-- DEBUG MODE --", { indicator = "none" }))
     table.insert(root, nodes.help_node("? = toggle help      Shift-H = collapse   Shift-L = expand              . = toggle                     ", { indicator = "none" }))
     table.insert(root, nodes.help_node("} = next top-level   { = prev top-level   ]] = next open top-level      [[ = up or prev open top-level ", { indicator = "none" }))
     table.insert(root, nodes.help_node("g. = toggle hidden   ⏎ = default action   Shift+⏎ = actions & preview   _ = zoom into                  ", { indicator = "none" }))
-    table.insert(root, nodes.help_node("- = zoom up                                                                                            ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("- = zoom up          ` = toggle debug                                                                  ", { indicator = "none" }))
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())
     table.insert(root, nodes.node("pin", { hl = "GruvboxPurple" }, {
@@ -127,6 +128,7 @@ vim.g[g_main_bufnr] = nil
 
 local function show_tree()
 
+    local show_debug = false
     local show_help = vim.g["treectl#show_help_by_default"] or false
 
     local winid = vim.api.nvim_get_current_win()
@@ -140,13 +142,13 @@ local function show_tree()
         vim.g[g_buf_suffix] = vim.g[g_buf_suffix] + 1
     end
 
-    local nodes, modules = init_nodes()
+    local root_nodes, modules = init_nodes()
 
     local tree = NuiTree({
       winid = winid,
-      nodes = nodes,
+      nodes = root_nodes,
       prepare_node = function(node)
-          return uiutils.node_get_nui_line(node, { show_help = show_help })
+          return uiutils.node_get_nui_line(node, { show_help = show_help, show_debug = show_debug })
       end,
     })
 
@@ -171,6 +173,14 @@ local function show_tree()
     vim.keymap.set("n", "?", function()
         uiutils.preserve_cursor_selection(tree, function()
             show_help = not show_help
+            tree:render()
+        end)
+    end, map_options)
+
+    -- toggle debug
+    vim.keymap.set("n", "`", function()
+        uiutils.preserve_cursor_selection(tree, function()
+            show_debug = not show_debug
             tree:render()
         end)
     end, map_options)
