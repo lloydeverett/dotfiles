@@ -5,9 +5,7 @@ set nu rnu
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#branch#enabled = 0
-
 let g:airline_section_z = '%2p%% %1l/%1L %1c'
-
 let g:vim_markdown_folding_disabled = 1
 
 call plug#begin()

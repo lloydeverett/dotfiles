@@ -181,7 +181,7 @@ function update_font_size()
 end
 if vim.g.neovide then
   update_font_size()
-  vim.o.guifont = "0xProto:h16"
+  vim.o.guifont = "0xProto Nerd Font Mono:h16"
   vim.g.neovide_cursor_animation_length = 0.0
   vim.g.neovide_scroll_animation_length = 0.15
   vim.keymap.set('v', '<D-c>', '"+y')             -- copy

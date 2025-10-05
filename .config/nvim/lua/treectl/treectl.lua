@@ -142,6 +142,7 @@ local function init_nodes()
         nodes.node("gradient"),
         nodes.node("treectl"),
         nodes.node("unicode"),
+        nodes.node("nerdfont"),
         nodes.node("english"),
         nodes.node("tz"),
         nodes.node("syntax", {}, {
