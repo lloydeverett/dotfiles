@@ -13,10 +13,6 @@ local function insert_opts(opts, additions)
     return new_opts
 end
 
-local function insert_lazy_opts(opts, provider)
-    return insert_opts(opts, { lazy = true, provider = provider })
-end
-
 local function random8()
   return math.random(0, 255)
 end
@@ -33,42 +29,37 @@ function M.gen_id()
     )
 end
 
-function M.node_with_id(text, id, children, details, opts)
-    if details == nil then
-        details = {}
-    end
+function M.node(text, opts, children)
     if opts == nil then
         opts = {}
     end
-    return NuiTree.Node({ text = text, id = id, opts = opts, details = details }, children)
+    local id = opts.id
+    if id == nil then
+        id = M.gen_id()
+    end
+    if children == nil then
+        children = {}
+    end
+    return NuiTree.Node({
+        text = text,
+        opts = opts,
+        id = id,
+        details = opts.details
+    }, children)
 end
 
-function M.node(text, children, details, opts)
-    return M.node_with_id(text, M.gen_id(), children, details, opts)
+function M.separator_node()
+    return M.node(nil, { separator = true })
 end
 
-function M.create_separator_node()
-    return M.node(nil, {}, {}, { separator = true })
+function M.lazy_node(text, opts, provider)
+    opts = insert_opts(opts, { lazy = true, provider = provider })
+    return M.node(text, opts)
 end
 
-function M.lazy_node(text, provider, details, opts)
-    opts = insert_lazy_opts(opts, provider)
-    return M.node(text, {}, details, opts)
-end
-
-function M.lazy_node_with_id(text, id, provider, details, opts)
-    opts = insert_lazy_opts(opts, provider)
-    return M.node_with_id(text, id, {}, details, opts)
-end
-
-function M.help_node(text, details, opts)
+function M.help_node(text, opts)
     opts = insert_opts(opts, { help = true })
-    return M.node(text, {}, details, opts)
-end
-
-function M.bare_help_node(text, details, opts)
-    opts = insert_opts(opts, { help = true, indicator = "none" })
-    return M.node(text, {}, details, opts)
+    return M.node(text, opts)
 end
 
 return M

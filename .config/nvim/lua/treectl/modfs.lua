@@ -38,12 +38,15 @@ local function sort_files_in_display_order(files)
 end
 
 local function node_from_file(provider, file)
-    return nodes.lazy_node(nil, provider, {
-        path = file.path,
-        filename = file.name,
-        is_directory = file.resolved_type == "directory",
-        hidden = file.hidden
-    })
+    local opts = {
+        details = {
+            path = file.path,
+            filename = file.name,
+            is_directory = file.resolved_type == "directory",
+            hidden = file.hidden
+        }
+    }
+    return nodes.lazy_node(nil, opts, provider)
 end
 
 local function init_file_provider()
@@ -109,11 +112,11 @@ local function init_file_provider()
 end
 
 local function create_directory_node(provider, text, path, help_suffix)
-    return nodes.lazy_node(
-        text,
-        provider,
-        { path = path, filename = nil, is_directory = true },
-        { hl = "directory", help_suffix = help_suffix })
+    return nodes.lazy_node(text, {
+            hl = "directory",
+            help_suffix = help_suffix,
+            details = { path = path, filename = nil, is_directory = true }
+           }, provider)
 end
 
 M._directory_provider = init_file_provider()
@@ -142,7 +145,7 @@ end
 
 if false then -- vim.fn.executable("zoxide") == 1 then
     -- TODO implement
-    table.insert(M._root_nodes, nodes.node("z/", {}, {}, { hl = "directory", help_suffix = help_suffix_zoxide }))
+    table.insert(M._root_nodes, nodes.node("z/", { hl = "directory", help_suffix = help_suffix_zoxide }))
 else
     table.insert(M._root_nodes, nodes.help_node("z/" .. help_suffix_zoxide))
 end

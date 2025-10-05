@@ -15,21 +15,21 @@ end
 
 table.insert(M._root_nodes, nodes.lazy_node(
     "buffer",
+    { hl = "DiagnosticInfo", help_suffix = " - lists open buffers" },
     providers.simple_provider(function()
         return luautils.map(nvimutils.list_open_buffers(), function(b)
             local display_name = b.name
             if display_name == "" then
                 display_name = "[No Name]"
             end
-            return nodes.node({ { "" .. b.bufnr, "Number" }, " ", display_name }, {})
+            return nodes.node({ { "" .. b.bufnr, "Number" }, " ", display_name })
         end)
-    end),
-    {},
-    { hl = "DiagnosticInfo", help_suffix = " - lists open buffers" })
+    end))
 )
 
 table.insert(M._root_nodes, nodes.lazy_node(
     "recent",
+    { hl = "DiagnosticInfo", help_suffix = " - nvim oldfiles" },
     providers.simple_provider(function()
         local files = luautils.filter(vim.v.oldfiles, function(f)
             if f:sub(1, #"term://") == "term://" then
@@ -42,18 +42,16 @@ table.insert(M._root_nodes, nodes.lazy_node(
 
         return luautils.map(files, function(f, i)
             local shortened_path = nvimutils.try_shorten_path(f)
-            return nodes.node({ { "" .. (i - 1), "Number" }, " ", shortened_path }, {})
+            return nodes.node({ { "" .. (i - 1), "Number" }, " ", shortened_path })
         end)
-    end),
-    {},
-    { hl = "DiagnosticInfo", help_suffix = " - nvim oldfiles" })
+    end))
 )
 
 local function styled_node(str, children, help_suffix)
     if children == nil then
         children = {}
     end
-    return nodes.node(str, children, {}, { hl = "DiagnosticInfo", help_suffix = help_suffix })
+    return nodes.node(str, { hl = "DiagnosticInfo", help_suffix = help_suffix }, children)
 end
 
 table.insert(M._root_nodes, styled_node("neovim", {

@@ -17,7 +17,7 @@ function M.node_allows_expand(n)
         if provider ~= nil then
             return provider:allows_expand(n)
         else
-            return n:has_children()
+            return false
         end
     end
 
@@ -37,6 +37,7 @@ function M.node_expand(tree, n)
             end
         end
     end
+
     n:expand()
 
     -- auto-expand subtree if there is only one child node

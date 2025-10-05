@@ -14,22 +14,22 @@ local function init_nodes()
     }
 
     local root = {}
-    table.insert(root, nodes.bare_help_node("? = toggle help      Shift-H = collapse   Shift-L = expand              . = toggle                     "))
-    table.insert(root, nodes.bare_help_node("} = next top-level   { = prev top-level   ]] = next open top-level      [[ = up or prev open top-level "))
-    table.insert(root, nodes.bare_help_node("g. = toggle hidden   ⏎ = default action   Shift+⏎ = actions & preview   _ = zoom into                  "))
-    table.insert(root, nodes.bare_help_node("- = zoom up                                                                                            "))
+    table.insert(root, nodes.help_node("? = toggle help      Shift-H = collapse   Shift-L = expand              . = toggle                     ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("} = next top-level   { = prev top-level   ]] = next open top-level      [[ = up or prev open top-level ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("g. = toggle hidden   ⏎ = default action   Shift+⏎ = actions & preview   _ = zoom into                  ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("- = zoom up                                                                                            ", { indicator = "none" }))
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())
-    table.insert(root, nodes.node("pin", {
+    table.insert(root, nodes.node("pin", { hl = "GruvboxPurple" }, {
       nodes.node("pin nodes from other subtrees here"),
-    }, {}, { hl = "GruvboxPurple" }))
-    table.insert(root, nodes.node("note", {
+    }))
+    table.insert(root, nodes.node("note", { hl = "GruvboxPurple" }, {
       nodes.node("make your own notes here"),
       nodes.node("can be based on files in ~/.treenote"),
       nodes.node("and then each file in there looks like an expanded tree"),
-    }, {}, { hl = "GruvboxPurple" }))
-    table.insert(root, nodes.node("task", {}, {}, { hl = "GruvboxPurple" }))
-    table.insert(root, nodes.node("calendar", {
+    }))
+    table.insert(root, nodes.node("task", { hl = "GruvboxPurple" }))
+    table.insert(root, nodes.node("calendar", { hl = "GruvboxPurple" }, {
       nodes.node("2024"),
       nodes.node("2025", {
         nodes.node("01 [January]", {
@@ -38,13 +38,13 @@ local function init_nodes()
         }),
       }),
       nodes.node("2026"),
-    }, {}, { hl = "GruvboxPurple" }))
-    table.insert(root, nodes.node("timer", {
-        nodes.node("Start 5min", {}, {}, { hl = "GruvboxPurple", indicator = "action" }),
-        nodes.node("Start 15min", {}, {}, { hl = "GruvboxPurple", indicator = "action" }),
-        nodes.node("Start...", {}, {}, { hl = "GruvboxPurple", indicator = "action" }),
-    }, {}, { hl = "GruvboxPurple" }))
-    table.insert(root, nodes.node("todo", {
+    }))
+    table.insert(root, nodes.node("timer", { hl = "GruvboxPurple" }, {
+        nodes.node("Start 5min", { hl = "GruvboxPurple", indicator = "action" }),
+        nodes.node("Start 15min", { hl = "GruvboxPurple", indicator = "action" }),
+        nodes.node("Start...", { hl = "GruvboxPurple", indicator = "action" }),
+    }))
+    table.insert(root, nodes.node("todo", {}, {
         nodes.node("clearlist gradients as part of note function?"),
         nodes.node("maybe also ties in with pomodoro / calendar?"),
         nodes.node("todo: scratch buffers that display as text with refs in insert mode, but in normal mode refs resolve to tree nodes and render as tree nodes"),
@@ -57,19 +57,19 @@ local function init_nodes()
         nodes.node("allow searching by opening a scratch buffer filled with cached fully expanded node contents that links back to the real tree " ..
                     "(although some nodes you don't need to use a cache, e.g. calendar, because you can just expand all the data anyway)"),
     }))
-    table.insert(root, nodes.node("www", {
+    table.insert(root, nodes.node("www", {}, {
       nodes.node("tab"),
       nodes.node("bookmark"),
     }))
     table.insert(root, nodes.node("llm"))
     table.insert(root, nodes.node("steampipe"))
-    table.insert(root, nodes.node("matrix", {
+    table.insert(root, nodes.node("matrix", {}, {
         nodes.node("slack"),
         nodes.node("whatsapp"),
     }))
     table.insert(root, nodes.node("man"))
     table.insert(root, nodes.node("email"))
-    table.insert(root, nodes.node("shell", {
+    table.insert(root, nodes.node("shell", {}, {
       nodes.node("env"),
       nodes.node("alias"),
       nodes.node("bin"),
@@ -83,8 +83,8 @@ local function init_nodes()
     table.insert(root, nodes.node("kubectl"))
     table.insert(root, nodes.node("window"))
     table.insert(root, nodes.node("systemd"))
-    table.insert(root, nodes.node("os", {
-      nodes.node("details", {
+    table.insert(root, nodes.node("os", {}, {
+      nodes.node("details", {}, {
         nodes.node("battery: xx%"),
       }),
       nodes.node("storage"),
@@ -93,7 +93,7 @@ local function init_nodes()
       nodes.node("application")
     }))
     table.insert(root, nodes.node("brew"))
-    table.insert(root, nodes.node("db", {
+    table.insert(root, nodes.node("db", {}, {
       nodes.node("sqlite"),
       nodes.node("postgres"),
       nodes.node("mysql"),
@@ -101,21 +101,21 @@ local function init_nodes()
     table.insert(root, nodes.node("takeout"))
     table.insert(root, nodes.node("docker"))
     table.insert(root, nodes.node("podman"))
-    table.insert(root, nodes.node("reference", {
+    table.insert(root, nodes.node("reference", {}, {
         nodes.node("palette"),
         nodes.node("gradient"),
         nodes.node("treectl"),
         nodes.node("unicode"),
         nodes.node("english"),
         nodes.node("tz"),
-        nodes.node("syntax", {
+        nodes.node("wikipedia"),
+        nodes.node("syntax", {}, {
             nodes.node("C"),
             nodes.node("C++"),
             nodes.node("Swift"),
         }),
     }))
     table.insert(root, nodes.node("youtube"))
-    table.insert(root, nodes.node("wikipedia"))
 
     return root, modules
 end
