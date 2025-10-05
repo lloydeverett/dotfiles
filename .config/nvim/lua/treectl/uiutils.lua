@@ -207,17 +207,15 @@ function M.node_get_nui_line(n, render_opts)
     line:append(string.rep("  ", n:get_depth() - 1))
 
     if n.opts.indicator == "none" then
-       line:append("  ")
+        line:append("  ")
     elseif n.opts.indicator == "action" then
-       line:append("→ ", "SpecialChar")
+        line:append("→ ", "SpecialChar")
+    elseif M.node_allows_expand(n) then
+        line:append(n:is_expanded() and "- " or "+ ", "SpecialChar")
+    elseif n.opts.help then
+        line:append("* ", "LineNr")
     else
-        if M.node_allows_expand(n) then
-          line:append(n:is_expanded() and "- " or "+ ", "SpecialChar")
-        elseif n.opts.help then
-          line:append("* ", "LineNr")
-        else
-          line:append("- ", "LineNr")
-        end
+        line:append("- ", "LineNr")
     end
 
     M.node_append_display_text(n, line, render_opts)
