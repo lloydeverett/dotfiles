@@ -53,11 +53,7 @@ table.insert(M._root_nodes, nodes.lazy_node(
     end))
 )
 
-table.insert(M._root_nodes, nodes.node("neovim", {
-        hl = "DiagnosticInfo",
-        help_suffix = "more neovim trees",
-        path = "neovim"
-    }, {
+table.insert(M._root_nodes, nodes.node("neovim", { hl = "DiagnosticInfo", path = "neovim", help_suffix = "more neovim trees" }, {
         nodes.node("window",       { hl = "DiagnosticInfo", path = "neovim/window" }),
         nodes.node("highlight",    { hl = "DiagnosticInfo", path = "neovim/highlight" }),
         nodes.node("tab",          { hl = "DiagnosticInfo", path = "neovim/tab" }),

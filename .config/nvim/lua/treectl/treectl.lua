@@ -47,12 +47,13 @@ local function init_nodes()
 
     table.insert(root, nodes.debug_node("-- DEBUG MODE --", { indicator = "none" }))
 
-    --                                 |                            |                            |
+    --                                 |----------------------------|----------------------------|-------------------------------|
     table.insert(root, nodes.help_node("? = toggle help             Shift-L = expand             Shift-H = collapse              ", { indicator = "none" }))
     table.insert(root, nodes.help_node(". = toggle node             } = next top-level           { = prev top-level              ", { indicator = "none" }))
     table.insert(root, nodes.help_node("g. = toggle hidden          ]] = next open top-level     [[ = up or prev open top-level  ", { indicator = "none" }))
     table.insert(root, nodes.help_node("` = toggle debug            _ = zoom into                - = zoom traverse up            ", { indicator = "none" }))
-    table.insert(root, nodes.help_node("s = preview in split        ⏎ = default action           Shift+⏎ = preview + show actions", { indicator = "none" }))
+    table.insert(root, nodes.help_node("s = preview in hsplit       ⏎ = default action           Shift+⏎ = preview + show actions", { indicator = "none" }))
+    table.insert(root, nodes.help_node("v = preview in vsplit       d = delete (if available)    p = paste (if available)        ", { indicator = "none" }))
 
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())

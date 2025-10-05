@@ -49,6 +49,8 @@ call plug#begin()
     Plug 'stevearc/aerial.nvim'
     Plug 'MunifTanjim/nui.nvim'
     Plug 'karb94/neoscroll.nvim'
+    Plug 'rcarriga/nvim-notify'
+    Plug 'epwalsh/pomo.nvim'
     " Plug 'nvzone/volt'
     " Plug 'nvzone/timerly'
 call plug#end()
@@ -100,8 +102,9 @@ nnoremap _ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
 nnoremap <leader>_ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
 nnoremap + <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
 nnoremap <leader>+ <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
-nnoremap ) <cmd>split<cr><cmd>wincmd j<cr><cmd>terminal timr-tui<cr>
-nnoremap <leader>) <cmd>split<cr><cmd>wincmd j<cr><cmd>terminal timr-tui<cr>
+
+nnoremap <leader>p <cmd>TimerStart 5m<cr>
+nnoremap <leader>P <cmd>TimerStart 15m<cr>
 
 " close terminal as soon as shell exits
 autocmd TermClose * if !v:event.status | exe 'bdelete! '..expand('<abuf>') | endif
@@ -145,7 +148,6 @@ set undodir=~/.local/share/nvim/undo/
 set cursorline
 
 function s:global_highlight_config()
-  hi Normal ctermbg=NONE guibg=#1D1F20
   hi VimwikiBold guifg=#FF3D5B gui=bold
   hi VimwikiItalic guifg=#FF6F91 gui=italic
 endfunction
