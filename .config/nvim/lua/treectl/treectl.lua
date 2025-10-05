@@ -4,8 +4,38 @@ local NuiTree = require("nui.tree")
 local luautils = require("treectl.luautils")
 local nodes = require("treectl.nodes")
 local uiutils = require("treectl.uiutils")
+
 local modfs_init = require("treectl.modfs")
 local modnvim_init = require("treectl.modnvim")
+
+local help_suffixes = {
+    pin       = "pin references to tree nodes",
+    outline   = "tree-based outlining and note-taking",
+    task      = "TaskWarrior integration",
+    calendar  = "inbuilt calendar",
+    clock     = "set and manage timers and other clock functions",
+    todo      = "dev roadmap",
+    www       = "browse the web from treectl",
+    llm       = "llm command integration",
+    steampipe = "steampipe integration",
+    matrix    = "matrix-commander integration",
+    man       = "indexes man pages",
+    email     = "treectl email client",
+    shell     = "shell integration",
+    spotify   = "Spotify integration",
+    gh        = "gh command integration",
+    kubectl   = "kubectl integration",
+    hs        = "macOS hammerspoon integration",
+    systemd   = "manage systemd services",
+    unix      = "process tree, volumes, etc.",
+    brew      = "manage brew packages",
+    sql       = "treectl SQL client",
+    takeout   = "navigate Google Takeout exports",
+    docker    = "docker command integration",
+    podman    = "podman command integration",
+    reference = "handy reference material",
+    youtube   = "browse YouTube from treectl",
+}
 
 local function init_nodes()
     local modules = {
@@ -14,38 +44,46 @@ local function init_nodes()
     }
 
     local root = {}
+
     table.insert(root, nodes.debug_node("-- DEBUG MODE --", { indicator = "none" }))
-    table.insert(root, nodes.help_node("? = toggle help      Shift-H = collapse   Shift-L = expand              . = toggle                     ", { indicator = "none" }))
-    table.insert(root, nodes.help_node("} = next top-level   { = prev top-level   ]] = next open top-level      [[ = up or prev open top-level ", { indicator = "none" }))
-    table.insert(root, nodes.help_node("g. = toggle hidden   ⏎ = default action   Shift+⏎ = actions & preview   _ = zoom into                  ", { indicator = "none" }))
-    table.insert(root, nodes.help_node("- = zoom up          ` = toggle debug                                                                  ", { indicator = "none" }))
+
+    --                                 |                            |                            |
+    table.insert(root, nodes.help_node("? = toggle help             Shift-L = expand             Shift-H = collapse              ", { indicator = "none" }))
+    table.insert(root, nodes.help_node(". = toggle node             } = next top-level           { = prev top-level              ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("g. = toggle hidden          ]] = next open top-level     [[ = up or prev open top-level  ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("` = toggle debug            _ = zoom into                - = zoom traverse up            ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("s = preview in split        ⏎ = default action           Shift+⏎ = preview + show actions", { indicator = "none" }))
+
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())
-    table.insert(root, nodes.node("pin", { hl = "GruvboxPurple" }, {
+
+    table.insert(root, nodes.node("pin", { hl = "GruvboxPurple", path = "pin", help_suffix = help_suffixes.pin }, {
       nodes.node("pin nodes from other subtrees here"),
     }))
-    table.insert(root, nodes.node("note", { hl = "GruvboxPurple" }, {
+    table.insert(root, nodes.node("outline", { hl = "GruvboxPurple", path = "outline", help_suffix = help_suffixes.outline }, {
       nodes.node("make your own notes here"),
       nodes.node("can be based on files in ~/.treenote"),
       nodes.node("and then each file in there looks like an expanded tree"),
     }))
-    table.insert(root, nodes.node("task", { hl = "GruvboxPurple" }))
-    table.insert(root, nodes.node("calendar", { hl = "GruvboxPurple" }, {
-      nodes.node("2024"),
-      nodes.node("2025", {
+    table.insert(root, nodes.node("task", { hl = "GruvboxPurple", path = "task", help_suffix = help_suffixes.task }))
+    table.insert(root, nodes.node("calendar", { hl = "GruvboxPurple", path ="calendar", help_suffix = help_suffixes.calendar }, {
+      nodes.node("2024", { path = "calendar/2024" }),
+      nodes.node("2025", { path = "calendar/2025" }, {
         nodes.node("01 [January]", {
             nodes.node("events"),
             nodes.node("days")
         }),
       }),
-      nodes.node("2026"),
+      nodes.node("2026", { path = "calendar/2026" }),
     }))
-    table.insert(root, nodes.node("timer", { hl = "GruvboxPurple" }, {
-        nodes.node("Start 5min", { hl = "GruvboxPurple", indicator = "action" }),
-        nodes.node("Start 15min", { hl = "GruvboxPurple", indicator = "action" }),
-        nodes.node("Start...", { hl = "GruvboxPurple", indicator = "action" }),
+    table.insert(root, nodes.node("clock", { hl = "GruvboxPurple", path = "clock", help_suffix = help_suffixes.clock }, {
+        nodes.node("Start 5m timer",  { hl = "GruvboxPurple", indicator = "action", path = "clock/timer/start/5m" }),
+        nodes.node("Start 15m timer", { hl = "GruvboxPurple", indicator = "action", path = "clock/timer/start/15m" }),
+        nodes.node("Start timer...",  { hl = "GruvboxPurple", indicator = "action", path = "clock/timer/start/custom" }),
     }))
-    table.insert(root, nodes.node("todo", {}, {
+    table.insert(root, nodes.node("todo", { path = "todo", help_suffix = help_suffixes.todo }, {
+        nodes.node("[[ and ]] are buggy - e.g. try ]] ]] [[ after startup"),
+        nodes.node("fix hl color refs"),
         nodes.node("clearlist gradients as part of note function?"),
         nodes.node("maybe also ties in with pomodoro / calendar?"),
         nodes.node("todo: scratch buffers that display as text with refs in insert mode, but in normal mode refs resolve to tree nodes and render as tree nodes"),
@@ -57,66 +95,61 @@ local function init_nodes()
         nodes.node("optionally display preview + keybindings in a split too"),
         nodes.node("allow searching by opening a scratch buffer filled with cached fully expanded node contents that links back to the real tree " ..
                     "(although some nodes you don't need to use a cache, e.g. calendar, because you can just expand all the data anyway)"),
+        nodes.node("low priority: raycast?"),
     }))
-    table.insert(root, nodes.node("www", {}, {
+    table.insert(root, nodes.node("www", { path = "www", help_suffix = help_suffixes.www }, {
       nodes.node("tab"),
       nodes.node("bookmark"),
     }))
-    table.insert(root, nodes.node("llm"))
-    table.insert(root, nodes.node("steampipe"))
-    table.insert(root, nodes.node("matrix", {}, {
-        nodes.node("slack"),
-        nodes.node("whatsapp"),
+    table.insert(root, nodes.node("llm", { path = "llm", help_suffix = help_suffixes.llm }))
+    table.insert(root, nodes.node("steampipe", { path = "steampipe", help_suffix = help_suffixes.steampipe }))
+    table.insert(root, nodes.node("matrix", { path = "matrix", help_suffix = help_suffixes.matrix }, {
+        nodes.node("e.g. slack"),
+        nodes.node("e.g. whatsapp"),
     }))
-    table.insert(root, nodes.node("man"))
-    table.insert(root, nodes.node("email"))
-    table.insert(root, nodes.node("shell", {}, {
+    table.insert(root, nodes.node("man", { path = "man", help_suffix = help_suffixes.man }))
+    table.insert(root, nodes.node("email", { path = "email", help_suffix = help_suffixes.email }))
+    table.insert(root, nodes.node("shell", { path = "shell", help_suffix = help_suffixes.shell }, {
       nodes.node("env"),
       nodes.node("alias"),
       nodes.node("bin"),
       nodes.node("path"),
       nodes.node("job"),
     }))
-    table.insert(root, nodes.node("music"))
-    table.insert(root, nodes.node("git"))
-    table.insert(root, nodes.node("gh"))
-    table.insert(root, nodes.node("raycast"))
-    table.insert(root, nodes.node("kubectl"))
-    table.insert(root, nodes.node("window"))
-    table.insert(root, nodes.node("systemd"))
-    table.insert(root, nodes.node("os", {}, {
-      nodes.node("details", {}, {
-        nodes.node("battery: xx%"),
-      }),
+    table.insert(root, nodes.node("spotify", { path = "spotify", help_suffix = help_suffixes.spotify }))
+    table.insert(root, nodes.node("gh", { path = "gh", help_suffix = help_suffixes.gh }))
+    table.insert(root, nodes.node("kubectl", { path = "kubectl", help_suffix = help_suffixes.kubectl }))
+    table.insert(root, nodes.node("hs", { path = "hs", help_suffix = help_suffixes.hs }))
+    table.insert(root, nodes.node("systemd", { path = "systemd", help_suffix = help_suffixes.systemd }))
+    table.insert(root, nodes.node("unix", { path = "unix", help_suffix = help_suffixes.unix }, {
       nodes.node("storage"),
       nodes.node("process"),
       nodes.node("netstat"),
       nodes.node("application")
     }))
-    table.insert(root, nodes.node("brew"))
-    table.insert(root, nodes.node("db", {}, {
+    table.insert(root, nodes.node("brew", { path = "brew", help_suffix = help_suffixes.brew }))
+    table.insert(root, nodes.node("sql", { path = "sql", help_suffix = help_suffixes.sql }, {
       nodes.node("sqlite"),
       nodes.node("postgres"),
       nodes.node("mysql"),
     }))
-    table.insert(root, nodes.node("takeout"))
-    table.insert(root, nodes.node("docker"))
-    table.insert(root, nodes.node("podman"))
-    table.insert(root, nodes.node("reference", {}, {
+    table.insert(root, nodes.node("takeout", { path = "takeout", help_suffix = help_suffixes.takeout }))
+    table.insert(root, nodes.node("docker", { path = "docker", help_suffix = help_suffixes.docker }))
+    table.insert(root, nodes.node("podman", { path = "podman", help_suffix = help_suffixes.podman }))
+    table.insert(root, nodes.node("reference", { path = "reference", help_suffix = help_suffixes.reference }, {
         nodes.node("palette"),
         nodes.node("gradient"),
         nodes.node("treectl"),
         nodes.node("unicode"),
         nodes.node("english"),
         nodes.node("tz"),
-        nodes.node("wikipedia"),
         nodes.node("syntax", {}, {
             nodes.node("C"),
             nodes.node("C++"),
             nodes.node("Swift"),
         }),
     }))
-    table.insert(root, nodes.node("youtube"))
+    table.insert(root, nodes.node("youtube", { path = "youtube", help_suffix = help_suffixes.youtube }))
 
     return root, modules
 end

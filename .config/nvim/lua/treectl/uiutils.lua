@@ -11,14 +11,31 @@ function M.is_node_text_dynamic(n)
     return n.text == nil
 end
 
-function M.node_get_path(n)
+function M.node_get_path_display_text(n)
+    local function render_path_to_string(path)
+        if type(path) == "string" then
+            return path
+        elseif type(path) == "table" then
+            local result = ""
+            for i, v in ipairs(path) do
+                if i > 1 then
+                    result = result .. " § "
+                end
+                result = result .. v
+            end
+            return result
+        else
+            return "???"
+        end
+    end
+
     if n.opts.path ~= nil then
-        return n.opts.path
+        return render_path_to_string(n.opts.path)
     end
     if n.opts.provider ~= nil then
         local path = n.opts.provider:path(n)
         if path ~= nil then
-            return path
+            return render_path_to_string(path)
         end
     end
     return "∅"
@@ -163,12 +180,13 @@ function M.node_append_display_text(n, line, render_opts)
     M.line_append_content(line, content, hl)
 
     if n.opts.help_suffix ~= nil and render_opts ~= nil and render_opts.show_help then
+        line:append(" - ", "Comment")
         M.line_append_content(line, n.opts.help_suffix, "Comment")
     end
 
     if not n.opts.debug and not n.opts.help and render_opts ~= nil and render_opts.show_debug then
         line:append(" ")
-        line:append("[" .. M.node_get_path(n) .. "]", "SpecialChar")
+        line:append("[" .. M.node_get_path_display_text(n) .. "]", "SpecialChar")
     end
 end
 
