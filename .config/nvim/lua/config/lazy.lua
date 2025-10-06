@@ -103,6 +103,7 @@ require("lazy").setup({
                copy_to_clipboard = false, -- Copy glyph to clipboard instead of inserting
            }
       },
+      -- { 'akinsho/toggleterm.nvim" },
       -- { 'powerman/vim-plugin-AnsiEsc' },
   },
   install = { colorscheme = { "habamax" } },
