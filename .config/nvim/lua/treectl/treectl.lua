@@ -68,6 +68,13 @@ local function init_nodes()
     }))
     table.insert(root, nodes.node("task", { hl = "GruvboxPurple", path = "task", help_suffix = help_suffixes.task }))
     table.insert(root, nodes.node("calendar", { hl = "GruvboxPurple", path ="calendar", help_suffix = help_suffixes.calendar }, {
+      nodes.node("Yesterday"),
+      nodes.node("Today"),
+      nodes.node("Tomorrow"),
+      nodes.node("September 2025"),
+      nodes.node("October 2025"),
+      nodes.node("November 2025"),
+      nodes.node("December 2025"),
       nodes.node("2024", { path = "calendar/2024" }),
       nodes.node("2025", { path = "calendar/2025" }, {
         nodes.node("01 [January]", {

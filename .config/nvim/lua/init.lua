@@ -52,7 +52,6 @@ function open_terminal_in_buffer_dir()
     vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
 end
 
-
 -- Set up nvim-cmp.
 local cmp = require'cmp'
 
@@ -208,29 +207,4 @@ else
   vim.keymap.set("n", "G", function() cinnamon.scroll("G", { mode = "window", max_delta = { time = 250 } }) end)
   vim.keymap.set("n", "gg", function() cinnamon.scroll("gg", { mode = "window", max_delta = { time = 250 } }) end)
 end
-
-require("aerial").setup({
-  -- optionally use on_attach to set keymaps when aerial has attached to a buffer
-  on_attach = function(bufnr)
-    -- Jump forwards/backwards with '{' and '}'
-    vim.keymap.set("n", "[[", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-    vim.keymap.set("n", "]]", "<cmd>AerialNext<CR>", { buffer = bufnr })
-  end,
-})
--- You probably also want to set a keymap to toggle aerial
-
-vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
-
-require("pomo").setup({
-  sessions = {
-    pomodoro = {
-      { name = "Work", duration = "25m" },
-      { name = "Short Break", duration = "5m" },
-      { name = "Work", duration = "25m" },
-      { name = "Short Break", duration = "5m" },
-      { name = "Work", duration = "25m" },
-      { name = "Long Break", duration = "15m" },
-    },
-  },
-})
 

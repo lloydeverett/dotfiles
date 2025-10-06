@@ -1,4 +1,4 @@
--- Bootstrap lazy.nvim
+-- lazy.nvim bootstrap
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -15,18 +15,24 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Setup lazy.nvim
 require("lazy").setup({
   spec = {
       -- begin color schemes
-      { 'fxn/vim-monochrome' },
       { 'ellisonleao/gruvbox.nvim' },
-      { 'ntk148v/komau.vim' },
-      { 'davidosomething/vim-colors-meh' },
-      { 'zekzekus/menguless' },
-      { 'EdenEast/nightfox.nvim' },
+      { 'fxn/vim-monochrome', lazy = true },
+      { 'ntk148v/komau.vim', lazy = true  },
+      { 'davidosomething/vim-colors-meh', lazy = true  },
+      { 'zekzekus/menguless', lazy = true  },
+      { 'EdenEast/nightfox.nvim', lazy = true  },
       -- end color schemes
-      { 'vimwiki/vimwiki', branch = 'dev' },
+      { 'folke/snacks.nvim',
+          opts = {
+              picker = { enabled = true },
+              scope = { enabled = true }
+          }
+      },
+      { 'vimwiki/vimwiki',
+          branch = 'dev' },
       { 'stevearc/oil.nvim' },
       { 'nvim-lua/plenary.nvim' },
       { 'nvim-lua/popup.nvim' },
@@ -49,15 +55,55 @@ require("lazy").setup({
       { 'hrsh7th/cmp-vsnip' },
       { 'hrsh7th/vim-vsnip' },
       { 'tbabej/taskwiki' },
-      { 'powerman/vim-plugin-AnsiEsc' },
-      { 'farseer90718/vim-taskwarrior' },
       { 'jvgrootveld/telescope-zoxide' },
       { 'declancm/cinnamon.nvim' },
-      { 'stevearc/aerial.nvim' },
       { 'MunifTanjim/nui.nvim' },
-      { 'karb94/neoscroll.nvim' },
-      { 'rcarriga/nvim-notify' },
-      { 'epwalsh/pomo.nvim' }
+      { 'rcarriga/nvim-notify',
+           opts = {
+               background_colour = "#000000",
+               top_down = false
+           }
+      },
+      { 'epwalsh/pomo.nvim',
+           opts = {
+               notifiers = {
+                 {
+                   name = "Default",
+                   toggles = {
+                       dim = false
+                   },
+                   opts = {
+                     sticky = true,
+                     title_icon = "󱎫",
+                     text_icon = "󰄉",
+                   },
+                 },
+                 { name = "System" },
+               },
+               sessions = {
+                   pomodoro = {
+                       { name = "Work", duration = "25m" },
+                       { name = "Short Break", duration = "5m" },
+                       { name = "Work", duration = "25m" },
+                       { name = "Short Break", duration = "5m" },
+                       { name = "Work", duration = "25m" },
+                       { name = "Long Break", duration = "15m" },
+                   },
+               },
+           }
+      },
+      { '2kabhishek/nerdy.nvim',
+           cmd = 'Nerdy',
+           dependencies = {
+               'folke/snacks.nvim',
+           },
+           opts = {
+               max_recents = 30, -- Configure recent icons limit
+               add_default_keybindings = true, -- Add default keybindings
+               copy_to_clipboard = false, -- Copy glyph to clipboard instead of inserting
+           }
+      },
+      -- { 'powerman/vim-plugin-AnsiEsc' },
   },
   install = { colorscheme = { "habamax" } },
   checker = { enabled = false }
