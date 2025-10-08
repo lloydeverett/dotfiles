@@ -41,6 +41,7 @@ local function node_from_file(provider, file)
             path = file.path,
             filename = file.name,
             is_directory = file.resolved_type == "directory",
+            resolved_path = file.resolved_path,
             hidden = file.hidden
         }
     }
@@ -68,6 +69,8 @@ local function init_file_provider()
       end,
 
       text = function(self, n)
+          local result = {}
+
           local highlight = nil
           if n.details.hidden then
               highlight = "Comment"
@@ -76,9 +79,20 @@ local function init_file_provider()
           end
 
           if n.details.is_directory then
-              return (n.details.filename .. "/"), highlight
+              table.insert(result, { (n.details.filename .. "/"), highlight })
+          else
+              table.insert(result, { n.details.filename, highlight })
           end
-          return n.details.filename, highlight
+
+          if n.details.resolved_path ~= n.details.path then
+              local displayed_path = n.details.resolved_path
+              if n.details.is_directory then
+                  displayed_path = luautils.path_concat(displayed_path, "")
+              end
+              table.insert(result, { (" -> " .. displayed_path), "Comment" })
+          end
+
+          return result
       end,
 
       path = function(self, n)

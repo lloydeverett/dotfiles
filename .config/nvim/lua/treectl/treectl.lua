@@ -48,12 +48,12 @@ local function init_nodes()
     table.insert(root, nodes.debug_node("-- DEBUG MODE --", { indicator = "none" }))
 
     --                                 |----------------------------|----------------------------|-------------------------------|
-    table.insert(root, nodes.help_node("? = toggle help             Shift-L = expand             Shift-H = collapse              ", { indicator = "none" }))
-    table.insert(root, nodes.help_node(". = toggle node             } = next top-level           { = prev top-level              ", { indicator = "none" }))
-    table.insert(root, nodes.help_node("g. = toggle hidden          ]] = next open top-level     [[ = up or prev open top-level  ", { indicator = "none" }))
-    table.insert(root, nodes.help_node("` = toggle debug            _ = zoom into                - = zoom traverse up            ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("? = toggle help             Shift-L = expand             Shift-H = collapse"              , { indicator = "none" }))
+    table.insert(root, nodes.help_node(". = toggle node             } = next top-level           { = prev top-level"              , { indicator = "none" }))
+    table.insert(root, nodes.help_node("g. = toggle hidden          ]] = next open top-level     [[ = up or prev open top-level"  , { indicator = "none" }))
+    table.insert(root, nodes.help_node("` = toggle debug            _ = zoom into                - = zoom traverse u"             , { indicator = "none" }))
     table.insert(root, nodes.help_node("s = preview in hsplit       ⏎ = default action           Shift+⏎ = preview + show actions", { indicator = "none" }))
-    table.insert(root, nodes.help_node("v = preview in vsplit       d = delete (if available)    p = paste (if available)        ", { indicator = "none" }))
+    table.insert(root, nodes.help_node("v = preview in vsplit       d = delete (if available)    p = paste (if available)"        , { indicator = "none" }))
 
     luautils.insert_all(root, modules.modfs.root_nodes())
     luautils.insert_all(root, modules.modnvim.root_nodes())
@@ -91,6 +91,7 @@ local function init_nodes()
     }))
     table.insert(root, nodes.node("todo", { path = "todo", help_suffix = help_suffixes.todo }, {
         nodes.node("[[ and ]] are buggy - e.g. try ]] ]] [[ after startup"),
+        nodes.node("also { motion when help is open on first node"),
         nodes.node("fix hl color refs"),
         nodes.node("clearlist gradients as part of note function?"),
         nodes.node("maybe also ties in with pomodoro / calendar?"),

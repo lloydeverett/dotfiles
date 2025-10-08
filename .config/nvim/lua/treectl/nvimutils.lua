@@ -45,11 +45,17 @@ function M.list_directory(path, opts)
         if not omit_hidden or not hidden then
             local subpath = luautils.path_concat(path, name)
             local resolved_type = type
+            local resolved_path = subpath
 
             if type == "link" then
                 local stat = uv.fs_stat(subpath)
                 if stat ~= nil then
                     resolved_type = stat.type
+                end
+
+                local readlink_path = uv.fs_readlink(subpath)
+                if readlink_path  ~= nil then
+                    resolved_path = readlink_path
                 end
             end
 
@@ -58,7 +64,8 @@ function M.list_directory(path, opts)
                 path = subpath,
                 type = type,
                 hidden = hidden,
-                resolved_type = resolved_type
+                resolved_type = resolved_type,
+                resolved_path = resolved_path
             })
         end
     end

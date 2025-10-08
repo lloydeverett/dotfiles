@@ -176,35 +176,44 @@ require("mason-lspconfig").setup()
 
 local font_size = 16.5
 function update_font_size()
-  vim.o.guifont = "0xProto:h" .. font_size
+    vim.o.guifont = "0xProto Nerd Font Mono:h" .. font_size
 end
 if vim.g.neovide then
-  update_font_size()
-  vim.o.guifont = "0xProto Nerd Font Mono:h16"
-  vim.g.neovide_cursor_animation_length = 0.0
-  vim.g.neovide_scroll_animation_length = 0.15
-  vim.keymap.set('v', '<D-c>', '"+y')             -- copy
-  vim.keymap.set('n', '<D-v>', '"+p')             -- paste normal mode
-  vim.keymap.set('v', '<D-v>', '"+p')             -- paste visual mode
-  vim.keymap.set('c', '<D-v>', '<C-R>+')          -- paste command mode
-  vim.keymap.set('t', '<D-v>', '<C-\\><C-n>"+pi') -- paste terminal mode
-  vim.keymap.set('i', '<D-v>', '<Esc>"+pi')       -- paste insert mode
-  vim.keymap.set('n', '<D-->', function()         -- zoom out
-      font_size = font_size - 1
-      update_font_size()
-  end, { noremap = true, silent = true })
-  vim.keymap.set('n', '<D-=>', function()         -- zoom in
-      font_size = font_size + 1
-      update_font_size()
-  end, { noremap = true, silent = true })
+    update_font_size()
+    vim.g.neovide_cursor_animation_length = 0.0
+    vim.g.neovide_scroll_animation_length = 0.15
+    vim.keymap.set('v', '<D-c>', '"+y')             -- copy
+    vim.keymap.set('n', '<D-v>', '"+p')             -- paste normal mode
+    vim.keymap.set('v', '<D-v>', '"+p')             -- paste visual mode
+    vim.keymap.set('c', '<D-v>', '<C-R>+')          -- paste command mode
+    vim.keymap.set('t', '<D-v>', '<C-\\><C-n>"+pi') -- paste terminal mode
+    vim.keymap.set('i', '<D-v>', '<Esc>"+pi')       -- paste insert mode
+    vim.keymap.set('n', '<D-->', function()         -- zoom out
+        font_size = font_size - 1
+        update_font_size()
+    end, { noremap = true, silent = true })
+    vim.keymap.set('n', '<D-=>', function()         -- zoom in
+        font_size = font_size + 1
+        update_font_size()
+    end, { noremap = true, silent = true })
+
+    -- Helper function for transparency formatting
+    local alpha = function(amt)
+        return string.format("%x", math.floor(255 * amt))
+    end
+    -- g:neovide_opacity should be 0 if you want to unify transparency of content and title bar.
+    -- vim.g.neovide_opacity = 0.0
+    -- vim.g.transparency = 0.0
+    -- vim.g.neovide_background_color = "#32302F" .. alpha()
+    -- vim.g.neovide_background_color = "#32302F" .. alpha(1.0)
 else
-  local cinnamon = require('cinnamon')
-  cinnamon.setup({})
-  vim.keymap.set("n", "<C-U>", function() cinnamon.scroll("<C-U>") end)
-  vim.keymap.set("n", "<C-D>", function() cinnamon.scroll("<C-D>") end)
-  -- vim.keymap.set("n", "{", function()  cinnamon.scroll("{", { mode = "window" }) end)
-  -- vim.keymap.set("n", "}", function() cinnamon.scroll("}", { mode = "window" }) end)
-  vim.keymap.set("n", "G", function() cinnamon.scroll("G", { mode = "window", max_delta = { time = 250 } }) end)
-  vim.keymap.set("n", "gg", function() cinnamon.scroll("gg", { mode = "window", max_delta = { time = 250 } }) end)
+    local cinnamon = require('cinnamon')
+    cinnamon.setup({})
+    vim.keymap.set("n", "<C-U>", function() cinnamon.scroll("<C-U>") end)
+    vim.keymap.set("n", "<C-D>", function() cinnamon.scroll("<C-D>") end)
+    -- vim.keymap.set("n", "{", function()  cinnamon.scroll("{", { mode = "window" }) end)
+    -- vim.keymap.set("n", "}", function() cinnamon.scroll("}", { mode = "window" }) end)
+    vim.keymap.set("n", "G", function() cinnamon.scroll("G", { mode = "window", max_delta = { time = 250 } }) end)
+    vim.keymap.set("n", "gg", function() cinnamon.scroll("gg", { mode = "window", max_delta = { time = 250 } }) end)
 end
 
