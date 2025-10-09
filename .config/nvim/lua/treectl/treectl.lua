@@ -16,6 +16,7 @@ local help_suffixes = {
     clock     = "set and manage timers and other clock functions",
     todo      = "dev roadmap",
     www       = "browse the web from treectl",
+    bookmark  = "browser bookmarks and history integration",
     llm       = "llm command integration",
     steampipe = "steampipe integration",
     matrix    = "matrix-commander integration",
@@ -108,7 +109,9 @@ local function init_nodes()
     }))
     table.insert(root, nodes.node("www", { path = "www", help_suffix = help_suffixes.www }, {
       nodes.node("tab"),
-      nodes.node("bookmark"),
+    }))
+    table.insert(root, nodes.node("bookmark", { path = "bookmark", help_suffix = help_suffixes.bookmark }, {
+      nodes.node("integrate with browser bookmarks, history, frequent tabs, etc.?"),
     }))
     table.insert(root, nodes.node("llm", { path = "llm", help_suffix = help_suffixes.llm }))
     table.insert(root, nodes.node("steampipe", { path = "steampipe", help_suffix = help_suffixes.steampipe }))
