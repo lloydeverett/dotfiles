@@ -153,7 +153,7 @@ local help_suffix_treectl_dir = "displays contents of ~/.treectl when present"
 if nvimutils.resolve_type(home_path .. ".treectl") == "directory" then
     table.insert(M._root_nodes, create_directory_node(M._directory_provider, "t/", home_path .. ".treectl/", help_suffix_treectl_dir))
 else
-    table.insert(M._root_nodes, nodes.help_node("t/" .. help_suffix_treectl_dir))
+    table.insert(M._root_nodes, nodes.help_node("t/", { help_suffix = help_suffix_treectl_dir }))
 end
 
 local help_suffix_zoxide = "displays frequent cd directories when zoxide is on the $PATH"
