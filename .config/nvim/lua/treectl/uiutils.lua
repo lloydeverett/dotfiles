@@ -3,6 +3,10 @@ local luautils = require("treectl.luautils")
 
 local M = {}
 
+function M.is_node_decorative(n)
+    return n.opts.help == true or n.opts.debug == true
+end
+
 function M.is_node_lazy(n)
     return n.opts.lazy == true
 end
@@ -277,7 +281,7 @@ function M.place_cursor_on_prev_top_level_node(tree)
     end
 
     local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
-        return (not n.opts.help) or n:get_id() == toplevel_node_id
+        return (not M.is_node_decorative(n)) or n:get_id() == toplevel_node_id
     end)
     local index = M.find_node(toplevel_nodes, toplevel_node_id)
     if index == nil then
@@ -296,7 +300,7 @@ function M.place_cursor_on_next_top_level_node(tree)
     local toplevel_node_id = ancestors[#ancestors]
 
     local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
-        return (not n.opts.help) or n:get_id() == toplevel_node_id
+        return (not M.is_node_decorative(n)) or n:get_id() == toplevel_node_id
     end)
     local index = M.find_node(toplevel_nodes, toplevel_node_id)
     if index == nil then
@@ -316,7 +320,7 @@ function M.place_cursor_on_parent_or_prev_open_top_level_node(tree)
 
     if #ancestors == 1 then
         local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
-            return (not n.opts.help) or n:get_id() == ancestors[1]
+            return (not M.is_node_decorative(n)) or n:get_id() == ancestors[1]
         end)
         local index = M.find_node(toplevel_nodes, ancestors[1])
         if index == nil then
@@ -341,7 +345,7 @@ end
 function M.place_cursor_on_next_open_top_level_node(tree)
     local ancestors = M.node_ancestors(tree, M.current_node(tree))
     local toplevel_nodes = luautils.filter(tree:get_nodes(), function(n)
-        return (not n.opts.help) or n:get_id() == ancestors[#ancestors]
+        return (not M.is_node_decorative(n)) or n:get_id() == ancestors[#ancestors]
     end)
     local index = M.find_node(toplevel_nodes, ancestors[#ancestors])
     if index == nil then
