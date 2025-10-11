@@ -67,5 +67,18 @@ function M.debug_node(text, opts)
     return M.node(text, opts)
 end
 
+function M.node_get_path(n)
+    if n.opts.path ~= nil then
+        return n.opts.path
+    end
+    if n.opts.provider ~= nil then
+        local path = n.opts.provider:path(n)
+        if path ~= nil then
+            return path
+        end
+    end
+    return nil
+end
+
 return M
 

@@ -5,57 +5,62 @@ local M = {}
 -- interface reference and sample implementations ---------------------------------------
 
 M.empty_provider = {
-    create_children = function(self, n) return {} end,   -- return list of child nodes
-    allows_expand = function(self, n) return false end,  -- true to show expand toggle
-    refresh_children = function(self, n, current_children) return nil end,
-            -- function used for niche case when we wish to (e.g. in a keybinding) update
-            -- the immediate rendered children without triggering a collapse + expand
-            -- note that:
-            --     * may simply return nil if unused to make this a no-op
-            --     * the implementation is not expected to recurse down the tree;
-            --       this is the responsibility of the caller if necessary
-            --     * expected to return a subset or superset of current_children
-            --     * implementation may assume node is currently expanded
-    text = function(self, n) return "empty_node" end,   -- text to display (used if text == nil)
-    path = function(self, n) return nil end,            -- stable path to node; otherwise return nil (used if opts.path == nil)
+    create_children = -- return list of child nodes
+                      -- recycle current_children where possible for smoother UI
+        function(self, n, current_children) return {} end,
+    allows_expand =   -- true to show expand toggle
+        function(self, n) return false end,
+    text =            -- text to display (used if text == nil)
+        function(self, n) return "empty_node" end,
+    path =            -- stable path to node; otherwise return nil (used if opts.path == nil)
+        function(self, n) return nil end,
 }
 
 M.dummy_provider = {
-    create_children = function(self, n) return {
-      nodes.node("foo"),
-      nodes.node("bar"),
-    } end,
-    allows_expand = function(self, n) return true end,
-    refresh_children = function(self, n, current_children) return nil end,
-    text = function(self, n) return "dummy_node" end,
-    path = function(self, n) return nil end,
+    create_children =
+        function(self, n, current_children) return {
+            nodes.node("foo"),
+            nodes.node("bar"),
+       } end,
+    allows_expand =
+        function(self, n) return true end,
+    text =
+        function(self, n) return "dummy_node" end,
+    path =
+        function(self, n) return nil end,
 }
 
 M.stress_test_provider = {
-    create_children = function(self, n)
-        local result = {}
-        for i = 1, 20000 do
-            table.insert(result, nodes.node("foo." .. i))
-        end
-        return result
-    end,
-    allows_expand = function(self, n) return true end,
-    refresh_children = function(self, n, current_children) return nil end,
-    text = function(self, n) return "stress_test_node" end,
-    path = function(self, n) return nil end,
+    create_children =
+        function(self, n, current_children)
+            local result = {}
+            for i = 1, 20000 do
+                table.insert(result, nodes.node("foo." .. i))
+            end
+            return result
+        end,
+    allows_expand =
+        function(self, n) return true end,
+    text =
+        function(self, n) return "stress_test_node" end,
+    path =
+        function(self, n) return nil end,
 }
 
 -- helpers to define new providers ------------------------------------------------------
 
 function M.simple_provider(create_children_fn)
     return {
-        create_children = function(self, n)
-            return create_children_fn(n)
-        end,
-        allows_expand = function(self, n) return true end,
-        refresh_children = function(self, n, current_children) return nil end,
-        text = function(self, n) return nil end,
-        path = function(self, n) return nil end,
+        create_children =
+            function(self, n, current_children)
+                return create_children_fn(n, current_children)
+            end,
+        allows_expand =
+            function(self, n) return true end,
+        text =
+            function(self, n) return nil end,
+        path =
+            function(self, n) return nil end,
     }
 end
 

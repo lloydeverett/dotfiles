@@ -1,5 +1,7 @@
 local NuiLine = require("nui.line")
 local luautils = require("treectl.luautils")
+local nodes = require("treectl.nodes")
+local paths = require("treectl.paths")
 
 local M = {}
 
@@ -16,33 +18,7 @@ function M.is_node_text_dynamic(n)
 end
 
 function M.node_get_path_display_text(n)
-    local function render_path_to_string(path)
-        if type(path) == "string" then
-            return path
-        elseif type(path) == "table" then
-            local result = ""
-            for i, v in ipairs(path) do
-                if i > 1 then
-                    result = result .. " § "
-                end
-                result = result .. v
-            end
-            return result
-        else
-            return "???"
-        end
-    end
-
-    if n.opts.path ~= nil then
-        return render_path_to_string(n.opts.path)
-    end
-    if n.opts.provider ~= nil then
-        local path = n.opts.provider:path(n)
-        if path ~= nil then
-            return render_path_to_string(path)
-        end
-    end
-    return "∅"
+    return paths.path_display_text(nodes.node_get_path(n))
 end
 
 function M.node_allows_expand(n)
@@ -66,7 +42,7 @@ function M.node_expand(tree, n)
     if M.is_node_lazy(n) then
         local provider = n.opts.provider
         if provider ~= nil then
-            for index, child_node in ipairs(provider:create_children(n)) do
+            for index, child_node in ipairs(provider:create_children(n, {})) do
                 tree:add_node(child_node, n:get_id())
             end
         end
@@ -110,7 +86,7 @@ function M.node_refresh_children(tree, n)
         table.insert(current_children, node)
     end
 
-    local new_children = provider:refresh_children(n, current_children)
+    local new_children = provider:create_children(n, current_children)
     if new_children == nil then
         return
     end
@@ -118,12 +94,12 @@ function M.node_refresh_children(tree, n)
     tree:set_nodes(new_children, n:get_id())
 end
 
-function M.node_refresh_all_children_for_provider(tree, provider)
+function M.refresh_all_children(tree, filter_for_provider)
     local refresh_recursively
     refresh_recursively = function(node_id)
         local n = tree:get_node(node_id)
 
-        if n.opts.provider == provider then
+        if filter_for_provider == nil or n.opts.provider == filter_for_provider then
             M.node_refresh_children(tree, n)
         end
 
@@ -380,6 +356,52 @@ function M.preserve_cursor_selection(tree, callback)
             break
         end
     end
+end
+
+function M.follow_path(path, modules, print_debug)
+    local path_head
+    local path_rest
+    if type(path) == "string" then
+        path_head = path
+        path_rest = {}
+    elseif type(path) == "table" then
+        path_head = path[1]
+        path_rest = { unpack(path, 2) }
+    else
+        error("unexpected path type " .. type(path))
+    end
+
+    local log = nil
+    if print_debug then
+        log = paths.path_display_text(path) .. " -> "
+    end
+    for _, module_name in ipairs(modules.keys) do
+        local module = modules.kv[module_name]
+        local result, err = module.follow_path(path_head, path_rest)
+        if err == nil then
+            assert(result ~= nil, module_name .. ".follow_path returned nil path with no error code for path wth head " .. path_head)
+            if print_debug then
+                log = log .. "(" .. module_name .. ") " .. M.node_get_path_display_text(result)
+                print(log)
+            end
+            return result
+        else
+            if err ~= paths.PATH_NOT_HANDLED then
+                if print_debug then
+                    log = log .. "(" .. module_name .. ") " .. err
+                    print(log)
+                end
+                return nil, err
+            elseif print_debug then
+                log = log .. "(" .. module_name .. ") " .. err .. " -> "
+            end
+        end
+    end
+    if print_debug then
+        log = log .. "nil (fail)"
+        print(log)
+    end
+    return nil, paths.PATH_NOT_HANDLED
 end
 
 return M

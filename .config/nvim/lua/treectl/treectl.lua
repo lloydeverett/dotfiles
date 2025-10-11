@@ -40,24 +40,31 @@ local help_suffixes = {
 
 local function init_nodes()
     local modules = {
-        modfs = modfs_init(),
-        modnvim = modnvim_init(),
+        kv = {
+            modfs = modfs_init(),
+            modnvim = modnvim_init(),
+        },
+        -- specify an iterative ordering for modules to dictate path resolution precedence
+        -- if a module earlier in the list resolves a path, later modules will not be queried
+        keys = {
+            "modfs",
+            "modnvim",
+        }
     }
 
     local root = {}
 
-    table.insert(root, nodes.debug_node("-- DEBUG MODE --", { indicator = "none" }))
+    table.insert(root, nodes.debug_node("-- DEBUG MODE --"                                                                             , { indicator = "none" }))
+    table.insert(root, nodes.debug_node("!; = refresh nodes          !/ = follow current path     !? = inspect current node"           , { indicator = "none" }))
+    table.insert(root, nodes.help_node ("? = toggle help             Shift-L = expand             Shift-H = collapse"                  , { indicator = "none" }))
+    table.insert(root, nodes.help_node (". = toggle node             } = next top-level           { = prev top-level"                  , { indicator = "none" }))
+    table.insert(root, nodes.help_node ("g. = toggle hidden          ]] = next open top-level     [[ = up or prev open top-level"      , { indicator = "none" }))
+    table.insert(root, nodes.help_node ("` = toggle debug            _ = zoom into                - = zoom traverse u"                 , { indicator = "none" }))
+    table.insert(root, nodes.help_node ("s = preview in hsplit       Enter = default action       Shift+Enter = preview + show actions", { indicator = "none" }))
+    table.insert(root, nodes.help_node ("v = preview in vsplit       d = delete (if available)    p = paste (if available)"            , { indicator = "none" }))
 
-    --                                 |----------------------------|----------------------------|-------------------------------|
-    table.insert(root, nodes.help_node("? = toggle help             Shift-L = expand             Shift-H = collapse"              , { indicator = "none" }))
-    table.insert(root, nodes.help_node(". = toggle node             } = next top-level           { = prev top-level"              , { indicator = "none" }))
-    table.insert(root, nodes.help_node("g. = toggle hidden          ]] = next open top-level     [[ = up or prev open top-level"  , { indicator = "none" }))
-    table.insert(root, nodes.help_node("` = toggle debug            _ = zoom into                - = zoom traverse u"             , { indicator = "none" }))
-    table.insert(root, nodes.help_node("s = preview in hsplit       ⏎ = default action           Shift+⏎ = preview + show actions", { indicator = "none" }))
-    table.insert(root, nodes.help_node("v = preview in vsplit       d = delete (if available)    p = paste (if available)"        , { indicator = "none" }))
-
-    luautils.insert_all(root, modules.modfs.root_nodes())
-    luautils.insert_all(root, modules.modnvim.root_nodes())
+    luautils.insert_all(root, modules.kv.modfs.root_nodes())
+    luautils.insert_all(root, modules.kv.modnvim.root_nodes())
 
     table.insert(root, nodes.node("pin", { hl = "GruvboxPurple", path = "pin", help_suffix = help_suffixes.pin }, {
       nodes.node("pin nodes from other subtrees here"),
@@ -91,8 +98,7 @@ local function init_nodes()
         nodes.node("Start timer...",  { hl = "GruvboxPurple", indicator = "action", path = "clock/timer/start/custom" }),
     }))
     table.insert(root, nodes.node("todo", { path = "todo", help_suffix = help_suffixes.todo }, {
-        nodes.node("[[ and ]] are buggy - e.g. try ]] ]] [[ after startup"),
-        nodes.node("also { motion when help is open on first node"),
+        nodes.node("GC nodes stored in caches"),
         nodes.node("fix hl color refs"),
         nodes.node("clearlist gradients as part of note function?"),
         nodes.node("maybe also ties in with pomodoro / calendar?"),
@@ -200,8 +206,35 @@ local function show_tree()
 
     local map_options = { noremap = true, nowait = true, buffer = true }
 
-    -- focus current node
-    vim.keymap.set("n", "<CR>", function()
+    -- debug: toggle debug
+    vim.keymap.set("n", "`", function()
+        uiutils.preserve_cursor_selection(tree, function()
+            show_debug = not show_debug
+            tree:render()
+        end)
+    end, map_options)
+
+    -- debug: follow current path and output
+    vim.keymap.set("n", "!/", function()
+        local node = uiutils.current_node(tree)
+        local path = nodes.node_get_path(node)
+        if path ~= nil then
+            uiutils.follow_path(path, modules, true)
+        else
+            print("node path is nil")
+        end
+    end, map_options)
+
+    -- debug: refresh nodes
+    vim.keymap.set("n", "!;", function()
+        uiutils.preserve_cursor_selection(tree, function()
+            uiutils.refresh_all_children(tree, nil)
+            tree:render()
+        end)
+    end, map_options)
+
+    -- debug: inspect current node
+    vim.keymap.set("n", "!?", function()
         local node = uiutils.current_node(tree)
         print(vim.inspect(node))
     end, map_options)
@@ -209,8 +242,8 @@ local function show_tree()
     -- toggle modfs hidden files
     vim.keymap.set("n", "g.", function()
         uiutils.preserve_cursor_selection(tree, function()
-            modules.modfs.toggle_show_hidden()
-            uiutils.node_refresh_all_children_for_provider(tree, modules.modfs.directory_provider())
+            modules.kv.modfs.toggle_show_hidden()
+            uiutils.refresh_all_children(tree, modules.kv.modfs.directory_provider())
             tree:render()
         end)
     end, map_options)
@@ -221,20 +254,6 @@ local function show_tree()
             show_help = not show_help
             tree:render()
         end)
-    end, map_options)
-
-    -- toggle debug
-    vim.keymap.set("n", "`", function()
-        uiutils.preserve_cursor_selection(tree, function()
-            show_debug = not show_debug
-            tree:render()
-        end)
-    end, map_options)
-
-    -- print current node
-    vim.keymap.set("n", "<leader><CR>", function()
-        local node = uiutils.current_node(tree)
-        print(vim.inspect(node))
     end, map_options)
 
     -- collapse current node

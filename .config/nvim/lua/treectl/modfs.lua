@@ -1,6 +1,8 @@
 local nodes = require("treectl.nodes")
+local paths = require("treectl.paths")
 local luautils = require("treectl.luautils")
 local nvimutils = require("treectl.nvimutils")
+local recycler = require("treectl.recycler")
 
 local home_path = nvimutils.home_path()
 
@@ -18,6 +20,10 @@ function M.toggle_show_hidden()
 end
 function M.show_hidden()
     return M._show_hidden
+end
+
+function M.follow_path(path)
+    return nil, paths.PATH_NOT_HANDLED
 end
 
 local function sort_files_in_display_order(files)
@@ -48,18 +54,30 @@ local function node_from_file(provider, file)
     return nodes.lazy_node(nil, opts, provider)
 end
 
+
 local function init_file_provider()
     return {
-      create_children = function(self, n)
+      create_children = function(self, n, current_children)
           if not n.details.is_directory then
               return {}
           end
+
+          local fs_recycler = recycler:recycler(
+              current_children,
+              function (v) return v.details.path end,
+              function (a, b)
+                  return a.details.path == b.details.path and
+                         a.details.resolved_path == b.details.resolved_path and
+                         a.details.is_directory == b.details.is_directory
+              end
+          )
+
           local files = sort_files_in_display_order(nvimutils.list_directory(n.details.path, {
               omit_hidden = not M.show_hidden()
           }))
           local result = {}
-          for i, file in ipairs(files) do
-              table.insert(result, node_from_file(self, file))
+          for _, file in ipairs(files) do
+              table.insert(result, fs_recycler:try_recycle(node_from_file(self, file)))
           end
           return result
       end,
@@ -97,28 +115,6 @@ local function init_file_provider()
 
       path = function(self, n)
           return n.details.path
-      end,
-
-      refresh_children = function(self, n, current_children)
-          local files = sort_files_in_display_order(nvimutils.list_directory(n.details.path, {
-              omit_hidden = not M.show_hidden()
-          }))
-
-          local current_children_kv = {}
-          for i, v in ipairs(current_children) do
-              current_children_kv[v.details.filename] = v
-          end
-
-          local result = {}
-          for i, file in ipairs(files) do
-              local existing = current_children_kv[file.name]
-              if existing ~= nil then
-                  table.insert(result, existing)
-              else
-                  table.insert(result, node_from_file(self, file))
-              end
-          end
-          return result
       end,
     }
 end

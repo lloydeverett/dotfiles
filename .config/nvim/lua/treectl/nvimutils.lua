@@ -11,7 +11,7 @@ function M.home_path()
 end
 
 function M.try_shorten_path(path)
-    if path:sub(1, #M._home_path) == M._home_path then
+    if luautils.starts_with(path, M._home_path) then
         return "~/" .. path:sub(#M._home_path + 1)
     end
     return path
@@ -40,7 +40,7 @@ function M.list_directory(path, opts)
         local name, type = uv.fs_scandir_next(fd)
         if not name then break end
 
-        local hidden = string.sub(name, 1, 1) == "."
+        local hidden = luautils.starts_with(name, ".")
 
         if not omit_hidden or not hidden then
             local subpath = luautils.path_concat(path, name)
