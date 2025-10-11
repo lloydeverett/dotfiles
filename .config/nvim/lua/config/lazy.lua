@@ -28,31 +28,32 @@ end
 require("lazy").setup({
   spec = {
       -- begin color schemes
-      { 'ellisonleao/gruvbox.nvim',
-           opts = {
-               terminal_colors = true, -- add neovim terminal colors
-               undercurl = true,
-               underline = true,
-               bold = true,
-               italic = {
-                 strings = true,
-                 emphasis = true,
-                 comments = true,
-                 operators = false,
-                 folds = true,
-               },
-               strikethrough = true,
-               invert_selection = false,
-               invert_signs = false,
-               invert_tabline = false,
-               inverse = true, -- invert background for search, diffs, statuslines and errors
-               contrast = "", -- can be "hard", "soft" or empty string
-               palette_overrides = {},
-               overrides = {},
-               dim_inactive = false,
-               transparent_mode = false,
-           }
-      },
+      { 'sainnhe/gruvbox-material' },
+      -- { 'ellisonleao/gruvbox.nvim',
+      --      opts = {
+      --          terminal_colors = true, -- add neovim terminal colors
+      --          undercurl = true,
+      --          underline = true,
+      --          bold = true,
+      --          italic = {
+      --            strings = true,
+      --            emphasis = true,
+      --            comments = true,
+      --            operators = false,
+      --            folds = true,
+      --          },
+      --          strikethrough = true,
+      --          invert_selection = false,
+      --          invert_signs = false,
+      --          invert_tabline = false,
+      --          inverse = true, -- invert background for search, diffs, statuslines and errors
+      --          contrast = "", -- can be "hard", "soft" or empty string
+      --          palette_overrides = {},
+      --          overrides = {},
+      --          dim_inactive = false,
+      --          transparent_mode = false,
+      --      }
+      -- },
       { 'fxn/vim-monochrome', lazy = true },
       { 'ntk148v/komau.vim', lazy = true  },
       { 'davidosomething/vim-colors-meh', lazy = true  },
@@ -95,8 +96,40 @@ require("lazy").setup({
        },
       { 'tpope/vim-fugitive' },
       { 'LukasPietzschmann/telescope-tabs' },
-      { 'vim-airline/vim-airline' },
-      { 'vim-airline/vim-airline-themes' },
+      -- { 'vim-airline/vim-airline' },
+      -- { 'vim-airline/vim-airline-themes' },
+      --
+      { 'nvim-lualine/lualine.nvim',
+           opts = {
+               sections = {
+                 lualine_x = {
+                   { 'encoding' },
+                   {
+                     'fileformat',
+                     symbols = {
+                       unix = 'unix',
+                       dos = 'dos',
+                       mac = 'mac',
+                     }
+                   }
+                 }
+               }
+           }
+      },
+      { 'akinsho/bufferline.nvim',
+           opts = {
+               options = {
+                   themeable = false,
+                   close_icon = '',
+                   buffer_close_icon = ''
+               }
+           },
+           config = function(_, opts)
+               local bufferline = require("bufferline")
+               opts.options.style_preset = bufferline.style_preset.minimal
+               bufferline.setup(opts)
+           end
+      },
       { 'neovim/nvim-lspconfig' },
       { 'mason-org/mason.nvim',
            opts = {}

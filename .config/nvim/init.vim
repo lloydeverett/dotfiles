@@ -3,7 +3,6 @@ set laststatus=0
 set relativenumber
 set nu rnu
 
-let g:vimwiki_emoji_enable = 1
 let g:treectl#nerd_font = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#branch#enabled = 0
@@ -37,7 +36,7 @@ let maplocalleader = "\\"
 
 lua require('config.lazy')
 
-colorscheme gruvbox
+colorscheme gruvbox-material
 
 lua require('init')
 lua require('treectl.treectl')
@@ -91,9 +90,6 @@ nnoremap <leader>4 <cmd>TimerStart 25m<cr>
 nnoremap <leader>0 <cmd>TimerStart 25m<cr>
 nnoremap <leader>p :TimerStart<Space>
 
-" close terminal as soon as shell exits
-autocmd TermClose * if !v:event.status | exe 'bdelete! '..expand('<abuf>') | endif
-
 nnoremap <leader><leader> <C-^>
 
 noremap <silent> <Esc> :noh<CR><Esc>
@@ -105,6 +101,8 @@ nnoremap <leader><S-Tab> :tabprev<cr>
 nnoremap <leader>wp :e ~/sync/wiki/personal.md<cr>
 nnoremap <leader>wo :e ~/sync/wiki/work.md<cr>
 nnoremap <leader>cc :e ~/.config/nvim/init.vim<cr>
+
+nnoremap <leader>H :put=execute('hi')
 
 set nocompatible
 filetype plugin on
@@ -125,19 +123,28 @@ set foldmethod=indent
 set foldlevelstart=99
 autocmd FileType markdown setlocal foldlevelstart=99
 
-hi def link markdownH1 GruvboxAquaBold
-hi def link markdownH2 GruvboxGreenBold
-hi def link markdownH3 GruvboxOrangeBold
-hi def link VimwikiHeader1 GruvboxAquaBold
-hi def link VimwikiHeader2 GruvboxGreenBold
-hi def link VimwikiHeader3 GruvboxOrangeBold
+" hi def link markdownH2 GruvboxAquaBold
+" hi def link markdownH2 GruvboxGreenBold
+" hi def link markdownH3 GruvboxOrangeBold
+
+" from color scheme
+" markdownH1     xxx cterm=bold ctermfg=167 gui=bold guifg=#ea6962
+" markdownH2     xxx cterm=bold ctermfg=208 gui=bold guifg=#e78a4e
+" markdownH3     xxx cterm=bold ctermfg=214 gui=bold guifg=#d8a657
+" markdownH4     xxx cterm=bold ctermfg=142 gui=bold guifg=#a9b665
+" markdownH5     xxx cterm=bold ctermfg=109 gui=bold guifg=#7daea3
+" markdownH6     xxx cterm=bold ctermfg=175 gui=bold guifg=#d3869b
+
+hi VimwikiHeader1 cterm=bold ctermfg=142 gui=bold guifg=#a9b665
+hi VimwikiBold guifg=#FF3D5B gui=bold
+hi VimwikiItalic guifg=#FF6F91 gui=italic
 
 xnoremap p "_dP
-
-" macro to generate markdown title based on filename
-let @t = '0"%p$vhhd?\/v0dyypv$hr=Ä˝5:noh'
 
 " Define a highlight group for trailing whitespace
 highlight TrailingWhitespace ctermbg=235 guibg=#3c3836
 call matchadd("TrailingWhitespace", '\v\s+$')
+
+" close terminal as soon as shell exits
+autocmd TermClose * if !v:event.status | exe 'bdelete! '..expand('<abuf>') | endif
 
