@@ -91,8 +91,6 @@ nnoremap <leader>4 <cmd>TimerStart 25m<cr>
 nnoremap <leader>0 <cmd>TimerStart 25m<cr>
 nnoremap <leader>p :TimerStart<Space>
 
-nnoremap <leader>/ <cmd>Nerdy<cr>
-
 " close terminal as soon as shell exits
 autocmd TermClose * if !v:event.status | exe 'bdelete! '..expand('<abuf>') | endif
 

@@ -1,46 +1,7 @@
-vim.g.vimwiki_list = {{
-  path = os.getenv('HOME') .. '/sync/wiki',
-  syntax = 'markdown',
-  ext = 'md'
-}}
-
-require("gruvbox").setup({
-  terminal_colors = true, -- add neovim terminal colors
-  undercurl = true,
-  underline = true,
-  bold = true,
-  italic = {
-    strings = true,
-    emphasis = true,
-    comments = true,
-    operators = false,
-    folds = true,
-  },
-  strikethrough = true,
-  invert_selection = false,
-  invert_signs = false,
-  invert_tabline = false,
-  inverse = true, -- invert background for search, diffs, statuslines and errors
-  contrast = "", -- can be "hard", "soft" or empty string
-  palette_overrides = {},
-  overrides = {},
-  dim_inactive = false,
-  transparent_mode = false,
-})
-
-function _G.get_oil_winbar()
-  local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-  local dir = require("oil").get_current_dir(bufnr)
-  if dir then
-    return vim.fn.fnamemodify(dir, ":~")
-  else
-    return vim.api.nvim_buf_get_name(0)
-  end
-end
 
 require("oil").setup({
   win_options = {
-    winbar = "%!v:lua.get_oil_winbar()",
+    winbar = "%!v:lua.custom_get_oil_winbar()",
   },
 })
 
@@ -53,29 +14,15 @@ function open_terminal_in_buffer_dir()
 end
 
 -- Set up nvim-cmp.
-local cmp = require'cmp'
+local cmp = require('cmp')
 
 cmp.setup({
   snippet = {
-    -- REQUIRED - you must specify a snippet engine
     expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-      -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-      -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-      -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
-
-      -- For `mini.snippets` users:
-      -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
-      -- insert({ body = args.body }) -- Insert at cursor
-      -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
-      -- require("cmp.config").set_onetime({ sources = {} })
+      vim.fn["vsnip#anonymous"](args.body)
     end,
   },
-  window = {
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
-  },
+  window = { },
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -85,25 +32,11 @@ cmp.setup({
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = 'vsnip' }, -- For vsnip users.
-    -- { name = 'luasnip' }, -- For luasnip users.
-    -- { name = 'ultisnips' }, -- For ultisnips users.
-    -- { name = 'snippy' }, -- For snippy users.
+    { name = 'vsnip' }
   }, {
     { name = 'buffer' },
   })
 })
-
--- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
--- Set configuration for specific filetype.
---[[ cmp.setup.filetype('gitcommit', {
-  sources = cmp.config.sources({
-    { name = 'git' },
-  }, {
-    { name = 'buffer' },
-  })
-)
-equire("cmp_git").setup() ]]--
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ '/', '?' }, {
@@ -124,58 +57,21 @@ cmp.setup.cmdline(':', {
   matching = { disallow_symbol_nonprefix_matching = false }
 })
 
-local telescope = require("telescope")
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-telescope.setup({
-  defaults = {
-    path_display = { "truncate" },
-  },
-  extensions = {
-    zoxide = {},
-  },
-})
-telescope.load_extension("zoxide")
-vim.keymap.set("n", "<leader>e", function()
-  telescope.extensions.zoxide.list({
-    previewer = false,
-    attach_mappings = function(prompt_bufnr, map)
-      local open_with_oil = function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        if selection and selection.value then
-          -- Open the selected directory with :e (or :Oil)
-          vim.cmd("e " .. vim.fn.fnameescape(selection.value))
-          -- Or if you want to use Oil plugin instead, use:
-          -- vim.cmd("Oil " .. vim.fn.fnameescape(selection.value))
-        end
-      end
-      -- Replace default select action with open_with_oil
-      map("i", "<CR>", open_with_oil)
-      map("n", "<CR>", open_with_oil)
-      return true
-    end,
-  })
-end, { noremap = true, silent = true })
-
 vim.diagnostic.config({ virtual_text = true })
 
 -- local lspconfig = require('lspconfig')
 -- lspconfig.sourcekit.setup({})
--- vim.api.nvim_create_autocmd('LspAttach', {
---     desc = 'LSP Actions',
---     callback = function(args)
---         vim.keymap.set('n', 'K', vim.lsp.buf.hover, {noremap = true, silent = true})
---         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {noremap = true, silent = true})
---     end,
--- })
 
-require("mason").setup()
+vim.api.nvim_create_autocmd('LspAttach', {
+    desc = 'LSP Actions',
+    callback = function(args)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, {noremap = true, silent = true})
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {noremap = true, silent = true})
+    end,
+})
 
-require("mason-lspconfig").setup()
-
-local font_size = 16.5
-function update_font_size()
+local font_size = 15.5
+local function update_font_size()
     vim.o.guifont = "0xProto Nerd Font Mono:h" .. font_size
 end
 if vim.g.neovide then
@@ -196,16 +92,6 @@ if vim.g.neovide then
         font_size = font_size + 1
         update_font_size()
     end, { noremap = true, silent = true })
-
-    -- Helper function for transparency formatting
-    local alpha = function(amt)
-        return string.format("%x", math.floor(255 * amt))
-    end
-    -- g:neovide_opacity should be 0 if you want to unify transparency of content and title bar.
-    -- vim.g.neovide_opacity = 0.0
-    -- vim.g.transparency = 0.0
-    -- vim.g.neovide_background_color = "#32302F" .. alpha()
-    -- vim.g.neovide_background_color = "#32302F" .. alpha(1.0)
 else
     local cinnamon = require('cinnamon')
     cinnamon.setup({})

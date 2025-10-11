@@ -5,8 +5,8 @@ local luautils = require("treectl.luautils")
 local nodes = require("treectl.nodes")
 local uiutils = require("treectl.uiutils")
 
-local modfs_init = require("treectl.modfs")
-local modnvim_init = require("treectl.modnvim")
+local modfs_init = require("treectl.mod.modfs")
+local modnvim_init = require("treectl.mod.modnvim")
 
 local help_suffixes = {
     pin       = "pin references to tree nodes",
