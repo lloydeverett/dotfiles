@@ -177,16 +177,6 @@ require("lazy").setup({
                vim.keymap.set('n', '<leader>sn', "<cmd>Nerdy<CR>")
            end,
       },
-      -- { 'godlygeek/tabular' },
-      -- { 'preservim/vim-markdown' },
-      -- { 'akinsho/toggleterm.nvim" },
-      -- { 'powerman/vim-plugin-AnsiEsc' },
-      -- { 'preservim/nerdtree' },
-      -- { 'jvgrootveld/telescope-zoxide',
-      --      dependencies = {
-      --          "nvim-telescope/telescope.nvim",
-      --      }
-      -- },
   },
   install = { colorscheme = { "habamax" } },
   checker = { enabled = false }
