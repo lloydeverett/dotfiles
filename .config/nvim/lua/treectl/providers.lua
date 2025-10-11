@@ -49,20 +49,18 @@ M.stress_test_provider = {
 
 -- helpers to define new providers ------------------------------------------------------
 
-function M.simple_provider(create_children_fn)
-    return {
-        create_children =
-            function(self, n, current_children)
-                return create_children_fn(n, current_children)
-            end,
-        allows_expand =
-            function(self, n) return true end,
-        text =
-            function(self, n) return nil end,
-        path =
-            function(self, n) return nil end,
-    }
-end
+function M.simple_provider(create_children_fn) return {
+    create_children =
+        function(self, n, current_children)
+            return create_children_fn(n, current_children)
+        end,
+    allows_expand =
+        function(self, n) return true end,
+    text =
+        function(self, n) return nil end,
+    path =
+        function(self, n) return nil end,
+} end
 
 return M
 

@@ -55,11 +55,11 @@ local function init_nodes()
     local root = {}
 
     table.insert(root, nodes.debug_node("-- DEBUG MODE --"                                                                             , { indicator = "none" }))
-    table.insert(root, nodes.debug_node("!; = refresh nodes          !/ = follow current path     !? = inspect current node"           , { indicator = "none" }))
+    table.insert(root, nodes.debug_node("!; = refresh node children  !/ = follow current path     !? = inspect current node"           , { indicator = "none" }))
     table.insert(root, nodes.help_node ("? = toggle help             Shift-L = expand             Shift-H = collapse"                  , { indicator = "none" }))
     table.insert(root, nodes.help_node (". = toggle node             } = next top-level           { = prev top-level"                  , { indicator = "none" }))
     table.insert(root, nodes.help_node ("g. = toggle hidden          ]] = next open top-level     [[ = up or prev open top-level"      , { indicator = "none" }))
-    table.insert(root, nodes.help_node ("` = toggle debug            _ = zoom into                - = zoom traverse u"                 , { indicator = "none" }))
+    table.insert(root, nodes.help_node ("` = toggle debug            _ = zoom traverse into       - = zoom traverse up"                , { indicator = "none" }))
     table.insert(root, nodes.help_node ("s = preview in hsplit       Enter = default action       Shift+Enter = preview + show actions", { indicator = "none" }))
     table.insert(root, nodes.help_node ("v = preview in vsplit       d = delete (if available)    p = paste (if available)"            , { indicator = "none" }))
 
