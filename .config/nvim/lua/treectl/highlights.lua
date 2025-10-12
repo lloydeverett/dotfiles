@@ -9,9 +9,9 @@ M.Number = "treectl_Number"
 M.Debug = "treectl_Debug"
 M.IndicatorActive = "treectl_IndicatorActive"
 M.IndicatorInactive = "treectl_IndicatorInactive"
-M.TreeModBuiltins = "treectl_TreeModBuiltins"
 M.TreeModNvim = "treectl_TreeModNvim"
 M.TreeModFs = "treectl_TreeModFs"
+M.TreeModBuiltins = "treectl_TreeModBuiltins"
 M.TreeModOther = "treectl_TreeModOther"
 
 function M.configure()
@@ -23,10 +23,10 @@ function M.configure()
     vim.cmd("highlight link treectl_Debug SpecialChar")
     vim.cmd("highlight link treectl_IndicatorActive SpecialChar")
     vim.cmd("highlight link treectl_IndicatorInactive LineNr")
-    vim.cmd("highlight link treectl_TreeModBuiltins markdownH1")
-    vim.cmd("highlight link treectl_TreeModNvim markdownH5")
     vim.cmd("highlight link treectl_TreeModFs markdownH4")
-    vim.cmd("highlight link treectl_TreeModOther markdownH2")
+    vim.cmd("highlight link treectl_TreeModNvim markdownH2")
+    vim.cmd("highlight link treectl_TreeModBuiltins markdownH5")
+    vim.cmd("highlight link treectl_TreeModOther markdownH6")
 end
 
 return M

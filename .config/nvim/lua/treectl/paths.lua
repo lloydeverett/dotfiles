@@ -13,7 +13,7 @@ function M.path_display_text(path)
         local result = ""
         for i, v in ipairs(path) do
             if i > 1 then
-                result = result .. " § "
+                result = result .. "␀"
             end
             result = result .. v
         end
