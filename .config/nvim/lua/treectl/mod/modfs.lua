@@ -3,6 +3,7 @@ local paths = require("treectl.paths")
 local luautils = require("treectl.luautils")
 local nvimutils = require("treectl.nvimutils")
 local recycler = require("treectl.recycler")
+local highlights = require("treectl.highlights")
 
 local home_path = nvimutils.home_path()
 
@@ -91,9 +92,9 @@ local function init_file_provider()
 
           local highlight = nil
           if n.details.hidden then
-              highlight = "Comment"
+              highlight = highlights.Hidden
           elseif n.details.is_directory then
-              highlight = "Directory"
+              highlight = highlights.Directory
           end
 
           if n.details.is_directory then
@@ -107,7 +108,7 @@ local function init_file_provider()
               if n.details.is_directory then
                   displayed_path = luautils.path_concat(displayed_path, "")
               end
-              table.insert(result, { (" -> " .. displayed_path), "Comment" })
+              table.insert(result, { (" -> " .. displayed_path), highlights.Comment })
           end
 
           return result
@@ -121,7 +122,7 @@ end
 
 local function create_directory_node(provider, text, path, help_suffix)
     return nodes.lazy_node(text, {
-        hl = "directory",
+        hl = highlights.TreeModFs,
         help_suffix = help_suffix,
         details = { path = path, filename = nil, is_directory = true }
     }, provider)
@@ -155,7 +156,7 @@ end
 local help_suffix_zoxide = "displays frequent cd directories when zoxide is on the $PATH"
 if not vim.fn.executable("zoxide") == 1 then
     -- TODO implement
-    table.insert(M._root_nodes, nodes.node("z/", { hl = "directory", help_suffix = help_suffix_zoxide, path="z" }))
+    table.insert(M._root_nodes, nodes.node("z/", { hl = highlights.TreeModFs, help_suffix = help_suffix_zoxide, path="z" }))
 else
     table.insert(M._root_nodes, nodes.help_node("z/", { help_suffix = help_suffix_zoxide }))
 end

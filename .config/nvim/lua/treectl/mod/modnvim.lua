@@ -5,6 +5,7 @@ local luautils = require("treectl.luautils")
 local nvimutils = require("treectl.nvimutils")
 local cache = require("treectl.cache")
 local recycler = require("treectl.recycler")
+local highlights = require("treectl.highlights")
 
 return function()
 local M = {}
@@ -38,7 +39,7 @@ end
 
 table.insert(M._root_nodes, stash(nodes.lazy_node(
     "buffer",
-    { hl = "DiagnosticInfo", help_suffix = "lists open buffers", path = "neovim/buffer" },
+    { hl = highlights.TreeModNvim, help_suffix = "lists open buffers", path = "neovim/buffer" },
     providers.simple_provider(function(n, current_children)
         local buffer_recycler = recycler:recycler(
             current_children,
@@ -52,7 +53,7 @@ table.insert(M._root_nodes, stash(nodes.lazy_node(
                 display_name = "[No Name]"
             end
             return buffer_recycler:try_recycle(nodes.node(
-                { { "" .. b.bufnr, "Number" }, " ", display_name },
+                { { "" .. b.bufnr, highlights.Number }, " ", display_name },
                 { path = "neovim/buffer/" .. b.bufnr }
             ))
         end)
@@ -61,7 +62,7 @@ table.insert(M._root_nodes, stash(nodes.lazy_node(
 
 table.insert(M._root_nodes, stash(nodes.lazy_node(
     "recent",
-    { hl = "DiagnosticInfo", help_suffix = "nvim oldfiles", path = "neovim/recent" },
+    { hl = highlights.TreeModNvim, help_suffix = "nvim oldfiles", path = "neovim/recent" },
     providers.simple_provider(function(n, current_children)
         local recents_recycler = recycler:recycler(
             current_children,
@@ -84,7 +85,7 @@ table.insert(M._root_nodes, stash(nodes.lazy_node(
         return luautils.map(files, function(f, i)
             local shortened_path = nvimutils.try_shorten_path(f)
             return recents_recycler:try_recycle(nodes.node(
-                { { "" .. (i - 1), "Number" }, " ", shortened_path },
+                { { "" .. (i - 1), highlights.Number }, " ", shortened_path },
                 {
                     path = { "neovim/recent/", f },
                     details = {
@@ -103,15 +104,15 @@ table.insert(M._root_nodes, stash(nodes.lazy_node(
 --   print(string.format("Window ID: %d, Buffer ID: %d", win, buf))
 -- end
 
-table.insert(M._root_nodes, stash(nodes.node("neovim", { hl = "DiagnosticInfo", path = "neovim", help_suffix = "more neovim trees" }, {
-        stash(nodes.node("window",       { hl = "DiagnosticInfo", path = "neovim/window" })),
-        stash(nodes.node("highlight",    { hl = "DiagnosticInfo", path = "neovim/highlight" })),
-        stash(nodes.node("tab",          { hl = "DiagnosticInfo", path = "neovim/tab" })),
-        stash(nodes.node("register",     { hl = "DiagnosticInfo", path = "neovim/register" })),
-        stash(nodes.node("symbol",       { hl = "DiagnosticInfo", path = "neovim/symbol" })),
-        stash(nodes.node("mark",         { hl = "DiagnosticInfo", path = "neovim/mark" })),
-        stash(nodes.node("colorscheme",  { hl = "DiagnosticInfo", path = "neovim/colorscheme" })),
-        stash(nodes.node("plugin",       { hl = "DiagnosticInfo", path = "neovim/plugin" })),
+table.insert(M._root_nodes, stash(nodes.node("neovim", { hl = highlights.TreeModNvim, path = "neovim", help_suffix = "more neovim trees" }, {
+        stash(nodes.node("window",       { hl = highlights.TreeModNvim, path = "neovim/window" })),
+        stash(nodes.node("highlight",    { hl = highlights.TreeModNvim, path = "neovim/highlight" })),
+        stash(nodes.node("tab",          { hl = highlights.TreeModNvim, path = "neovim/tab" })),
+        stash(nodes.node("register",     { hl = highlights.TreeModNvim, path = "neovim/register" })),
+        stash(nodes.node("symbol",       { hl = highlights.TreeModNvim, path = "neovim/symbol" })),
+        stash(nodes.node("mark",         { hl = highlights.TreeModNvim, path = "neovim/mark" })),
+        stash(nodes.node("colorscheme",  { hl = highlights.TreeModNvim, path = "neovim/colorscheme" })),
+        stash(nodes.node("plugin",       { hl = highlights.TreeModNvim, path = "neovim/plugin" })),
         nodes.node("see what telescope offers?"),
     })))
 

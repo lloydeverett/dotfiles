@@ -2,6 +2,7 @@ local NuiLine = require("nui.line")
 local luautils = require("treectl.luautils")
 local nodes = require("treectl.nodes")
 local paths = require("treectl.paths")
+local highlights = require("treectl.highlights")
 
 local M = {}
 
@@ -128,7 +129,7 @@ function M.line_append_content(line, content, hl)
             end
         end
     else
-        line:append("unknown", "ErrorMsg")
+        line:append("unknown", highlights.ErrorMsg)
     end
 end
 
@@ -142,17 +143,17 @@ function M.node_append_display_text(n, line, render_opts)
             content, hl = provider:text(n)
         else
             content = "nil"
-            hl = "ErrorMsg"
+            hl = highlights.ErrorMsg
         end
     else
         if n.opts.hl ~= nil then
             hl = n.opts.hl
         elseif n.opts.help then
-            hl = "Comment"
+            hl = highlights.Comment
         elseif n.opts.debug then
-            hl = "SpecialChar"
+            hl = highlights.Debug
         elseif n:get_parent_id() == nil then
-            hl = "Define"
+            hl = highlights.TreeModOther
         end
         content = n.text
     end
@@ -160,13 +161,13 @@ function M.node_append_display_text(n, line, render_opts)
     M.line_append_content(line, content, hl)
 
     if n.opts.help_suffix ~= nil and render_opts ~= nil and render_opts.show_help then
-        line:append(" - ", "Comment")
-        M.line_append_content(line, n.opts.help_suffix, "Comment")
+        line:append(" - ", highlights.Comment)
+        M.line_append_content(line, n.opts.help_suffix, highlights.Comment)
     end
 
     if not n.opts.debug and not n.opts.help and render_opts ~= nil and render_opts.show_debug then
         line:append(" ")
-        line:append("[" .. M.node_get_path_display_text(n) .. "]", "SpecialChar")
+        line:append("[" .. M.node_get_path_display_text(n) .. "]", highlights.Debug)
     end
 end
 
@@ -189,13 +190,13 @@ function M.node_get_nui_line(n, render_opts)
     if n.opts.indicator == "none" then
         line:append("  ")
     elseif n.opts.indicator == "action" then
-        line:append("→ ", "SpecialChar")
+        line:append("→ ", highlights.IndicatorActive)
     elseif M.node_allows_expand(n) then
-        line:append(n:is_expanded() and "- " or "+ ", "SpecialChar")
+        line:append(n:is_expanded() and "- " or "+ ", highlights.IndicatorActive)
     elseif n.opts.help then
-        line:append("* ", "LineNr")
+        line:append("* ", highlights.IndicatorInactive)
     else
-        line:append("- ", "LineNr")
+        line:append("- ", highlights.IndicatorInactive)
     end
 
     M.node_append_display_text(n, line, render_opts)

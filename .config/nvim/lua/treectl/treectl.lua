@@ -4,6 +4,7 @@ local NuiTree = require("nui.tree")
 local luautils = require("treectl.luautils")
 local nodes = require("treectl.nodes")
 local uiutils = require("treectl.uiutils")
+local highlights = require("treectl.highlights")
 
 local modfs_init = require("treectl.mod.modfs")
 local modnvim_init = require("treectl.mod.modnvim")
@@ -38,6 +39,8 @@ local help_suffixes = {
     youtube   = "browse YouTube from treectl",
 }
 
+highlights.configure()
+
 local function init_nodes()
     local modules = {
         kv = {
@@ -66,16 +69,16 @@ local function init_nodes()
     luautils.insert_all(root, modules.kv.modfs.root_nodes())
     luautils.insert_all(root, modules.kv.modnvim.root_nodes())
 
-    table.insert(root, nodes.node("pin", { hl = "GruvboxPurple", path = "pin", help_suffix = help_suffixes.pin }, {
+    table.insert(root, nodes.node("pin", { hl = highlights.TreeModBuiltins, path = "pin", help_suffix = help_suffixes.pin }, {
       nodes.node("pin nodes from other subtrees here"),
     }))
-    table.insert(root, nodes.node("outline", { hl = "GruvboxPurple", path = "outline", help_suffix = help_suffixes.outline }, {
+    table.insert(root, nodes.node("outline", { hl = highlights.TreeModBuiltins, path = "outline", help_suffix = help_suffixes.outline }, {
       nodes.node("make your own notes here"),
       nodes.node("can be based on files in ~/.treenote"),
       nodes.node("and then each file in there looks like an expanded tree"),
     }))
-    table.insert(root, nodes.node("task", { hl = "GruvboxPurple", path = "task", help_suffix = help_suffixes.task }))
-    table.insert(root, nodes.node("calendar", { hl = "GruvboxPurple", path ="calendar", help_suffix = help_suffixes.calendar }, {
+    table.insert(root, nodes.node("task", { hl = highlights.TreeModBuiltins, path = "task", help_suffix = help_suffixes.task }))
+    table.insert(root, nodes.node("calendar", { hl = highlights.TreeModBuiltins, path ="calendar", help_suffix = help_suffixes.calendar }, {
       nodes.node("Yesterday"),
       nodes.node("Today"),
       nodes.node("Tomorrow"),
@@ -92,10 +95,10 @@ local function init_nodes()
       }),
       nodes.node("2026", { path = "calendar/2026" }),
     }))
-    table.insert(root, nodes.node("clock", { hl = "GruvboxPurple", path = "clock", help_suffix = help_suffixes.clock }, {
-        nodes.node("Start 5m timer",  { hl = "GruvboxPurple", indicator = "action", path = "clock/timer/start/5m" }),
-        nodes.node("Start 15m timer", { hl = "GruvboxPurple", indicator = "action", path = "clock/timer/start/15m" }),
-        nodes.node("Start timer...",  { hl = "GruvboxPurple", indicator = "action", path = "clock/timer/start/custom" }),
+    table.insert(root, nodes.node("clock", { hl = highlights.TreeModBuiltins, path = "clock", help_suffix = help_suffixes.clock }, {
+        nodes.node("Start 5m timer",  { hl = highlights.TreeModBuiltins, indicator = "action", path = "clock/timer/start/5m" }),
+        nodes.node("Start 15m timer", { hl = highlights.TreeModBuiltins, indicator = "action", path = "clock/timer/start/15m" }),
+        nodes.node("Start timer...",  { hl = highlights.TreeModBuiltins, indicator = "action", path = "clock/timer/start/custom" }),
     }))
     table.insert(root, nodes.node("todo", { path = "todo", help_suffix = help_suffixes.todo }, {
         nodes.node("GC nodes stored in caches"),
