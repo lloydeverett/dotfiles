@@ -120,8 +120,8 @@ require("lazy").setup({
       { 'hrsh7th/cmp-path' },
       { 'hrsh7th/cmp-cmdline' },
       { 'hrsh7th/nvim-cmp' },
-      { 'hrsh7th/cmp-vsnip' },
-      { 'hrsh7th/vim-vsnip' },
+      -- { 'hrsh7th/cmp-vsnip' },
+      -- { 'hrsh7th/vim-vsnip' },
       { 'tbabej/taskwiki' },
       { 'declancm/cinnamon.nvim',
            opts = {},
@@ -202,6 +202,9 @@ require("lazy").setup({
                vim.keymap.set('n', '<leader>sn', "<cmd>Nerdy<CR>")
            end,
       },
+      { dir = "~/treectl",
+           opts = {}
+      }
   },
   install = { colorscheme = { "habamax" } },
   checker = { enabled = false }

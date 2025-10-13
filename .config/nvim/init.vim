@@ -7,7 +7,6 @@ let maplocalleader = "\\"
 " evaluate lua
 lua require('config.lazy')
 lua require('init')
-lua require('treectl.treectl')
 
 " window switching
 tnoremap <Esc> <C-\><C-n>
