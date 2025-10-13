@@ -1,6 +1,6 @@
 -- lazy.nvim bootstrap
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
+if not (vim.uv or vim.loop)["fs_stat"](lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
     local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
     if vim.v.shell_error ~= 0 then
@@ -15,45 +15,14 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-function _G.custom_get_oil_winbar()
-    local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-    local dir = require("oil").get_current_dir(bufnr)
-    if dir then
-        return vim.fn.fnamemodify(dir, ":~")
-    else
-        return vim.api.nvim_buf_get_name(0)
-    end
-end
-
 require("lazy").setup({
   spec = {
       -- begin color schemes
-      { 'sainnhe/gruvbox-material' },
-      -- { 'ellisonleao/gruvbox.nvim',
-      --      opts = {
-      --          terminal_colors = true, -- add neovim terminal colors
-      --          undercurl = true,
-      --          underline = true,
-      --          bold = true,
-      --          italic = {
-      --            strings = true,
-      --            emphasis = true,
-      --            comments = true,
-      --            operators = false,
-      --            folds = true,
-      --          },
-      --          strikethrough = true,
-      --          invert_selection = false,
-      --          invert_signs = false,
-      --          invert_tabline = false,
-      --          inverse = true, -- invert background for search, diffs, statuslines and errors
-      --          contrast = "", -- can be "hard", "soft" or empty string
-      --          palette_overrides = {},
-      --          overrides = {},
-      --          dim_inactive = false,
-      --          transparent_mode = false,
-      --      }
-      -- },
+      { 'sainnhe/gruvbox-material',
+           config = function(_, _)
+               vim.cmd("colorscheme gruvbox-material")
+           end
+      },
       { 'fxn/vim-monochrome', lazy = true },
       { 'ntk148v/komau.vim', lazy = true  },
       { 'davidosomething/vim-colors-meh', lazy = true  },
@@ -68,7 +37,7 @@ require("lazy").setup({
       },
       { 'vimwiki/vimwiki',
            branch = 'dev',
-           config = function(_, opts)
+           config = function(_, _)
                vim.g.vimwiki_list = {{
                  path = os.getenv('HOME') .. '/sync/wiki',
                  syntax = 'markdown',
@@ -79,9 +48,21 @@ require("lazy").setup({
       { 'stevearc/oil.nvim',
            opts = {
                win_options = {
-                   winbar = "%!v:lua.custom_get_oil_winbar()",
+                   winbar = "%!v:lua.get_oil_winbar()",
                },
-           }
+           },
+           config = function(_, opts)
+               _G["" .. "get_oil_winbar"] = function()
+                   local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+                   local dir = require("oil").get_current_dir(bufnr)
+                   if dir then
+                       return vim.fn.fnamemodify(dir, ":~")
+                   else
+                       return vim.api.nvim_buf_get_name(0)
+                   end
+               end
+               require("oil").setup(opts)
+           end
       },
       { 'nvim-lua/plenary.nvim' },
       { 'nvim-lua/popup.nvim' },
@@ -96,9 +77,6 @@ require("lazy").setup({
        },
       { 'tpope/vim-fugitive' },
       { 'LukasPietzschmann/telescope-tabs' },
-      -- { 'vim-airline/vim-airline' },
-      -- { 'vim-airline/vim-airline-themes' },
-      --
       { 'nvim-lualine/lualine.nvim',
            opts = {
                sections = {
@@ -107,9 +85,9 @@ require("lazy").setup({
                    {
                      'fileformat',
                      symbols = {
-                       unix = 'unix',
-                       dos = 'dos',
-                       mac = 'mac',
+                       unix = 'LF',
+                       dos = 'CRLF',
+                       mac = 'CR',
                      }
                    }
                  }
@@ -145,7 +123,21 @@ require("lazy").setup({
       { 'hrsh7th/cmp-vsnip' },
       { 'hrsh7th/vim-vsnip' },
       { 'tbabej/taskwiki' },
-      { 'declancm/cinnamon.nvim' },
+      { 'declancm/cinnamon.nvim',
+           opts = {},
+           config = function(_, opts)
+               if not vim.g.neovide then
+                   local cinnamon = require('cinnamon')
+                   cinnamon.setup(opts)
+                   vim.keymap.set("n", "<C-U>", function() cinnamon.scroll("<C-U>") end)
+                   vim.keymap.set("n", "<C-D>", function() cinnamon.scroll("<C-D>") end)
+                   -- vim.keymap.set("n", "{", function() cinnamon.scroll("{", { mode = "window" }) end)
+                   -- vim.keymap.set("n", "}", function() cinnamon.scroll("}", { mode = "window" }) end)
+                   vim.keymap.set("n", "G", function() cinnamon.scroll("G", { mode = "window", max_delta = { time = 250 } }) end)
+                   vim.keymap.set("n", "gg", function() cinnamon.scroll("gg", { mode = "window", max_delta = { time = 250 } }) end)
+               end
+           end
+      },
       { 'MunifTanjim/nui.nvim' },
       { "allaman/emoji.nvim",
            dependencies = {

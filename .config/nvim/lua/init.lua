@@ -1,11 +1,5 @@
 
-require("oil").setup({
-  win_options = {
-    winbar = "%!v:lua.custom_get_oil_winbar()",
-  },
-})
-
-function open_terminal_in_buffer_dir()
+_G["" .. "open_terminal_in_buffer_dir"] = function()
     local dir = vim.fn.expand("%:p:h")
     if dir:find("oil://", 1, true) == 1 then
       dir = dir:sub(#"oil://" + 1)
@@ -17,6 +11,10 @@ end
 local cmp = require('cmp')
 
 cmp.setup({
+  enabled = function()
+    -- Disable cmp for markdown files
+    return vim.bo.filetype ~= "vimwiki"
+  end,
   snippet = {
     expand = function(args)
       vim.fn["vsnip#anonymous"](args.body)
@@ -70,7 +68,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-local font_size = 15.5
+local font_size = 16
 local function update_font_size()
     vim.o.guifont = "0xProto Nerd Font Mono:h" .. font_size
 end
@@ -92,14 +90,5 @@ if vim.g.neovide then
         font_size = font_size + 1
         update_font_size()
     end, { noremap = true, silent = true })
-else
-    local cinnamon = require('cinnamon')
-    cinnamon.setup({})
-    vim.keymap.set("n", "<C-U>", function() cinnamon.scroll("<C-U>") end)
-    vim.keymap.set("n", "<C-D>", function() cinnamon.scroll("<C-D>") end)
-    -- vim.keymap.set("n", "{", function()  cinnamon.scroll("{", { mode = "window" }) end)
-    -- vim.keymap.set("n", "}", function() cinnamon.scroll("}", { mode = "window" }) end)
-    vim.keymap.set("n", "G", function() cinnamon.scroll("G", { mode = "window", max_delta = { time = 250 } }) end)
-    vim.keymap.set("n", "gg", function() cinnamon.scroll("gg", { mode = "window", max_delta = { time = 250 } }) end)
 end
 
