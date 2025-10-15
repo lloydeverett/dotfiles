@@ -53,6 +53,15 @@ nnoremap <leader>wo :e ~/sync/wiki/work.md<cr>
 nnoremap <leader>cc :e ~/.config/nvim/init.vim<cr>
 
 " oil
+lua <<EOF
+_G["" .. "open_terminal_in_buffer_dir"] = function()
+    local dir = vim.fn.expand("%:p:h")
+    if dir:find("oil://", 1, true) == 1 then
+        dir = dir:sub(#"oil://" + 1)
+    end
+    vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
+end
+EOF
 nnoremap - <cmd>Oil<cr>
 nnoremap <leader>- <cmd>Oil<cr>
 nnoremap = <cmd>lua open_terminal_in_buffer_dir()<cr>i

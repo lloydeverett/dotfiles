@@ -17,7 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local function postprocess_spec(spec)
     local result = {}
-    for i, v in ipairs(spec) do
+    for _, v in ipairs(spec) do
         if not vim.env.NVIM_MINIMAL or v.include_in_minimal then
             table.insert(result, v)
         end
@@ -132,9 +132,52 @@ require("lazy").setup({
       { 'hrsh7th/cmp-buffer' },
       { 'hrsh7th/cmp-path' },
       { 'hrsh7th/cmp-cmdline' },
-      { 'hrsh7th/nvim-cmp' },
-      -- { 'hrsh7th/cmp-vsnip' },
-      -- { 'hrsh7th/vim-vsnip' },
+      { 'hrsh7th/nvim-cmp',
+           config = function(_, _)
+               -- Set up nvim-cmp.
+               local cmp = require('cmp')
+               cmp.setup({
+                   enabled = function()
+                       return true
+                   end,
+                   snippet = {
+                       expand = function(args)
+                           vim.snippet.expand(args.body)
+                       end,
+                   },
+                   window = { },
+                   mapping = cmp.mapping.preset.insert({
+                       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+                       ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                       ['<C-Space>'] = cmp.mapping.complete(),
+                       ['<C-e>'] = cmp.mapping.abort(),
+                       ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+                   }),
+                   sources = cmp.config.sources({
+                       { name = 'nvim_lsp' },
+                   }, {
+                       { name = 'buffer' },
+                   })
+               })
+               -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+               cmp.setup.cmdline({ '/', '?' }, {
+                   mapping = cmp.mapping.preset.cmdline(),
+                   sources = {
+                       { name = 'buffer' }
+                   }
+               })
+               -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+               cmp.setup.cmdline(':', {
+                   mapping = cmp.mapping.preset.cmdline(),
+                   sources = cmp.config.sources({
+                       { name = 'path' }
+                   }, {
+                       { name = 'cmdline' }
+                   }),
+                   matching = { disallow_symbol_nonprefix_matching = false }
+               })
+           end
+      },
       { 'tbabej/taskwiki' },
       { 'declancm/cinnamon.nvim',
            opts = {},
@@ -214,8 +257,25 @@ require("lazy").setup({
                vim.keymap.set('n', '<leader>sn', "<cmd>Nerdy<CR>")
            end,
       },
+      { "ThePrimeagen/harpoon",
+           branch = "harpoon2",
+           dependencies = { "nvim-lua/plenary.nvim" }
+      },
       { 'MunifTanjim/nui.nvim',
-           include_in_minimal = true
+           include_in_minimal = true,
+           opts = {},
+           config = function(_, opts)
+               local harpoon = require("harpoon")
+               harpoon:setup(opts)
+               vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+               vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+               vim.keymap.set("n", "<C-1>", function() harpoon:list():select(1) end)
+               vim.keymap.set("n", "<C-2>", function() harpoon:list():select(2) end)
+               vim.keymap.set("n", "<C-3>", function() harpoon:list():select(3) end)
+               vim.keymap.set("n", "<C-4>", function() harpoon:list():select(4) end)
+               vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
+               vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
+           end
       },
       { dir = "~/treectl",
            opts = {},

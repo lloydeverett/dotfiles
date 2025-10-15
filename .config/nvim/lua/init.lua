@@ -1,75 +1,19 @@
 
-_G["" .. "open_terminal_in_buffer_dir"] = function()
-    local dir = vim.fn.expand("%:p:h")
-    if dir:find("oil://", 1, true) == 1 then
-        dir = dir:sub(#"oil://" + 1)
-    end
-    vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
-end
-
--- Set up nvim-cmp.
-local cmp = require('cmp')
-
-cmp.setup({
-    enabled = function()
-        -- Disable cmp for markdown files
-        return vim.bo.filetype ~= "vimwiki"
-    end,
-    snippet = {
-        expand = function(args)
-            vim.snippet.expand(args.body)
-            -- vim.fn["vsnip#anonymous"](args.body)
-        end,
-    },
-    window = { },
-    mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        -- { name = 'vsnip' }
-    }, {
-        { name = 'buffer' },
-    })
-})
-
--- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = 'buffer' }
-    }
-})
-
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' }
-    }, {
-        { name = 'cmdline' }
-    }),
-    matching = { disallow_symbol_nonprefix_matching = false }
-})
-
+-- LSP setup
 vim.diagnostic.config({ virtual_text = true })
-
 vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'LSP Actions',
-    callback = function(args)
+    callback = function(_)
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, {noremap = true, silent = true})
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {noremap = true, silent = true})
     end,
 })
 
+-- Neovide
 local font_size = 16
+local font_name = "CaskaydiaMono Nerd Font Mono" -- alt: "0xProto Nerd Font Mono"
 local function update_font_size()
-    -- vim.o.guifont = "0xProto Nerd Font Mono:h" .. font_size
-    vim.o.guifont = "CaskaydiaMono Nerd Font Mono:h" .. font_size
+    vim.o.guifont = font_name .. ":h" .. font_size
 end
 if vim.g.neovide then
     local padding_x = 18
