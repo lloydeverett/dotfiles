@@ -4,8 +4,15 @@ nnoremap <SPACE> <Nop>
 let mapleader = " "
 let maplocalleader = "\\"
 
-" evaluate lua
+" plugin setup
 lua require('config.lazy')
+
+" early exit if environment variable is set
+if $NVIM_MINIMAL != ""
+    finish
+endif
+
+" evaluate init.lua
 lua require('init')
 
 " window switching

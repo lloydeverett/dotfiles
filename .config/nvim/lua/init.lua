@@ -72,9 +72,14 @@ local function update_font_size()
     vim.o.guifont = "CaskaydiaMono Nerd Font Mono:h" .. font_size
 end
 if vim.g.neovide then
+    local padding_x = 18
     update_font_size()
     vim.g.neovide_cursor_animation_length = 0.0
     vim.g.neovide_scroll_animation_length = 0.15
+    vim.g.neovide_padding_top = 0
+    vim.g.neovide_padding_bottom = 6
+    vim.g.neovide_padding_left = padding_x
+    vim.g.neovide_padding_right = padding_x
     vim.keymap.set('v', '<D-c>', '"+y')             -- copy
     vim.keymap.set('n', '<D-v>', '"+p')             -- paste normal mode
     vim.keymap.set('v', '<D-v>', '"+p')             -- paste visual mode

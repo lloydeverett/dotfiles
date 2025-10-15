@@ -15,8 +15,21 @@ if not (vim.uv or vim.loop)["fs_stat"](lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local function postprocess_spec(spec)
+    local result = {}
+    for i, v in ipairs(spec) do
+        if not vim.env.NVIM_MINIMAL or v.include_in_minimal then
+            table.insert(result, v)
+        end
+        if v.include_in_minimal ~= nil then
+            v.include_in_minimal = nil
+        end
+    end
+    return result
+end
+
 require("lazy").setup({
-  spec = {
+  spec = postprocess_spec({
       -- begin color schemes
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
@@ -138,7 +151,6 @@ require("lazy").setup({
                end
            end
       },
-      { 'MunifTanjim/nui.nvim' },
       { "allaman/emoji.nvim",
            dependencies = {
                "nvim-lua/plenary.nvim",
@@ -202,10 +214,15 @@ require("lazy").setup({
                vim.keymap.set('n', '<leader>sn', "<cmd>Nerdy<CR>")
            end,
       },
+      { 'MunifTanjim/nui.nvim',
+           include_in_minimal = true
+      },
       { dir = "~/treectl",
-           opts = {}
+           opts = {},
+           dependencies = { 'MunifTanjim/nui.nvim' },
+           include_in_minimal = true
       }
-  },
+  }),
   install = { colorscheme = { "habamax" } },
   checker = { enabled = false }
 })
