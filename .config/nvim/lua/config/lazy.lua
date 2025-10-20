@@ -30,7 +30,8 @@ end
 
 require("lazy").setup({
   spec = postprocess_spec({
-      -- begin color schemes
+
+      -- color schemes --------------------------------------------------------------------------------------------
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.cmd("colorscheme gruvbox-material")
@@ -41,7 +42,8 @@ require("lazy").setup({
       { 'davidosomething/vim-colors-meh', lazy = true  },
       { 'zekzekus/menguless', lazy = true  },
       { 'EdenEast/nightfox.nvim', lazy = true  },
-      -- end color schemes
+
+      -- plugins --------------------------------------------------------------------------------------------------
       { 'folke/snacks.nvim',
            opts = {
                picker = { enabled = true },
@@ -110,9 +112,9 @@ require("lazy").setup({
       { 'akinsho/bufferline.nvim',
            opts = {
                options = {
-                   themeable = false,
-                   close_icon = '',
-                   buffer_close_icon = ''
+                   themeable = true,
+                   show_close_icon = false,
+                   show_buffer_close_icons = false
                }
            },
            config = function(_, opts)
@@ -151,7 +153,8 @@ require("lazy").setup({
                        ['<C-f>'] = cmp.mapping.scroll_docs(4),
                        ['<C-Space>'] = cmp.mapping.complete(),
                        ['<C-e>'] = cmp.mapping.abort(),
-                       ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+                       -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+                       ['<Tab>'] = cmp.mapping.confirm({ select = true }),
                    }),
                    sources = cmp.config.sources({
                        { name = 'nvim_lsp' },
@@ -262,10 +265,7 @@ require("lazy").setup({
       },
       { "ThePrimeagen/harpoon",
            branch = "harpoon2",
-           dependencies = { "nvim-lua/plenary.nvim" }
-      },
-      { 'MunifTanjim/nui.nvim',
-           include_in_minimal = true,
+           dependencies = { "nvim-lua/plenary.nvim" },
            opts = {},
            config = function(_, opts)
                local harpoon = require("harpoon")
@@ -276,15 +276,80 @@ require("lazy").setup({
                vim.keymap.set("n", "<C-2>", function() harpoon:list():select(2) end)
                vim.keymap.set("n", "<C-3>", function() harpoon:list():select(3) end)
                vim.keymap.set("n", "<C-4>", function() harpoon:list():select(4) end)
-               vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
-               vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
+               -- vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
+               -- vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
            end
       },
-      { dir = "~/treectl",
-           opts = {},
-           dependencies = { 'MunifTanjim/nui.nvim' },
+      { "folke/todo-comments.nvim",
+           dependencies = { "nvim-lua/plenary.nvim" },
+           opts = { }
+      },
+      { "jake-stewart/multicursor.nvim",
+          branch = "1.0",
+          config = function(_, _)
+              local mc = require("multicursor-nvim")
+              mc.setup()
+              -- Add or skip cursor above/below the main cursor.
+              vim.keymap.set({"n", "x"}, "<up>", function() mc.lineAddCursor(-1) end)
+              vim.keymap.set({"n", "x"}, "<down>", function() mc.lineAddCursor(1) end)
+              vim.keymap.set({"n", "x"}, "<C-k>", function() mc.lineAddCursor(-1) end)
+              vim.keymap.set({"n", "x"}, "<C-j>", function() mc.lineAddCursor(1) end)
+              vim.keymap.set({"n", "x"}, "<leader><up>", function() mc.lineSkipCursor(-1) end)
+              vim.keymap.set({"n", "x"}, "<leader><down>", function() mc.lineSkipCursor(1) end)
+              -- Add or skip adding a new cursor by matching word/selection
+              vim.keymap.set({"n", "x"}, "<C-n>", function() mc.matchAddCursor(1) end)
+              vim.keymap.set({"n", "x"}, "<C-s>", function() mc.matchSkipCursor(1) end)
+              vim.keymap.set({"n", "x"}, "<C-S-N>", function() mc.matchAddCursor(-1) end)
+              vim.keymap.set({"n", "x"}, "<C-S-S>", function() mc.matchSkipCursor(-1) end)
+              -- Add and remove cursors with control + left click.
+              vim.keymap.set("n", "<c-leftmouse>", mc.handleMouse)
+              vim.keymap.set("n", "<c-leftdrag>", mc.handleMouseDrag)
+              vim.keymap.set("n", "<c-leftrelease>", mc.handleMouseRelease)
+              -- Disable and enable cursors.
+              vim.keymap.set({"n", "x"}, "<c-q>", mc.toggleCursor)
+              -- Mappings defined in a keymap layer only apply when there are
+              -- multiple cursors. This lets you have overlapping mappings.
+              mc.addKeymapLayer(function(layerSet)
+                  -- Select a different cursor as the main one.
+                  layerSet({"n", "x"}, "<left>", mc.prevCursor)
+                  layerSet({"n", "x"}, "<right>", mc.nextCursor)
+                  -- Delete the main cursor.
+                  layerSet({"n", "x"}, "<leader>x", mc.deleteCursor)
+                  -- Enable and clear cursors using escape.
+                  layerSet("n", "<esc>", function()
+                      if not mc.cursorsEnabled() then
+                          mc.enableCursors()
+                      else
+                          mc.clearCursors()
+                      end
+                  end)
+              end)
+              -- Customize how cursors look.
+              vim.api.nvim_set_hl(0, "MultiCursorCursor", { reverse = true })
+              vim.api.nvim_set_hl(0, "MultiCursorVisual", { link = "Visual" })
+              vim.api.nvim_set_hl(0, "MultiCursorSign", { link = "SignColumn"})
+              vim.api.nvim_set_hl(0, "MultiCursorMatchPreview", { link = "Search" })
+              vim.api.nvim_set_hl(0, "MultiCursorDisabledCursor", { reverse = true })
+              vim.api.nvim_set_hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
+              vim.api.nvim_set_hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
+          end
+      },
+
+      -- treectl --------------------------------------------------------------------------------------------------
+      { 'MunifTanjim/nui.nvim',
            include_in_minimal = true
+      },
+      { dir = "~/treectl",
+           dependencies = { 'MunifTanjim/nui.nvim' },
+           include_in_minimal = true,
+           opts = {},
+           config = function(_, opts)
+               require("treectl").setup(opts)
+               vim.api.nvim_set_keymap('n', '<leader>[', '<Cmd>Treectl<CR>', { noremap = true, silent = true })
+               vim.api.nvim_set_keymap('n', '<leader>]', '<Cmd>TreectlNewBuf<CR>', { noremap = true, silent = true })
+           end
       }
+
   }),
   install = { colorscheme = { "habamax" } },
   checker = { enabled = false }

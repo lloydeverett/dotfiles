@@ -1,0 +1,7 @@
+#!/bin/bash
+
+{
+    cd /Users/lloyd/dotfiles/cron
+    lua ./neocron.lua "$@"
+}
+

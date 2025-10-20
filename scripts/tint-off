@@ -1,0 +1,4 @@
+#!/bin/bash
+
+pgrep "Menu Bar Tint" | xargs kill
+

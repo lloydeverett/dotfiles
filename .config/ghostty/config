@@ -23,7 +23,7 @@ font-family = 0xProto Nerd Font
 font-size = 16
 font-thicken = true
 
-theme = GruvboxDarkHard
+theme = gruvbox-material
 window-step-resize = true
 window-padding-x = 0
 

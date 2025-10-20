@@ -1,7 +1,0 @@
-#!/bin/bash
-
-cd /opt/homebrew/bin
-ln -s $(realpath "$HOME/dotfiles/bin/adjacent-window") adjacent-window
-ln -s $(realpath "$HOME/dotfiles/bin/focus-next") focus-next
-ln -s $(realpath "$HOME/dotfiles/bin/focus-prev") focus-prev
-

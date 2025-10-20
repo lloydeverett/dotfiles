@@ -3,6 +3,8 @@ eval "$(zoxide init zsh --cmd cd)"
 
 set -o vi                                                # VI editing mode
 
+export PATH="$PATH:/Users/lloyd/dotfiles/scripts"
+
 alias vim='nvim'
 alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
@@ -21,7 +23,6 @@ HISTFILE=~/.zsh_history                                  # File where history is
 setopt appendhistory                                     # Append new history lines to the history file instead of overwriting
 setopt sharehistory                                      # Share history across multiple terminals
 setopt incappendhistory                                  # Append history immediately, not just on shell exit
-
 setopt interactive_comments                              # Allow comments in the interactive shell
 
 autoload -U up-line-or-beginning-search
@@ -40,7 +41,14 @@ format_current_git_branch() {
     echo "($branch)"
   fi
 }
-PROMPT='%F{green}%n@%m%f %F{blue}%~%f $(format_current_git_branch) %# '
+format_exit_status() {
+  if [[ $? -ne 0 && $? -ne 130 ]]; then
+    echo "%(?..%F{red}%B(%?%)%b )"
+  elif [[ $? -eq 0 ]]; then
+    echo ""
+  fi
+}
+PROMPT='$(format_exit_status)%F{green}%n@%m%f %F{blue}%~%f $(format_current_git_branch) %# '
 
 # Terminal emulator colors: Copied from vim gruvbox color scheme
 # colors.bg0               terminal_color_0       #282828

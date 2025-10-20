@@ -1,0 +1,10 @@
+#!/bin/bash
+
+pgrep "Menu Bar Tint" > /dev/null
+
+if [ $? -ne 0 ]; then
+    open "/Applications/Menu Bar Tint.app" 
+else
+    exit 1
+fi
+
