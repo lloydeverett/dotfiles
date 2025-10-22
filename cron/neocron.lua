@@ -20,7 +20,7 @@ end
 
 local function parse_t(str)
     local year, month, day, hour, min, sec = str:match("(%d+)%-(%d+)%-(%d+)T(%d+):(%d+):(%d+)")
-    return os.time{ year=year, month=month, day=day, hour=hour, min=min, sec=sec }
+    return os.time{ year = year, month = month, day = day, hour = hour, min = min, sec = sec }
 end
 
 local function parse_dt(str)
@@ -61,8 +61,27 @@ local function map(t, fn)
     return ret
 end
 
+local function filter(t, fn)
+    local ret = {}
+    for i, v in ipairs(t) do
+        if fn(i, v) then
+            ret[i] = v
+        end
+    end
+    for k, v in pairs(t) do
+        if fn(k, v) then
+            ret[k] = v
+        end
+    end
+    return ret
+end
+
 local function pretty_print(x)
     print(serpent.block(x, { comment = false }))
+end
+
+local function print_err(str)
+    io.stderr:write(str .. "\n")
 end
 
 local NEOCRON_DIR_PATH = os.getenv("HOME") .. "/.neocron"
@@ -82,7 +101,9 @@ G = {
     plus_days = plus_days,
     clone_table = clone_table,
     map = map,
+    filter = filter,
     pretty_print = pretty_print,
+    print_err = print_err,
     NEOCRON_DIR_PATH = NEOCRON_DIR_PATH,
     JOB_DEFS_PATH = JOB_DEFS_PATH,
     LAST_RUN_PATH = LAST_RUN_PATH,
@@ -108,6 +129,44 @@ local function write_to_file(filename, content)
     file:close()
 end
 
+local ERR_GENERAL = 1
+local ERR_USAGE = 64
+local ERR_INPUT = 66
+local USAGE = "usage: neocron [--as-at YYYY-MM-DDTHH:MM:SS] [--help]"
+
+local now_dt = date()
+local reading_flag = nil
+for _, a in ipairs(arg) do
+    if reading_flag ~= nil then
+        if reading_flag == "--as-at" then
+            local ok, result = pcall(function() return parse_dt(a) end)
+            if ok then
+                now_dt = result
+                reading_flag = nil
+            else
+                print_err(USAGE)
+                os.exit(ERR_USAGE)
+            end
+        else
+            print_err(USAGE)
+            os.exit(ERR_USAGE)
+        end
+    elseif a == "--as-at" then
+        reading_flag = "--as-at"
+    elseif a == "--help" then
+        print(USAGE)
+        os.exit(0)
+    else
+        print(USAGE)
+        os.exit(ERR_USAGE)
+    end
+end
+if reading_flag ~= nil then
+    print_err(USAGE)
+    os.exit(ERR_USAGE)
+end
+print("[neocron] evaluating as at " .. format_dt(now_dt))
+
 local jobs_load_ok, jobs_load_result = pcall(function ()
     local ok, value = serpent.load(read_to_str(JOB_DEFS_PATH), { safe = false })
     if not ok then
@@ -116,72 +175,86 @@ local jobs_load_ok, jobs_load_result = pcall(function ()
     return value
 end)
 if not jobs_load_ok or type(jobs_load_result) ~= "table" then
-    io.stderr:write("[neocron] " .. jobs_load_result .. "\n")
-    io.stderr:write("[neocron] failed to read '" .. JOB_DEFS_PATH .. "'; exiting\n")
-    os.exit(1)
+    print_err("[neocron] " .. jobs_load_result)
+    print_err("[neocron] failed to read '" .. JOB_DEFS_PATH .. "'; exiting")
+    os.exit(ERR_INPUT)
 end
 local jobs = jobs_load_result
 
-local default_last_dts = map(jobs, function(_) return LONG_AGO end)
-local last_dts
-local last_dts_history
+local last_dts_history = { }
 local dts_load_ok, dts_load_result = pcall(function ()
     local ok, value = serpent.load(read_to_str(LAST_RUN_PATH), { safe = true })
-    if not ok then
+    if not ok or type(value) ~= "table" then
         error("could not deserialize contents of last run file")
     end
-    return map(value, function(dts)
-        return map(dts, parse_dt)
-    end)
+    for _, history_elem in ipairs(value) do
+        history_elem[1] = parse_dt(history_elem[1])
+        if time(now_dt) <= time(history_elem[1]) then
+            print_err("[neocron] there are runs more recent than the as at date " .. format_dt(now_dt) .. "; exiting")
+            print_err("[neocron] you may want to adjust or remove '" .. LAST_RUN_PATH .. "' or specify a different --as-at date")
+            os.exit(ERR_GENERAL)
+        end
+    end
+    return value
 end)
 if dts_load_ok then
     last_dts_history = dts_load_result
-    last_dts = clone_table(default_last_dts, last_dts_history[1])
 else
-    io.stderr:write("[neocron] " .. dts_load_result .. "\n")
-    io.stderr:write("[neocron] failed to read '" .. LAST_RUN_PATH .. "'; assuming all jobs were never run before\n")
-    last_dts = clone_table(default_last_dts)
-    last_dts_history = { }
+    print_err("[neocron] " .. dts_load_result)
+    print_err("[neocron] failed to read '" .. LAST_RUN_PATH .. "'; assuming all jobs were never run before")
+    --  TODO: Back up contents of this file to ~/.neocron/last_run.YYYYMMDDTHHMMSS
+    --        Probably also want to force a write here even if you're just writing "{ }"
 end
 
-local now_dt = date()
-last_dts[1] = now_dt
-local something_ran = false
+local last_dts = map(jobs, function(_) return LONG_AGO end)
+for i = #last_dts_history, 1, -1 do
+    local history_elem = last_dts_history[i]
+    local dt = history_elem[1]
+    for k, _ in pairs(history_elem) do
+        last_dts[k] = dt
+    end
+end
+
+local jobs_that_ran = { }
 for k, j in pairs(jobs) do
+    --  TODO: Call next_dt with pcall in case it fails and handle the error
     local next_dt = j.next_dt(last_dts[k], k)
     if time(next_dt) <= time(now_dt) then
-        print("[neocron] " .. k .. " now starting (prev next = " .. format_dt(last_dts[k]) ..
-                                      ", now = " .. format_dt(now_dt) ..
-                                      ", new next = " .. format_dt(j.next_dt(now_dt)) .. ")")
-        j.run(now_dt, k)
-        print("[neocron] " .. k .. " completed")
-        last_dts[k] = now_dt
-        something_ran = true
+        print("[neocron] " .. k .. " now starting (prev next = " .. format_dt(last_dts[k]) .. ")")
+        local ok, result = pcall(function()
+            local ret = j.run(now_dt, k)
+            if ret == nil then
+                return { }
+            else
+                return ret
+            end
+        end)
+        if ok then
+            print("[neocron] " .. k .. " completed (new next = " .. format_dt(j.next_dt(now_dt)) .. ")")
+            last_dts[k] = now_dt
+            jobs_that_ran[k] = result
+        else
+            print_err("[neocron] " .. k .. " failed; not marking as run and will be attempted again on next evaluation")
+        end
     else
         print("[neocron] " .. k .. " next runs on " .. format_dt(next_dt))
     end
 end
 
---  TODO: Output should look like:
---        {
---            "2025-10-20T08:17:03",
---            menubar_tint = {} -- meta output from run
---        },
---        {
---            "2025-10-20T08:17:03",
---            memelord = {} -- meta output from run
---        }
---        Obtain last_dts by aggregating this on load.
-
-table.insert(last_dts_history, 1, last_dts)
+local new_history_elem = clone_table(jobs_that_ran)
+new_history_elem[1] = now_dt
+table.insert(last_dts_history, 1, new_history_elem)
 last_dts_history = { table.unpack(last_dts_history, 1, MAX_HISTORY_LENGTH) }
 
-if something_ran then
-    print("[neocron] writing run info to '" .. LAST_RUN_PATH .. "'...")
-    print(serpent.block(map(last_dts_history[1], format_dt), { comment = false }))
-    local output = map(last_dts_history, function(dts)
-        return map(dts, format_dt)
+if next(jobs_that_ran) then
+    local ser_last_dts_history = map(last_dts_history, function(v)
+        local ret = clone_table(v)
+        ret[1] = format_dt(ret[1])
+        return ret
     end)
-    write_to_file(LAST_RUN_PATH, serpent.block(output, { comment = false }))
+    print("[neocron] writing run info to '" .. LAST_RUN_PATH .. "'...")
+    print(serpent.block(ser_last_dts_history[1], { comment = false }))
+    local output = serpent.block(ser_last_dts_history, { comment = false }) .. "\n"
+    write_to_file(LAST_RUN_PATH, output)
 end
 

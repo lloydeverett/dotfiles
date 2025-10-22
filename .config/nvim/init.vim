@@ -79,7 +79,7 @@ nnoremap <leader>p :TimerStart<Space>
 nnoremap <leader><leader> <C-^>
 
 " clear search highlight
-noremap <silent> <Esc> :noh<CR><Esc>
+nnoremap <silent> <Esc> :noh<CR><Esc>
 
 " normal mode in terminal via esc
 tnoremap <Esc> <C-\><C-n>
