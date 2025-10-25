@@ -2,10 +2,14 @@
 local default_cmd_height = 1
 vim.o.cmdheight = default_cmd_height
 local font_size = 16
-local font_name = "CaskaydiaMono Nerd Font Mono" -- alt: "0xProto Nerd Font Mono"
+local font_name = "CaskaydiaMono Nerd Font Mono"
+    -- alt: "Operator Mono Lig"
+    -- alt: "0xProto Nerd Font Mono"
+
 local function update_font_size()
     vim.o.guifont = font_name .. ":h" .. font_size
 end
+
 if vim.g.neovide then
     local padding_x = 18
     update_font_size()

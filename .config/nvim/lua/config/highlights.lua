@@ -1,5 +1,5 @@
 
--- color reference          everforest   gruvbox-material 
+-- color reference          everforest   gruvbox-material
 -- g:terminal_color_0          #414b50            #5a524c
 -- g:terminal_color_1          #e67e80            #ea6962
 -- g:terminal_color_2          #a7c080            #a9b665
@@ -31,17 +31,21 @@ local function apply_custom_highlights()
     -- highlight group for trailing whitespace
     vim.cmd('hi link TrailingWhitespace CursorLine')
 
+    -- customise vimwiki highlights
     vim.cmd('hi VimwikiBold gui=bold guifg='     .. vim.g['terminal_color_1'])
     vim.cmd('hi VimwikiItalic gui=italic guifg=' .. vim.g['terminal_color_5'])
-    vim.cmd('hi VimwikiHeader1 cterm=bold ctermfg=142 gui=bold guifg=#a9b665')
+    vim.cmd('hi VimwikiHeader1 gui=bold guifg='  .. vim.g['terminal_color_2'])
 
-    -- patch bufferline bg
+    -- patch bufferline highlights
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
     local hl_rules = vim.api.nvim_get_hl(0, { })
     for k, v in pairs(hl_rules) do
         if starts_with(k, "BufferLine") then
-            v.bg = cursorline_hl_rule.bg
-            v.ctermbg = cursorline_hl_rule.ctermbg
+            -- patch background
+            if v.bg ~= nil then v.bg = cursorline_hl_rule.bg end
+            if v.ctermbg ~= nil then v.ctermbg = cursorline_hl_rule.ctermbg end
+
+            -- apply
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end

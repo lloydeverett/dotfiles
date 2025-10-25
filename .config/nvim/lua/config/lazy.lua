@@ -35,17 +35,19 @@ require("lazy").setup({
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.g.gruvbox_material_background = 'medium'
-               vim.cmd("colorscheme gruvbox-material")
+               -- vim.cmd("colorscheme gruvbox-material")
            end
       },
       { 'sainnhe/everforest',
            config = function(_, _)
                vim.g.everforest_background = 'hard'
+               vim.cmd("colorscheme everforest")
            end
       },
       { 'sainnhe/sonokai',
            config = function(_, _)
                vim.g.sonokai_background = 'hard'
+               -- vim.cmd("colorscheme sonokai")
            end,
       },
 
@@ -351,6 +353,29 @@ require("lazy").setup({
            config = function(_, _)
                require('colorizer').setup()
            end
+      },
+      { 'tzachar/local-highlight.nvim',
+           opts = {
+               -- file_types = {"python", "cpp"}, -- If this is given only attach to this
+               -- OR attach to every filetype except:
+               disable_file_types = { "markdown", "vimwiki" },
+               hlgroup = "LocalHighlight",
+               cw_hlgroup = nil,
+               -- Whether to display highlights in INSERT mode or not
+               insert_mode = false,
+               min_match_len = 1,
+               max_match_len = math.huge,
+               highlight_single_match = true,
+               animate = {
+                   enabled = true,
+                   easing = "linear",
+                   duration = {
+                       step = 10, -- ms per step
+                       total = 100, -- maximum duration
+                   },
+               },
+               debounce_timeout = 200,
+           }
       },
 
       -- treectl --------------------------------------------------------------------------------------------------
