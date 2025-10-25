@@ -87,7 +87,7 @@ end
 local NEOCRON_DIR_PATH = os.getenv("HOME") .. "/.neocron"
 local JOB_DEFS_PATH = NEOCRON_DIR_PATH .. "/jobs.lua"
 local LAST_RUN_PATH = NEOCRON_DIR_PATH .. "/last_run"
-local MAX_HISTORY_LENGTH = 2 -- 20
+local MAX_HISTORY_LENGTH = 20
 local LONG_AGO = date(time({ year = 1970, month = 1, day = 1, hour = 0, min = 0, sec = 0 }))
 
 -- global exports to allow access from within job definitions
@@ -182,6 +182,7 @@ end
 local jobs = jobs_load_result
 
 local last_dts_history = { }
+local needs_write = false
 local dts_load_ok, dts_load_result = pcall(function ()
     local ok, value = serpent.load(read_to_str(LAST_RUN_PATH), { safe = true })
     if not ok or type(value) ~= "table" then
@@ -202,8 +203,13 @@ if dts_load_ok then
 else
     print_err("[neocron] " .. dts_load_result)
     print_err("[neocron] failed to read '" .. LAST_RUN_PATH .. "'; assuming all jobs were never run before")
-    --  TODO: Back up contents of this file to ~/.neocron/last_run.YYYYMMDDTHHMMSS
-    --        Probably also want to force a write here even if you're just writing "{ }"
+    needs_write = true
+    local ok, content = pcall(function() return read_to_str(LAST_RUN_PATH) end)
+    if ok then
+        local backup_path = LAST_RUN_PATH .. "." .. os.date("%Y%m%dT%H%M%S", time(now_dt))
+        print_err("[neocron] backing up '" .. LAST_RUN_PATH .. "' to '" .. backup_path .. "'")
+        write_to_file(backup_path, content)
+    end
 end
 
 local last_dts = map(jobs, function(_) return LONG_AGO end)
@@ -217,9 +223,11 @@ end
 
 local jobs_that_ran = { }
 for k, j in pairs(jobs) do
-    --  TODO: Call next_dt with pcall in case it fails and handle the error
-    local next_dt = j.next_dt(last_dts[k], k)
-    if time(next_dt) <= time(now_dt) then
+    local next_dt_ok, next_dt = pcall(function() return j.next_dt(last_dts[k], k) end)
+    if not next_dt_ok then
+        print_err("[neocron] " .. k .. " failed due to error:")
+        print_err("[neocron] " .. next_dt)
+    elseif time(next_dt) <= time(now_dt) then
         print("[neocron] " .. k .. " now starting (prev next = " .. format_dt(last_dts[k]) .. ")")
         local ok, result = pcall(function()
             local ret = j.run(now_dt, k)
@@ -246,7 +254,7 @@ new_history_elem[1] = now_dt
 table.insert(last_dts_history, 1, new_history_elem)
 last_dts_history = { table.unpack(last_dts_history, 1, MAX_HISTORY_LENGTH) }
 
-if next(jobs_that_ran) then
+if needs_write or next(jobs_that_ran) then
     local ser_last_dts_history = map(last_dts_history, function(v)
         local ret = clone_table(v)
         ret[1] = format_dt(ret[1])

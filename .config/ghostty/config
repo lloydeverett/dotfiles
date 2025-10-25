@@ -20,10 +20,10 @@
 # # The config file consists of simple key-value pairs,
 # # separated by equals signs.
 font-family = 0xProto Nerd Font
-font-size = 16
+font-size = 15
 font-thicken = true
 
-theme = gruvbox-material
+theme = /Users/lloyd/dotfiles/.config/ghostty/themes/test
 window-step-resize = true
 window-padding-x = 0
 

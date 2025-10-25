@@ -1,15 +1,4 @@
 
--- LSP setup
-vim.diagnostic.config({ virtual_text = true })
-vim.api.nvim_create_autocmd('LspAttach', {
-    desc = 'LSP Actions',
-    callback = function(_)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, {noremap = true, silent = true})
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {noremap = true, silent = true})
-    end,
-})
-
--- Neovide
 local default_cmd_height = 1
 vim.o.cmdheight = default_cmd_height
 local font_size = 16

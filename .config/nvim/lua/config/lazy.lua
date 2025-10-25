@@ -1,3 +1,4 @@
+
 -- lazy.nvim bootstrap
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop)["fs_stat"](lazypath) then
@@ -30,18 +31,23 @@ end
 
 require("lazy").setup({
   spec = postprocess_spec({
-
       -- color schemes --------------------------------------------------------------------------------------------
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
+               vim.g.gruvbox_material_background = 'medium'
                vim.cmd("colorscheme gruvbox-material")
            end
       },
-      { 'fxn/vim-monochrome', lazy = true },
-      { 'ntk148v/komau.vim', lazy = true  },
-      { 'davidosomething/vim-colors-meh', lazy = true  },
-      { 'zekzekus/menguless', lazy = true  },
-      { 'EdenEast/nightfox.nvim', lazy = true  },
+      { 'sainnhe/everforest',
+           config = function(_, _)
+               vim.g.everforest_background = 'hard'
+           end
+      },
+      { 'sainnhe/sonokai',
+           config = function(_, _)
+               vim.g.sonokai_background = 'hard'
+           end,
+      },
 
       -- plugins --------------------------------------------------------------------------------------------------
       { 'folke/snacks.nvim',
@@ -333,6 +339,18 @@ require("lazy").setup({
               vim.api.nvim_set_hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
               vim.api.nvim_set_hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
           end
+      },
+      { "chomosuke/term-edit.nvim",
+           opts = {
+               prompt_end = '%% ',
+           }
+      },
+      { 'psliwka/termcolors.nvim' }, -- :TermcolorsShow to output terminal color scheme
+      { 'Makaze/AnsiEsc' }, -- :AnsiEsc to toggle colorize according to escape seqeunces
+      { 'norcalli/nvim-colorizer.lua', -- highlight hex colour codes
+           config = function(_, _)
+               require('colorizer').setup()
+           end
       },
 
       -- treectl --------------------------------------------------------------------------------------------------
