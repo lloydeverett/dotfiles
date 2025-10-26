@@ -411,25 +411,6 @@ require("lazy").setup({
       { 'lewis6991/gitsigns.nvim',
            opts = { }
       },
-      -- { 'akinsho/toggleterm.nvim',
-      --      opts = {
-      --          size = function(term)
-      --              if term.direction == "horizontal" then
-      --                  return 15
-      --              elseif term.direction == "vertical" then
-      --                  return vim.o.columns * 0.4
-      --              end
-      --          end,
-      --      },
-      --      config = function(_, opts)
-      --          require("toggleterm").setup(opts)
-      --          local Terminal = require('toggleterm.terminal').Terminal
-      --          vim.cmd[[
-      --              nnoremap <silent><leader>/ <Cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>
-      --              nnoremap <silent><leader>. <Cmd>ToggleTermToggleAll<CR>
-      --          ]]
-      --      end
-      -- },
 
       -- treectl --------------------------------------------------------------------------------------------------
       { 'MunifTanjim/nui.nvim',
