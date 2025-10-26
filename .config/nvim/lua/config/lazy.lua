@@ -32,25 +32,28 @@ end
 require("lazy").setup({
   spec = postprocess_spec({
       -- color schemes --------------------------------------------------------------------------------------------
+      { "jpwol/thorn.nvim",
+           opts = {}
+      },
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.g.gruvbox_material_background = 'medium'
-               -- vim.cmd("colorscheme gruvbox-material")
+               if not vim.g.neovide then
+                   vim.cmd("colorscheme gruvbox-material")
+               end
            end
-      },
-      { "jpwol/thorn.nvim",
-           opts = {}
       },
       { 'sainnhe/everforest',
            config = function(_, _)
                vim.g.everforest_background = 'hard'
-               vim.cmd("colorscheme everforest")
+               if vim.g.neovide then
+                   vim.cmd("colorscheme everforest")
+               end
            end
       },
       { 'sainnhe/sonokai',
            config = function(_, _)
                vim.g.sonokai_background = 'hard'
-               -- vim.cmd("colorscheme sonokai")
            end,
       },
 
