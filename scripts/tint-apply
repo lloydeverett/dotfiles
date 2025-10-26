@@ -1,0 +1,12 @@
+#!/bin/bash
+
+while true; do
+    pgrep "Menu Bar Tint" > /dev/null
+    if [ $? -ne 0 ]; then
+        open "/Applications/Menu Bar Tint.app" 
+    fi
+    sleep 2
+    pgrep "Menu Bar Tint" | xargs kill
+    sleep 2
+done
+

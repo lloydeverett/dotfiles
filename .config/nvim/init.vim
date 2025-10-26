@@ -4,7 +4,20 @@ nnoremap <SPACE> <Nop>
 let mapleader = " "
 let maplocalleader = "\\"
 
-" enable termguicolors
+" adjust defaults
+set nocompatible
+filetype plugin on
+syntax on
+set scrolloff=5
+set relativenumber
+set nu rnu
+set expandtab autoindent tabstop=4 shiftwidth=4
+set hidden
+set nowrap
+set noswapfile
+set undofile
+set undodir=~/.local/share/nvim/undo/
+set cursorline
 set termguicolors
 
 " plugin setup
@@ -97,21 +110,6 @@ nnoremap <leader><S-Tab> :tabprev<cr>
 " shortcut for :put call
 nnoremap <leader>H :put=execute('hi')
 
-" adjust defaults
-set nocompatible
-filetype plugin on
-syntax on
-set scrolloff=5
-set relativenumber
-set nu rnu
-set expandtab autoindent tabstop=4 shiftwidth=4
-set hidden
-set nowrap
-set noswapfile
-set undofile
-set undodir=~/.local/share/nvim/undo/
-set cursorline
-
 " don't replace register by default when pasting in visual mode
 xnoremap p "_dP
 
@@ -124,9 +122,15 @@ set foldmethod=indent
 set foldlevelstart=99
 autocmd FileType markdown setlocal foldlevelstart=99
 
+" auto-close terminals when shell exits
+autocmd TermClose * execute 'close!'
+
 " apply highlights on trailing whitespace
 call matchadd("TrailingWhitespace", '\v\s+$')
 
 " custom highlights
 lua require('config.highlights')
+
+" conceal rules
+lua require('config.conceal')
 

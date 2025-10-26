@@ -1,9 +1,12 @@
 #!/bin/bash
 
-pgrep "Menu Bar Tint" > /dev/null
+pgrep -f "/bin/bash ./tint-apply" > /dev/null
 
 if [ $? -ne 0 ]; then
-    open "/Applications/Menu Bar Tint.app" 
+    {
+        cd /Users/lloyd/dotfiles/scripts/
+        nohup /bin/bash ./tint-apply > /dev/null &
+    }
 else
     exit 1
 fi

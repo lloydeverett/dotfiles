@@ -36,6 +36,8 @@ local function apply_custom_highlights()
     vim.cmd('hi VimwikiItalic gui=italic guifg=' .. vim.g['terminal_color_5'])
     vim.cmd('hi VimwikiHeader1 gui=bold guifg='  .. vim.g['terminal_color_2'])
 
+    vim.cmd("hi Red cterm=italic gui=italic")
+
     -- patch bufferline highlights
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
     local hl_rules = vim.api.nvim_get_hl(0, { })

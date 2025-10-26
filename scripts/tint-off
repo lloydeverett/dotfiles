@@ -1,4 +1,6 @@
 #!/bin/bash
 
+pgrep -f "/bin/bash ./tint-apply" | xargs kill
+sleep 0.1
 pgrep "Menu Bar Tint" | xargs kill
 
