@@ -1,0 +1,38 @@
+#!/usr/bin/env lua
+
+local function parse_duration(str)
+    local hours, minutes, seconds = 0, 0, 0
+
+    local h_match = string.match(str, "(%d+)h")
+    if h_match then
+        hours = tonumber(h_match) or 0
+    end
+
+    local m_match = string.match(str, "(%d+)m")
+    if m_match then
+        minutes = tonumber(m_match) or 0
+    end
+
+    local s_match = string.match(str, "(%d+)s")
+    if s_match then
+        seconds = tonumber(s_match) or 0
+    else
+        s_match = string.match(str, "(%d+)$")
+        if s_match then
+            seconds = tonumber(s_match) or 0
+        end
+    end
+
+    return (hours * 3600) + (minutes * 60) + seconds
+end
+
+local str = ""
+for _, a in ipairs(arg) do
+    if str ~= "" then
+        str = str .. " "
+    end
+    str = str .. a
+end
+
+print(parse_duration(str))
+
