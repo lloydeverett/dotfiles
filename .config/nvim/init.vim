@@ -86,14 +86,6 @@ nnoremap <leader>_ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
 nnoremap + <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
 nnoremap <leader>+ <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
 
-" timers
-nnoremap <leader>1 <cmd>TimerStart 2.5m<cr>
-nnoremap <leader>2 <cmd>TimerStart 5m<cr>
-nnoremap <leader>3 <cmd>TimerStart 15m<cr>
-nnoremap <leader>4 <cmd>TimerStart 25m<cr>
-nnoremap <leader>0 <cmd>TimerStart 25m<cr>
-nnoremap <leader>p :TimerStart<Space>
-
 " swap between buffers
 nnoremap <leader><leader> <C-^>
 

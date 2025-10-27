@@ -229,40 +229,6 @@ require("lazy").setup({
                vim.keymap.set('n', '<leader>se', ts.emoji, { desc = '[S]earch [E]moji' })
            end,
       },
-      { 'rcarriga/nvim-notify',
-           opts = {
-               background_colour = "#000000",
-               top_down = false
-           }
-      },
-      { 'epwalsh/pomo.nvim',
-           opts = {
-               notifiers = {
-                 {
-                   name = "Default",
-                   toggles = {
-                       dim = false
-                   },
-                   opts = {
-                     sticky = true,
-                     title_icon = "󱎫",
-                     text_icon = "󰄉",
-                   },
-                 },
-                 { name = "System" },
-               },
-               sessions = {
-                   pomodoro = {
-                       { name = "Work", duration = "25m" },
-                       { name = "Short Break", duration = "5m" },
-                       { name = "Work", duration = "25m" },
-                       { name = "Short Break", duration = "5m" },
-                       { name = "Work", duration = "25m" },
-                       { name = "Long Break", duration = "15m" },
-                   },
-               },
-           }
-      },
       { '2kabhishek/nerdy.nvim',
            dependencies = {
                'folke/snacks.nvim',
