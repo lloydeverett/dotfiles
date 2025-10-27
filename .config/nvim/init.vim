@@ -115,7 +115,7 @@ set foldlevelstart=99
 autocmd FileType markdown setlocal foldlevelstart=99
 
 " auto-close terminals when shell exits
-autocmd TermClose * execute 'close!'
+autocmd TermClose * execute 'bdelete!'
 
 " apply highlights on trailing whitespace
 call matchadd("TrailingWhitespace", '\v\s+$')
