@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -euo pipefail
-
-bc -e "$1" | xargs sleep
-shift
-"$@"
-
