@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SEC="$1"
+SEC=$(duration "$1")
 shift
 DESC="$@"
 
