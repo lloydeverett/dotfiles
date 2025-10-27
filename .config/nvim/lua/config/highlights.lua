@@ -32,9 +32,11 @@ local function apply_custom_highlights()
     vim.cmd('hi link TrailingWhitespace CursorLine')
 
     -- customise vimwiki highlights
-    vim.cmd('hi VimwikiBold gui=bold guifg='     .. vim.g['terminal_color_1'])
-    vim.cmd('hi VimwikiItalic gui=italic guifg=' .. vim.g['terminal_color_5'])
-    vim.cmd('hi VimwikiHeader1 gui=bold guifg='  .. vim.g['terminal_color_2'])
+    vim.cmd('hi VimwikiBold gui=bold guifg='      .. vim.g['terminal_color_1'])
+    vim.cmd('hi VimwikiItalic gui=italic guifg='  .. vim.g['terminal_color_5'])
+    vim.cmd('hi VimwikiHeader1 gui=bold guifg='   .. vim.g['terminal_color_2'])
+    vim.cmd('hi VimwikiList guifg='               .. vim.g['terminal_color_6'])
+    vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_6'])
 
     vim.cmd("hi Red cterm=italic gui=italic")
 
