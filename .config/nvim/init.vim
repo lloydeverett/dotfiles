@@ -37,18 +37,10 @@ lua require('config.neovide')
 " window switching
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-Esc> <Esc>
-tnoremap <A-h> <C-\><C-N><C-w>h
-tnoremap <A-j> <C-\><C-N><C-w>j
-tnoremap <A-k> <C-\><C-N><C-w>k
-tnoremap <A-l> <C-\><C-N><C-w>l
-inoremap <A-h> <C-\><C-N><C-w>h
-inoremap <A-j> <C-\><C-N><C-w>j
-inoremap <A-k> <C-\><C-N><C-w>k
-inoremap <A-l> <C-\><C-N><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
+nnoremap <C-h> <cmd>wincmd h<cr>
+nnoremap <C-j> <cmd>wincmd j<cr>
+nnoremap <C-k> <cmd>wincmd k<cr>
+nnoremap <C-l> <cmd>wincmd l<cr>
 
 " telescope
 nnoremap <leader>: <cmd>Telescope<cr>
