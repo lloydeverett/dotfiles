@@ -38,7 +38,7 @@ setopt PROMPT_SUBST
 format_current_git_branch() {
   local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
   if [[ -n $branch ]]; then
-    echo "($branch)"
+    echo "($branch) "
   fi
 }
 format_exit_status() {
@@ -48,5 +48,5 @@ format_exit_status() {
     echo ""
   fi
 }
-PROMPT='$(format_exit_status)%F{green}%n@%m%f %F{blue}%~%f $(format_current_git_branch) %# '
+PROMPT='$(format_exit_status)%F{green}%n%f %F{blue}%~%f $(format_current_git_branch)%# '
 
