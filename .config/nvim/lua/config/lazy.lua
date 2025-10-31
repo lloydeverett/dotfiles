@@ -56,6 +56,8 @@ require("lazy").setup({
                vim.g.sonokai_background = 'hard'
            end,
       },
+      { 'srcery-colors/srcery-vim'
+      },
 
       -- plugins --------------------------------------------------------------------------------------------------
       { 'folke/snacks.nvim',
