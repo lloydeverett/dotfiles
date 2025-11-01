@@ -28,10 +28,13 @@ local function starts_with(str, start)
 end
 
 local function apply_custom_highlights()
-    -- highlight group for trailing whitespace
-    vim.cmd('hi link TrailingWhitespace CursorLine')
     -- highlight for conceal
     vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_6'])
+
+    -- highlights for checkboxes
+    vim.cmd('hi link todoDone VimwikiCheckBoxDone')
+    vim.cmd('hi link todoCheckbox Todo')
+
     -- customise vimwiki highlights
     vim.cmd('hi VimwikiBold gui=bold guifg='      .. vim.g['terminal_color_1'])
     vim.cmd('hi VimwikiItalic gui=italic guifg='  .. vim.g['terminal_color_5'])
@@ -40,15 +43,20 @@ local function apply_custom_highlights()
     vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_6'])
 
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
+    local winbarnc_hl_rule = vim.api.nvim_get_hl(0, { name = "WinBarNC" })
     local hl_rules = vim.api.nvim_get_hl(0, { })
     for k, v in pairs(hl_rules) do
         -- patch bufferline highlights
         if starts_with(k, "BufferLine") then
-            -- patch background
             if v.bg ~= nil then v.bg = cursorline_hl_rule.bg end
             if v.ctermbg ~= nil then v.ctermbg = cursorline_hl_rule.ctermbg end
-
-            -- apply
+            v.force = true
+            vim.api.nvim_set_hl(0, k, v)
+        end
+        -- patch winbar to have same color regardless of focus
+        if k == "WinBar" then
+            v.bg = winbarnc_hl_rule.bg
+            v.ctermbg = winbarnc_hl_rule.ctermbg
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end

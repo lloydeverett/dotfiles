@@ -123,6 +123,9 @@ autocmd TermClose * execute 'bdelete!'
 " custom highlights
 lua require('config.highlights')
 
+" custom winbar
+lua require('config.winbar')
+
 " custom vimwiki conceal + syntax highlight rules
 set conceallevel=2
 set concealcursor=ncv
@@ -137,9 +140,6 @@ fun s:vimwiki()
 
     syn match VimwikiHeader1Setext "=" conceal cchar=═ containedin=VimwikiHeader1 contained
     syn match VimwikiHeader2Setext "-" conceal cchar=─ containedin=VimwikiHeader2 contained
-
-    hi link todoDone VimwikiCheckBoxDone
-    hi link todoCheckbox Todo
 
     set conceallevel=2
     set concealcursor=ncv
