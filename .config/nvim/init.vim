@@ -19,6 +19,8 @@ set undofile
 set undodir=~/.local/share/nvim/undo/
 set cursorline
 set termguicolors
+set ssop-=options
+set ssop-=folds
 set fillchars=eob:\ 
 
 " plugin setup
@@ -118,21 +120,27 @@ autocmd FileType markdown setlocal foldlevelstart=99
 " auto-close terminals when shell exits
 autocmd TermClose * execute 'bdelete!'
 
-" apply highlights on trailing whitespace
-call matchadd("TrailingWhitespace", '\v\s+$')
-
 " custom highlights
 lua require('config.highlights')
 
-" custom conceal rules
+" custom vimwiki conceal + syntax highlight rules
+set conceallevel=2
+set concealcursor=ncv
 fun s:vimwiki()
     syn match todoCheckbox '\v(\s+)?(-|\*)\s\[\s\]'hs=e-4 conceal cchar=
-    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[X\]'hs=e-4 conceal cchar=
+    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[X\]'hs=e-4 conceal containedin=todoDone cchar=
+    syn match todoDone '\v(\s+)?(-|\*)\s\[X\].*$' contains=VimwikiItalic,VimwikiBold
     syn match todoCheckbox '\v(\s+)?(-|\*)\s\[-\]'hs=e-4 conceal cchar=󰅘
     syn match todoCheckbox '\v(\s+)?(-|\*)\s\[\.\]'hs=e-4 conceal cchar=⊡
     syn match todoCheckbox '\v(\s+)?(-|\*)\s\[o\]'hs=e-4 conceal cchar=⬕
     syn match todoCheckbox '\v(\s+)?(-|\*)\s\[/\]'hs=e-4 conceal cchar=
+
+    syn match VimwikiHeader1Setext "=" conceal cchar=═ containedin=VimwikiHeader1 contained
+    syn match VimwikiHeader2Setext "-" conceal cchar=─ containedin=VimwikiHeader2 contained
+
+    hi link todoDone VimwikiCheckBoxDone
     hi link todoCheckbox Todo
+
     set conceallevel=2
     set concealcursor=ncv
 endfun

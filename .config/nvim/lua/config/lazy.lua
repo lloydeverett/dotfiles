@@ -380,6 +380,9 @@ require("lazy").setup({
       { 'lewis6991/gitsigns.nvim',
            opts = { }
       },
+      { 'nvim-mini/mini.trailspace',
+           opts = { }
+      },
 
       -- treectl --------------------------------------------------------------------------------------------------
       { 'MunifTanjim/nui.nvim',
