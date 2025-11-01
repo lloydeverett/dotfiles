@@ -19,15 +19,19 @@
 # ==========================
 # # The config file consists of simple key-value pairs,
 # # separated by equals signs.
-font-family = 0xProto Nerd Font
+# font-family = 0xProto Nerd Font
+font-family = "CaskaydiaMono Nerd Font Mono"
 font-size = 15
 font-thicken = true
 
-theme = /Users/lloyd/dotfiles/.config/ghostty/themes/test
+theme = /Users/lloyd/dotfiles/.config/ghostty/themes/everforest
 window-step-resize = true
-window-padding-x = 0
+window-padding-x = 4
 
-mouse-scroll-multiplier = 2.0
+background-opacity = 0.95
+background-blur-radius = 0
+
+mouse-scroll-multiplier = 1.0
 
 #
 # # Spacing around the equals sign does not matter.

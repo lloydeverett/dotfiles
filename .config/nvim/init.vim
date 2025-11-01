@@ -79,7 +79,14 @@ nnoremap <leader>_ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
 nnoremap + <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
 nnoremap <leader>+ <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
 
-" swap between buffers
+" evaluate lua file shortcut
+lua <<EOF
+vim.keymap.set("n", "<leader>gf", function()
+    vim.cmd("luafile " .. vim.fn.expand("<cWORD>"))
+end, { noremap = true })
+EOF
+
+" swap between buffers with <leader><leader>
 nnoremap <leader><leader> <C-^>
 
 " clear search highlight with esc
@@ -87,10 +94,6 @@ nnoremap <silent> <Esc> :noh<CR><Esc>
 
 " normal mode in terminal via esc
 tnoremap <Esc> <C-\><C-n>
-
-" tab switching
-nnoremap <leader><Tab> :tabnext<cr>
-nnoremap <leader><S-Tab> :tabprev<cr>
 
 " shortcut for :put call
 nnoremap <leader>H :put=execute('hi')
@@ -118,4 +121,8 @@ lua require('config.highlights')
 
 " conceal rules
 lua require('config.conceal')
+
+" custom mappings
+nnoremap <silent> <S-H> <cmd>tabprev<cr>
+nnoremap <silent> <S-L> <cmd>tabnext<cr>
 
