@@ -19,6 +19,7 @@ set undofile
 set undodir=~/.local/share/nvim/undo/
 set cursorline
 set termguicolors
+set fillchars=eob:\ 
 
 " plugin setup
 lua require('config.lazy')
@@ -37,10 +38,10 @@ lua require('config.neovide')
 " window switching
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-Esc> <Esc>
-nnoremap <C-h> <cmd>wincmd h<cr>
-nnoremap <C-j> <cmd>wincmd j<cr>
-nnoremap <C-k> <cmd>wincmd k<cr>
-nnoremap <C-l> <cmd>wincmd l<cr>
+nnoremap <silent> <C-h> <cmd>wincmd h<cr>
+nnoremap <silent> <C-j> <cmd>wincmd j<cr>
+nnoremap <silent> <C-k> <cmd>wincmd k<cr>
+nnoremap <silent> <C-l> <cmd>wincmd l<cr>
 
 " telescope
 nnoremap <leader>: <cmd>Telescope<cr>

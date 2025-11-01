@@ -38,10 +38,10 @@ local function apply_custom_highlights()
     vim.cmd('hi VimwikiList guifg='               .. vim.g['terminal_color_6'])
     vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_6'])
 
-    -- patch bufferline highlights
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
     local hl_rules = vim.api.nvim_get_hl(0, { })
     for k, v in pairs(hl_rules) do
+        -- patch bufferline highlights
         if starts_with(k, "BufferLine") then
             -- patch background
             if v.bg ~= nil then v.bg = cursorline_hl_rule.bg end
@@ -58,5 +58,17 @@ apply_custom_highlights()
 
 vim.api.nvim_create_autocmd('ColorScheme', {
     callback = apply_custom_highlights,
+})
+
+vim.api.nvim_create_autocmd({ "FocusGained", "WinEnter", "BufEnter" }, {
+  callback = function()
+    vim.o.cursorline = true
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "FocusLost", "WinLeave", "BufLeave" }, {
+  callback = function()
+    vim.o.cursorline = false
+  end,
 })
 
