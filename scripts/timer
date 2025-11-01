@@ -17,3 +17,5 @@ done
 ansi --hide-cursor --no-restore -n --up=1 --column=1 --cyan "00:00"
 ansi --hide-cursor --cyan " $DESC"
 
+notify "$DESC"
+

@@ -30,7 +30,8 @@ end
 local function apply_custom_highlights()
     -- highlight group for trailing whitespace
     vim.cmd('hi link TrailingWhitespace CursorLine')
-
+    -- highlight for conceal
+    vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_6'])
     -- customise vimwiki highlights
     vim.cmd('hi VimwikiBold gui=bold guifg='      .. vim.g['terminal_color_1'])
     vim.cmd('hi VimwikiItalic gui=italic guifg='  .. vim.g['terminal_color_5'])

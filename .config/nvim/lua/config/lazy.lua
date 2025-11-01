@@ -40,7 +40,9 @@ require("lazy").setup({
       { 'sainnhe/everforest',
            config = function(_, _)
                vim.g.everforest_background = 'hard'
-               vim.g.everforest_transparent_background = 1
+               if not vim.g.neovide then
+                   vim.g.everforest_transparent_background = 1
+               end
                vim.cmd("colorscheme everforest")
            end
       },

@@ -35,6 +35,11 @@ lua require('config.lsp')
 " neovide-specific setup
 lua require('config.neovide')
 
+" custom mappings
+nnoremap <silent> <C-S-H> <cmd>tabprev<cr>
+nnoremap <silent> <C-S-L> <cmd>tabnext<cr>
+nnoremap <silent> <C-Q> <cmd>wincmd q<cr>
+
 " window switching
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-Esc> <Esc>
@@ -119,10 +124,20 @@ call matchadd("TrailingWhitespace", '\v\s+$')
 " custom highlights
 lua require('config.highlights')
 
-" conceal rules
-lua require('config.conceal')
-
-" custom mappings
-nnoremap <silent> <S-H> <cmd>tabprev<cr>
-nnoremap <silent> <S-L> <cmd>tabnext<cr>
+" custom conceal rules
+fun s:vimwiki()
+    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[\s\]'hs=e-4 conceal cchar=
+    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[X\]'hs=e-4 conceal cchar=
+    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[-\]'hs=e-4 conceal cchar=󰅘
+    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[\.\]'hs=e-4 conceal cchar=⊡
+    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[o\]'hs=e-4 conceal cchar=⬕
+    syn match todoCheckbox '\v(\s+)?(-|\*)\s\[/\]'hs=e-4 conceal cchar=
+    hi link todoCheckbox Todo
+    set conceallevel=2
+    set concealcursor=ncv
+endfun
+augroup ft_vimwiki
+  autocmd!
+  autocmd Syntax vimwiki call s:vimwiki()
+augroup end
 

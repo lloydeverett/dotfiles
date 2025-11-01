@@ -28,8 +28,8 @@ theme = /Users/lloyd/dotfiles/.config/ghostty/themes/everforest
 window-step-resize = true
 window-padding-x = 4
 
-background-opacity = 0.95
-background-blur-radius = 0
+# background-opacity = 0.95
+# background-blur-radius = 0
 
 mouse-scroll-multiplier = 1.0
 

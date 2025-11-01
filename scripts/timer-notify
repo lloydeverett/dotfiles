@@ -1,8 +1,0 @@
-#!/bin/bash
-
-SEC="$1"
-shift
-DESC="$@"
-
-timer "$SEC" "$DESC" && sys-notify "$DESC"
-
