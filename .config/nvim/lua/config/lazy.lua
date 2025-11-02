@@ -40,21 +40,12 @@ require("lazy").setup({
       { 'sainnhe/everforest',
            config = function(_, _)
                vim.g.everforest_background = 'hard'
-               if not vim.g.neovide then
-                   vim.g.everforest_transparent_background = 1
-               end
+               -- vim.g.everforest_transparent_background = 1
                vim.cmd("colorscheme everforest")
            end
       },
-      { 'sainnhe/sonokai',
-           config = function(_, _)
-               vim.g.sonokai_background = 'hard'
-           end,
-      },
-      { "jpwol/thorn.nvim",
+      { 'jpwol/thorn.nvim',
            opts = {}
-      },
-      { 'srcery-colors/srcery-vim'
       },
 
       -- plugins --------------------------------------------------------------------------------------------------
@@ -73,7 +64,7 @@ require("lazy").setup({
                  ext = 'md'
                }}
            end
-       },
+      },
       { 'stevearc/oil.nvim',
            opts = {
                win_options = {
@@ -383,6 +374,13 @@ require("lazy").setup({
       { 'nvim-mini/mini.trailspace',
            opts = { }
       },
+      -- { 'MeanderingProgrammer/render-markdown.nvim',
+      --      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },
+      --      opts = {},
+      -- },
+      -- { "OXY2DEV/markview.nvim",
+      --      lazy = false,
+      -- },
 
       -- treectl --------------------------------------------------------------------------------------------------
       { 'MunifTanjim/nui.nvim',
@@ -398,7 +396,6 @@ require("lazy").setup({
                vim.api.nvim_set_keymap('n', '<leader>]', '<Cmd>TreectlNewBuf<CR>', { noremap = true, silent = true })
            end
       }
-
   }),
   install = { colorscheme = { "habamax" } },
   checker = { enabled = false }
