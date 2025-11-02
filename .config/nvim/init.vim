@@ -43,8 +43,6 @@ nnoremap <silent> <C-S-L> <cmd>tabnext<cr>
 nnoremap <silent> <C-Q> <cmd>wincmd q<cr>
 
 " window switching
-tnoremap <Esc> <C-\><C-n>
-tnoremap <C-Esc> <Esc>
 nnoremap <silent> <C-h> <cmd>wincmd h<cr>
 nnoremap <silent> <C-j> <cmd>wincmd j<cr>
 nnoremap <silent> <C-k> <cmd>wincmd k<cr>
@@ -67,24 +65,8 @@ nnoremap <leader>wp :e ~/sync/wiki/personal.md<cr>
 nnoremap <leader>wo :e ~/sync/wiki/work.md<cr>
 nnoremap <leader>cc :e ~/.config/nvim/init.vim<cr>
 
-" oil
-lua <<EOF
-_G["" .. "open_terminal_in_buffer_dir"] = function()
-    local dir = vim.fn.expand("%:p:h")
-    if dir:find("oil://", 1, true) == 1 then
-        dir = dir:sub(#"oil://" + 1)
-    end
-    vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
-end
-EOF
-nnoremap - <cmd>Oil<cr>
-nnoremap <leader>- <cmd>Oil<cr>
-nnoremap = <cmd>lua open_terminal_in_buffer_dir()<cr>i
-nnoremap <leader>= <cmd>lua open_terminal_in_buffer_dir()<cr>i
-nnoremap _ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
-nnoremap <leader>_ <cmd>split<cr><cmd>wincmd j<cr><cmd>Oil<cr>
-nnoremap + <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
-nnoremap <leader>+ <cmd>split<cr><cmd>wincmd j<cr><cmd>lua open_terminal_in_buffer_dir()<cr>i
+" terminal keymappings
+lua require('config.terminals')
 
 " evaluate lua file shortcut
 lua <<EOF
@@ -101,12 +83,13 @@ nnoremap <silent> <Esc> :noh<CR><Esc>
 
 " normal mode in terminal via esc
 tnoremap <Esc> <C-\><C-n>
+tnoremap <C-Esc> <Esc>
 
 " shortcut for :put call
 nnoremap <leader>H :put=execute('hi')
 
 " don't replace register by default when pasting in visual mode
-xnoremap p "_dP
+xnoremap p P
 
 " update buffer when file changes
 set autoread

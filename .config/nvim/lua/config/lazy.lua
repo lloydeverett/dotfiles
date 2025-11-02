@@ -29,9 +29,15 @@ local function postprocess_spec(spec)
     return result
 end
 
+-- disable builtin colorschemes
+vim.o.wildignore = "blue.vim,darkblue.vim,delek.vim,desert.vim,elflord.vim,evening.vim,habamax.vim,industry.vim,koehler.vim,lunaperche.vim,morning.vim,murphy.vim,pablo.vim,peachpuff.vim,quiet.vim,retrobox.vim,ron.vim,shine.vim,slate.vim,sorbet.vim,torte.vim,wildcharm.vim,zaibatsu.vim,zellner.vim"
+
 require("lazy").setup({
   spec = postprocess_spec({
       -- color schemes --------------------------------------------------------------------------------------------
+      { "vague-theme/vague.nvim" },
+      { "kamwitsta/vinyl.nvim" },
+      { "webhooked/kanso.nvim" },
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.g.gruvbox_material_background = 'medium'
@@ -312,9 +318,15 @@ require("lazy").setup({
       },
       { 'psliwka/termcolors.nvim' }, -- :TermcolorsShow to output terminal color scheme
       { 'Makaze/AnsiEsc' }, -- :AnsiEsc to toggle colorize according to escape seqeunces
-      { 'norcalli/nvim-colorizer.lua', -- highlight hex colour codes
+      { 'nvim-mini/mini.hipatterns',
            config = function(_, _)
-               require('colorizer').setup()
+               local hipatterns = require('mini.hipatterns')
+               hipatterns.setup({
+                   highlighters = {
+                       -- Highlight hex color strings (`#rrggbb`) using that color
+                       hex_color = hipatterns.gen_highlighter.hex_color(),
+                   },
+               })
            end
       },
       { 'tzachar/local-highlight.nvim',
