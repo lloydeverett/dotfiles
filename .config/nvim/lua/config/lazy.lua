@@ -29,8 +29,41 @@ local function postprocess_spec(spec)
     return result
 end
 
--- disable builtin colorschemes
-vim.o.wildignore = "blue.vim,darkblue.vim,delek.vim,desert.vim,elflord.vim,evening.vim,habamax.vim,industry.vim,koehler.vim,lunaperche.vim,morning.vim,murphy.vim,pablo.vim,peachpuff.vim,quiet.vim,retrobox.vim,ron.vim,shine.vim,slate.vim,sorbet.vim,torte.vim,wildcharm.vim,zaibatsu.vim,zellner.vim"
+-- don't load default color schemes so they don't show up in autocomplete
+local default_colorschemes = {
+    "blue.vim",
+    "darkblue.vim",
+    "delek.vim",
+    "desert.vim",
+    "elflord.vim",
+    "evening.vim",
+    "habamax.vim",
+    "industry.vim",
+    "koehler.vim",
+    "lunaperche.vim",
+    "morning.vim",
+    "murphy.vim",
+    "pablo.vim",
+    "peachpuff.vim",
+    "quiet.vim",
+    "retrobox.vim",
+    "ron.vim",
+    "shine.vim",
+    "slate.vim",
+    "sorbet.vim",
+    "torte.vim",
+    "wildcharm.vim",
+    "zaibatsu.vim",
+    "zellner.vim",
+}
+local wildignore = ""
+for _, v in ipairs(default_colorschemes) do
+    if wildignore ~= "" then
+        wildignore = wildignore .. ","
+    end
+    wildignore = wildignore .. v
+end
+vim.o.wildignore = wildignore
 
 require("lazy").setup({
   spec = postprocess_spec({

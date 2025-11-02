@@ -1,27 +1,27 @@
 
--- color reference          everforest   gruvbox-material
--- g:terminal_color_0          #414b50            #5a524c
--- g:terminal_color_1          #e67e80            #ea6962
--- g:terminal_color_2          #a7c080            #a9b665
--- g:terminal_color_3          #dbbc7f            #d8a657
--- g:terminal_color_4          #7fbbb3            #7daea3
--- g:terminal_color_5          #d699b6            #d3869b
--- g:terminal_color_6          #83c092            #89b482
--- g:terminal_color_7          #d3c6aa            #d4be98
--- g:terminal_color_8          #414b50            #5a524c
--- g:terminal_color_9          #e67e80            #ea6962
--- g:terminal_color_10         #a7c080            #a9b665
--- g:terminal_color_11         #dbbc7f            #d8a657
--- g:terminal_color_12         #7fbbb3            #7daea3
--- g:terminal_color_13         #d699b6            #d3869b
--- g:terminal_color_14         #83c092            #89b482
--- g:terminal_color_15         #d3c6aa            #d4be98
--- markdownH1                  #e67e80            #ea6962
--- markdownH2                  #e69875            #e78a4e
--- markdownH3                  #dbbc7f            #d8a657
--- markdownH4                  #a7c080            #a9b665
--- markdownH5                  #7fbbb3            #7daea3
--- markdownH6                  #d699b6            #d3869b
+-- color reference          everforest   gruvbox-material         thorn
+-- g:terminal_color_0          #414b50            #5a524c       #252530
+-- g:terminal_color_1          #e67e80            #ea6962       #d8647e
+-- g:terminal_color_2          #a7c080            #a9b665       #7fa563
+-- g:terminal_color_3          #dbbc7f            #d8a657       #f3be7c
+-- g:terminal_color_4          #7fbbb3            #7daea3       #6e94b2
+-- g:terminal_color_5          #d699b6            #d3869b       #bb9dbd
+-- g:terminal_color_6          #83c092            #89b482       #aeaed1
+-- g:terminal_color_7          #d3c6aa            #d4be98       #cdcdcd
+-- g:terminal_color_8          #414b50            #5a524c       #606079
+-- g:terminal_color_9          #e67e80            #ea6962       #e08398
+-- g:terminal_color_10         #a7c080            #a9b665       #99b782
+-- g:terminal_color_11         #dbbc7f            #d8a657       #f5cb96
+-- g:terminal_color_12         #7fbbb3            #7daea3       #8ba9c1
+-- g:terminal_color_13         #d699b6            #d3869b       #c9b1ca
+-- g:terminal_color_14         #83c092            #89b482       #bebeda
+-- g:terminal_color_15         #d3c6aa            #d4be98       #d7d7d7
+-- markdownH1                  #e67e80            #ea6962       #d9add4
+-- markdownH2                  #e69875            #e78a4e       #86bfd0
+-- markdownH3                  #dbbc7f            #d8a657       #86bfd0
+-- markdownH4                  #a7c080            #a9b665       #86bfd0
+-- markdownH5                  #7fbbb3            #7daea3       #86bfd0
+-- markdownH6                  #d699b6            #d3869b       #86bfd0
 
 local function starts_with(str, start)
     return str:sub(1, #start) == start
@@ -29,7 +29,7 @@ end
 
 local function apply_custom_highlights()
     -- highlight for conceal
-    vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_6'])
+    vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_12'])
 
     -- highlights for checkboxes
     vim.cmd('hi link todoDone VimwikiCheckBoxDone')
@@ -44,12 +44,13 @@ local function apply_custom_highlights()
 
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
     local winbarnc_hl_rule = vim.api.nvim_get_hl(0, { name = "WinBarNC" })
+    local normal_hl_rule = vim.api.nvim_get_hl(0, { name = "Normal" })
     local hl_rules = vim.api.nvim_get_hl(0, { })
     for k, v in pairs(hl_rules) do
         -- patch bufferline highlights
         if starts_with(k, "BufferLine") then
-            if v.bg ~= nil then v.bg = cursorline_hl_rule.bg end
-            if v.ctermbg ~= nil then v.ctermbg = cursorline_hl_rule.ctermbg end
+            v.bg = cursorline_hl_rule.bg
+            v.ctermbg = cursorline_hl_rule.ctermbg
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
@@ -57,6 +58,13 @@ local function apply_custom_highlights()
         if k == "WinBar" then
             v.bg = winbarnc_hl_rule.bg
             v.ctermbg = winbarnc_hl_rule.ctermbg
+            v.force = true
+            vim.api.nvim_set_hl(0, k, v)
+        end
+        -- patch vimwiki links to be the same colour as normal text
+        if k == "VimwikiLink" then
+            v.fg = normal_hl_rule.fg
+            v.ctermfg = normal_hl_rule.ctermbg
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
