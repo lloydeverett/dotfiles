@@ -29,7 +29,7 @@ end
 
 local function apply_custom_highlights()
     -- highlight for conceal
-    vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_12'])
+    vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_10'])
 
     -- highlights for checkboxes
     vim.cmd('hi link todoDone VimwikiCheckBoxDone')
@@ -39,32 +39,46 @@ local function apply_custom_highlights()
     vim.cmd('hi VimwikiBold gui=bold guifg='      .. vim.g['terminal_color_1'])
     vim.cmd('hi VimwikiItalic gui=italic guifg='  .. vim.g['terminal_color_5'])
     vim.cmd('hi VimwikiHeader1 gui=bold guifg='   .. vim.g['terminal_color_2'])
-    vim.cmd('hi VimwikiList guifg='               .. vim.g['terminal_color_6'])
-    vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_6'])
+    vim.cmd('hi VimwikiList guifg='               .. vim.g['terminal_color_10'])
+    vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_10'])
 
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
     local winbarnc_hl_rule = vim.api.nvim_get_hl(0, { name = "WinBarNC" })
     local normal_hl_rule = vim.api.nvim_get_hl(0, { name = "Normal" })
+    local function_hl_rule = vim.api.nvim_get_hl(0, { name = "Function" })
+    local statement_hl_rule = vim.api.nvim_get_hl(0, { name = "Statement" })
     local hl_rules = vim.api.nvim_get_hl(0, { })
     for k, v in pairs(hl_rules) do
-        -- patch bufferline highlights
         if starts_with(k, "BufferLine") then
             v.bg = cursorline_hl_rule.bg
             v.ctermbg = cursorline_hl_rule.ctermbg
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
-        -- patch winbar to have same color regardless of focus
         if k == "WinBar" then
             v.bg = winbarnc_hl_rule.bg
             v.ctermbg = winbarnc_hl_rule.ctermbg
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
-        -- patch vimwiki links to be the same colour as normal text
+        if vim.g.colors_name == "thorn" then
+            if k == "VimwikiItalic" then
+                v.fg = function_hl_rule.fg
+                v.ctermfg = function_hl_rule.ctermfg
+                v.force = true
+                vim.api.nvim_set_hl(0, k, v)
+            end
+            if k == "VimwikiBold" then
+                v.fg = statement_hl_rule.fg
+                v.ctermfg = statement_hl_rule.ctermfg
+                v.force = true
+                vim.api.nvim_set_hl(0, k, v)
+            end
+        end
         if k == "VimwikiLink" then
             v.fg = normal_hl_rule.fg
-            v.ctermfg = normal_hl_rule.ctermbg
+            v.ctermfg = normal_hl_rule.ctermfg
+            v.underline = true
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
