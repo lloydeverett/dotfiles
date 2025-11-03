@@ -42,6 +42,10 @@ local function apply_custom_highlights()
     vim.cmd('hi VimwikiList guifg='               .. vim.g['terminal_color_10'])
     vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_10'])
 
+    -- style todo dates as comments
+    vim.cmd('hi link TodoDate Comment')
+
+    -- patch misc rules dynamically based on other highlights
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
     local winbarnc_hl_rule = vim.api.nvim_get_hl(0, { name = "WinBarNC" })
     local normal_hl_rule = vim.api.nvim_get_hl(0, { name = "Normal" })
@@ -89,17 +93,5 @@ apply_custom_highlights()
 
 vim.api.nvim_create_autocmd('ColorScheme', {
     callback = apply_custom_highlights,
-})
-
-vim.api.nvim_create_autocmd({ "FocusGained", "WinEnter", "BufEnter" }, {
-  callback = function()
-    vim.o.cursorline = true
-  end,
-})
-
-vim.api.nvim_create_autocmd({ "FocusLost", "WinLeave", "BufLeave" }, {
-  callback = function()
-    vim.o.cursorline = false
-  end,
 })
 

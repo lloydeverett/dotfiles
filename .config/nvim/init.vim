@@ -17,7 +17,6 @@ set nowrap
 set noswapfile
 set undofile
 set undodir=~/.local/share/nvim/undo/
-set cursorline
 set termguicolors
 set ssop-=options
 set ssop-=folds
@@ -87,6 +86,20 @@ tnoremap <C-Esc> <Esc>
 
 " shortcut for :put call
 nnoremap <leader>H :put=execute('hi')
+
+" cursorline
+lua <<EOF
+vim.api.nvim_create_autocmd({ "FocusGained", "WinEnter", "BufEnter" }, {
+    callback = function()
+        vim.o.cursorline = true
+    end,
+})
+vim.api.nvim_create_autocmd({ "FocusLost", "WinLeave", "BufLeave" }, {
+    callback = function()
+        vim.o.cursorline = false
+    end,
+})
+EOF
 
 " don't replace register by default when pasting in visual mode
 xnoremap p P

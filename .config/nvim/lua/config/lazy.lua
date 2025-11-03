@@ -138,18 +138,23 @@ require("lazy").setup({
       { 'LukasPietzschmann/telescope-tabs' },
       { 'nvim-lualine/lualine.nvim',
            opts = {
+               options = {
+                   -- nerd font glyph names: ple_...
+                   component_separators = {  left = '', right = ''},
+                   section_separators = { left = '', right = ''},
+               },
                sections = {
-                 lualine_x = {
-                   { 'encoding' },
-                   {
-                     'fileformat',
-                     symbols = {
-                       unix = 'LF',
-                       dos = 'CRLF',
-                       mac = 'CR',
-                     }
+                   lualine_x = {
+                       { 'encoding' },
+                       {
+                           'fileformat',
+                           symbols = {
+                               unix = 'LF',
+                               dos = 'CRLF',
+                               mac = 'CR',
+                           }
+                       }
                    }
-                 }
                }
            }
       },
