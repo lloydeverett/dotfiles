@@ -11,7 +11,7 @@ local function open_split()
     vim.cmd("new")
     vim.cmd("wincmd x")
     vim.cmd("wincmd j")
-    vim.api.nvim_win_set_height(0, 15)
+    vim.api.nvim_win_set_height(0, 20)
 end
 
 local function set_keymap(key, fn)
