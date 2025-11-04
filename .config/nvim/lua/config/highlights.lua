@@ -46,6 +46,9 @@ local function apply_custom_highlights()
     vim.cmd('hi def todoUnderline cterm=underline gui=underline guisp=' .. vim.g['terminal_color_2'])
     vim.cmd('hi link TodoDate todoUnderline')
 
+    -- make sure trailspace is obvious
+    vim.cmd('hi link MiniTrailspace MiniHipatternsFixme')
+
     -- patch misc rules dynamically based on other highlights
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
     local winbarnc_hl_rule = vim.api.nvim_get_hl(0, { name = "WinBarNC" })
