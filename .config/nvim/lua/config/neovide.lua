@@ -11,12 +11,12 @@ local function update_font_size()
 end
 
 if vim.g.neovide then
-    local padding_x = 18
+    local padding_x = 12
     update_font_size()
     vim.g.neovide_cursor_animation_length = 0.0
     vim.g.neovide_scroll_animation_length = 0.15
     vim.g.neovide_padding_top = 0
-    vim.g.neovide_padding_bottom = 6
+    vim.g.neovide_padding_bottom = 12
     vim.g.neovide_padding_left = padding_x
     vim.g.neovide_padding_right = padding_x
     vim.g.neovide_opacity = 0.9
