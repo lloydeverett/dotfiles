@@ -8,8 +8,7 @@ local function open_terminal_in_buffer_dir()
 end
 
 local function open_split()
-    vim.cmd("new")
-    vim.cmd("wincmd x")
+    vim.cmd("split")
     vim.cmd("wincmd j")
     vim.api.nvim_win_set_height(0, 20)
 end
