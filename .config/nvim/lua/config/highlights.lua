@@ -43,7 +43,8 @@ local function apply_custom_highlights()
     vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_10'])
 
     -- style todo dates as comments
-    vim.cmd('hi link TodoDate Comment')
+    vim.cmd('hi def Undercurl cterm=undercurl gui=undercurl guisp=' .. vim.g['terminal_color_2'])
+    vim.cmd('hi link TodoDate Undercurl')
 
     -- patch misc rules dynamically based on other highlights
     local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
