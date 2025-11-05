@@ -42,9 +42,11 @@ local function apply_custom_highlights()
     vim.cmd('hi VimwikiList guifg='               .. vim.g['terminal_color_10'])
     vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_10'])
 
-    -- style todo dates as comments
-    vim.cmd('hi def todoUnderline cterm=underline gui=underline guisp=' .. vim.g['terminal_color_2'])
-    vim.cmd('hi link TodoDate todoUnderline')
+    -- style todo dates
+    vim.cmd('hi def todoUnderlineA cterm=underline gui=underline guisp=' .. vim.g['terminal_color_2'])
+    vim.cmd('hi def todoUnderlineB cterm=underline gui=underline guisp=' .. vim.g['terminal_color_2'])
+    vim.cmd('hi link TodoDate todoUnderlineA')
+    vim.cmd('hi link TodoDateMonth todoUnderlineB')
 
     -- make sure trailspace is obvious
     vim.cmd('hi link MiniTrailspace MiniHipatternsFixme')
