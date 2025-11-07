@@ -1,18 +1,20 @@
 
-local signs = {
-  Error = " ",
-  Warn = " ",
-  Hint = " ",
-  Info = " "
-}
-
-for name, icon in pairs(signs) do
-	local hl = "DiagnosticSign" .. name
-	vim.fn.sign_define(hl, { text = icon, numhl = hl, texthl = hl })
-end
-
 vim.diagnostic.config({
     virtual_text = true,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN]  = " ",
+            [vim.diagnostic.severity.HINT]  = " ",
+            [vim.diagnostic.severity.INFO]  = " ",
+        },
+        linehl = {
+            [vim.diagnostic.severity.ERROR] = "Error",
+            [vim.diagnostic.severity.WARN]  = "Warn",
+            [vim.diagnostic.severity.HINT]  = "Hint",
+            [vim.diagnostic.severity.INFO]  = "Info",
+        },
+    },
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
