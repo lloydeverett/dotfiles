@@ -412,13 +412,6 @@ require("lazy").setup({
       { 'nvim-mini/mini.trailspace',
            opts = { }
       },
-      -- { 'MeanderingProgrammer/render-markdown.nvim',
-      --      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },
-      --      opts = {},
-      -- },
-      -- { "OXY2DEV/markview.nvim",
-      --      lazy = false,
-      -- },
 
       -- treectl --------------------------------------------------------------------------------------------------
       { 'MunifTanjim/nui.nvim',
