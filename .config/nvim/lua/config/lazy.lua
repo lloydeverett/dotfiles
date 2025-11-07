@@ -91,23 +91,108 @@ require("lazy").setup({
       },
 
       -- plugins --------------------------------------------------------------------------------------------------
-      { 'folke/snacks.nvim',
-           opts = {
-               picker = { enabled = true },
-               scope = { enabled = true }
-           }
+      { 'nvim-mini/mini.nvim',
+           opts = {},
+           config = function(_, opts)
+               local MiniTrailspace = require('mini.trailspace')
+               MiniTrailspace.setup({ })
+
+               local MiniStatusline = require("mini.statusline")
+               MiniStatusline.setup({ })
+               local default_section_fileinfo = MiniStatusline.section_fileinfo
+               local function rfind(str, pattern)
+                   local i = str:len()
+                   while i > 0 do
+                       if str:sub(i, i) == pattern then
+                           return i
+                       end
+                       i = i - 1
+                   end
+                   return nil
+               end
+               MiniStatusline.section_fileinfo = function(args)
+                   -- remove file size from fileinfo result
+                   local default_result = default_section_fileinfo(args)
+                   local index = rfind(default_result, " ")
+                   if index ~= nil then
+                       return default_result:sub(1, index - 1)
+                   else
+                       return default_result
+                   end
+               end
+               MiniStatusline.section_location = function(_)
+                   return '%l|%v'
+               end
+
+               local MiniTabline = require("mini.tabline")
+               MiniTabline.setup({ tabpage_section = 'right' })
+
+               local MiniHipatterns = require("mini.hipatterns")
+               MiniHipatterns.setup({
+                   highlighters = {
+                       -- Highlight hex color strings (`#rrggbb`) using that color
+                       hex_color = MiniHipatterns.gen_highlighter.hex_color(),
+                   },
+               })
+
+               local MiniFiles = require("mini.files")
+               MiniFiles.setup({
+                   mappings = {
+                       close       = '<ESC>',
+                       go_in       = 'l',
+                       go_in_plus  = 'L',
+                       go_out      = 'h',
+                       go_out_plus = 'H',
+                       mark_goto   = "'",
+                       mark_set    = 'm',
+                       reset       = '<BS>',
+                       reveal_cwd  = '@',
+                       show_help   = 'g?',
+                       synchronize = '=',
+                       trim_left   = '<',
+                       trim_right  = '>',
+                   },
+               })
+
+               local MiniPick = require('mini.pick')
+               MiniPick.setup({ })
+               vim.keymap.set("n", "<leader>b", function()
+                   MiniPick.builtin.buffers()
+               end)
+               vim.keymap.set("n", "<leader>f", function()
+                   MiniPick.builtin.files()
+               end)
+               vim.keymap.set("n", "<leader>/", function()
+                   MiniPick.builtin.grep_live()
+               end)
+               vim.keymap.set("n", "<leader>h", function()
+                   MiniPick.builtin.help()
+               end)
+
+               local MiniVisits = require('mini.visits')
+               MiniVisits.setup({ })
+               vim.keymap.set("n", "<leader>.", function()
+                   MiniVisits.select_path('')
+               end)
+
+               require("mini.hues")
+           end
       },
       { 'vimwiki/vimwiki',
            branch = 'dev',
            config = function(_, _)
                vim.g.vimwiki_list = {{
-                 path = os.getenv('HOME') .. '/sync/wiki',
-                 syntax = 'markdown',
-                 ext = 'md'
+                   path = os.getenv('HOME') .. '/sync/wiki',
+                   syntax = 'markdown',
+                   ext = 'md'
                }}
            end
       },
+      { 'chentoast/marks.nvim',
+           opts = {}
+      },
       { 'stevearc/oil.nvim',
+           enabled = false,
            opts = {
                win_options = {
                    winbar = "%!v:lua.get_oil_winbar()",
@@ -135,46 +220,13 @@ require("lazy").setup({
                },
                extensions = { },
            },
+           config = function(_, opts)
+               require("telescope").setup(opts)
+               vim.keymap.set("n", "<leader>:", "<cmd>Telescope<cr>")
+           end,
            tag = '0.1.8'
        },
       { 'tpope/vim-fugitive' },
-      { 'LukasPietzschmann/telescope-tabs' },
-      { 'nvim-lualine/lualine.nvim',
-           opts = {
-               options = {
-                   -- nerd font glyph names: ple_...
-                   component_separators = {  left = '', right = ''},
-                   section_separators = { left = '', right = ''},
-               },
-               sections = {
-                   lualine_x = {
-                       { 'encoding' },
-                       {
-                           'fileformat',
-                           symbols = {
-                               unix = 'LF',
-                               dos = 'CRLF',
-                               mac = 'CR',
-                           }
-                       }
-                   }
-               }
-           }
-      },
-      { 'akinsho/bufferline.nvim',
-           opts = {
-               options = {
-                   themeable = true,
-                   show_close_icon = false,
-                   show_buffer_close_icons = false
-               }
-           },
-           config = function(_, opts)
-               local bufferline = require("bufferline")
-               opts.options.style_preset = bufferline.style_preset.minimal
-               bufferline.setup(opts)
-           end
-      },
       { 'neovim/nvim-lspconfig' },
       { 'mason-org/mason.nvim',
            opts = {}
@@ -252,25 +304,7 @@ require("lazy").setup({
                end
            end
       },
-      { "allaman/emoji.nvim",
-           dependencies = {
-               "nvim-lua/plenary.nvim",
-               "nvim-telescope/telescope.nvim",
-           },
-           opts = {
-               enable_cmp_integration = false,
-           },
-           config = function(_, opts)
-               require("emoji").setup(opts)
-               -- optional for telescope integration
-               local ts = require('telescope').load_extension 'emoji'
-               vim.keymap.set('n', '<leader>se', ts.emoji, { desc = '[S]earch [E]moji' })
-           end,
-      },
       { '2kabhishek/nerdy.nvim',
-           dependencies = {
-               'folke/snacks.nvim',
-           },
            opts = {
                max_recents = 30,
                add_default_keybindings = true,
@@ -342,20 +376,13 @@ require("lazy").setup({
       },
       { 'psliwka/termcolors.nvim' }, -- :TermcolorsShow to output terminal color scheme
       { 'Makaze/AnsiEsc' }, -- :AnsiEsc to toggle colorize according to escape seqeunces
-      { 'nvim-mini/mini.hues',
-      },
-      { 'nvim-mini/mini.hipatterns',
-           config = function(_, _)
-               local hipatterns = require('mini.hipatterns')
-               hipatterns.setup({
-                   highlighters = {
-                       -- Highlight hex color strings (`#rrggbb`) using that color
-                       hex_color = hipatterns.gen_highlighter.hex_color(),
-                   },
-               })
-           end
+      { 'folke/snacks.nvim',
+           opts = { }
       },
       { 'tzachar/local-highlight.nvim',
+           dependencies = {
+               "folke/snacks.nvim" -- for animation support
+           },
            opts = {
                -- file_types = {"python", "cpp"}, -- If this is given only attach to this
                -- OR attach to every filetype except:
@@ -407,9 +434,6 @@ require("lazy").setup({
            end
       },
       { 'lewis6991/gitsigns.nvim',
-           opts = { }
-      },
-      { 'nvim-mini/mini.trailspace',
            opts = { }
       },
 

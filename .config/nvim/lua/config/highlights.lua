@@ -23,10 +23,6 @@
 -- markdownH5                  #7fbbb3            #7daea3       #86bfd0
 -- markdownH6                  #d699b6            #d3869b       #86bfd0
 
-local function starts_with(str, start)
-    return str:sub(1, #start) == start
-end
-
 local function apply_custom_highlights()
     -- highlight for conceal
     vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_10'])
@@ -52,25 +48,11 @@ local function apply_custom_highlights()
     vim.cmd('hi link MiniTrailspace MiniHipatternsFixme')
 
     -- patch misc rules dynamically based on other highlights
-    local cursorline_hl_rule = vim.api.nvim_get_hl(0, { name = "CursorLine" })
-    local winbarnc_hl_rule = vim.api.nvim_get_hl(0, { name = "WinBarNC" })
     local normal_hl_rule = vim.api.nvim_get_hl(0, { name = "Normal" })
     local function_hl_rule = vim.api.nvim_get_hl(0, { name = "Function" })
     local statement_hl_rule = vim.api.nvim_get_hl(0, { name = "Statement" })
     local hl_rules = vim.api.nvim_get_hl(0, { })
     for k, v in pairs(hl_rules) do
-        if starts_with(k, "BufferLine") then
-            v.bg = cursorline_hl_rule.bg
-            v.ctermbg = cursorline_hl_rule.ctermbg
-            v.force = true
-            vim.api.nvim_set_hl(0, k, v)
-        end
-        if k == "WinBar" then
-            v.bg = winbarnc_hl_rule.bg
-            v.ctermbg = winbarnc_hl_rule.ctermbg
-            v.force = true
-            vim.api.nvim_set_hl(0, k, v)
-        end
         if vim.g.colors_name == "thorn" then
             if k == "VimwikiItalic" then
                 v.fg = function_hl_rule.fg

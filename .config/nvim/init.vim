@@ -47,22 +47,11 @@ nnoremap <silent> <C-j> <cmd>wincmd j<cr>
 nnoremap <silent> <C-k> <cmd>wincmd k<cr>
 nnoremap <silent> <C-l> <cmd>wincmd l<cr>
 
-" telescope
-nnoremap <leader>: <cmd>Telescope<cr>
-nnoremap <leader>f <cmd>Telescope find_files<cr>
-nnoremap <leader>g <cmd>Telescope live_grep<cr>
-nnoremap <leader>b <cmd>Telescope buffers<cr>
-nnoremap <leader>h <cmd>Telescope help_tags<cr>
-nnoremap <leader>t <cmd>Telescope telescope-tabs list_tabs<cr>
-nnoremap <leader>cd <cmd>Telescope zoxide list previewer=false<cr>
-
-" vimwiki bindings
-nnoremap <C-X> <cmd>VimwikiToggleListItem<cr>
-nnoremap <leader><c-cr> <cmd>VimwikiTabnewLink<cr>
-nnoremap <leader><cr> <cmd>call vimwiki#base#follow_link('tab', 0, 0)<cr>
+" file shortcuts
 nnoremap <leader>wp :e ~/sync/wiki/personal.md<cr>
 nnoremap <leader>wo :e ~/sync/wiki/work.md<cr>
 nnoremap <leader>cc :e ~/.config/nvim/init.vim<cr>
+nnoremap <leader>cl :e ~/.config/nvim/lua/config/lazy.lua<cr>
 
 " terminal keymappings
 lua require('config.terminals')
