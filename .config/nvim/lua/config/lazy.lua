@@ -356,6 +356,8 @@ require("lazy").setup({
       },
       { 'psliwka/termcolors.nvim' }, -- :TermcolorsShow to output terminal color scheme
       { 'Makaze/AnsiEsc' }, -- :AnsiEsc to toggle colorize according to escape seqeunces
+      { 'nvim-mini/mini.hues',
+      },
       { 'nvim-mini/mini.hipatterns',
            config = function(_, _)
                local hipatterns = require('mini.hipatterns')
