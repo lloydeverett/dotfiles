@@ -120,6 +120,9 @@ require("lazy").setup({
                        return default_result
                    end
                end
+               MiniStatusline.section_diff = function()
+                   return ""
+               end
                MiniStatusline.section_location = function(_)
                    return '%l|%v'
                end
@@ -174,8 +177,6 @@ require("lazy").setup({
                vim.keymap.set("n", "<leader>.", function()
                    MiniVisits.select_path('')
                end)
-
-               require("mini.hues")
            end
       },
       { 'vimwiki/vimwiki',
@@ -234,11 +235,14 @@ require("lazy").setup({
       { 'mason-org/mason-lspconfig.nvim',
            opts = {}
       },
-      { 'hrsh7th/cmp-nvim-lsp' },
-      { 'hrsh7th/cmp-buffer' },
-      { 'hrsh7th/cmp-path' },
-      { 'hrsh7th/cmp-cmdline' },
       { 'hrsh7th/nvim-cmp',
+           dependencies = {
+               { 'hrsh7th/cmp-nvim-lsp' },
+               { 'hrsh7th/cmp-buffer' },
+               { 'hrsh7th/cmp-path' },
+               { 'hrsh7th/cmp-cmdline' },
+               { 'hrsh7th/cmp-nvim-lsp-signature-help' },
+           },
            config = function(_, _)
                -- Set up nvim-cmp.
                local cmp = require('cmp')
@@ -264,6 +268,8 @@ require("lazy").setup({
                        { name = 'nvim_lsp' },
                    }, {
                        { name = 'buffer' },
+                   }, {
+                       { name = 'nvim_lsp_signature_help' }
                    })
                })
                -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
@@ -316,7 +322,9 @@ require("lazy").setup({
            end,
       },
       { "folke/todo-comments.nvim",
-           dependencies = { "nvim-lua/plenary.nvim" },
+           dependencies = {
+               "nvim-lua/plenary.nvim"
+           },
            opts = { }
       },
       { "jake-stewart/multicursor.nvim",
