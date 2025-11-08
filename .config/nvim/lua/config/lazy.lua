@@ -114,17 +114,29 @@ require("lazy").setup({
                    -- remove file size from fileinfo result
                    local default_result = default_section_fileinfo(args)
                    local index = rfind(default_result, " ")
+                   local result
+
                    if index ~= nil then
-                       return default_result:sub(1, index - 1)
+                       result = default_result:sub(1, index - 1)
                    else
-                       return default_result
+                       result = default_result
                    end
+
+                   return result
                end
                MiniStatusline.section_diff = function()
                    return ""
                end
                MiniStatusline.section_location = function(_)
-                   return '%l|%v'
+                   local result = '%l|%v'
+
+                   -- prepend timer icon when using virtualtimer
+                   local buf = vim.api.nvim_get_current_buf()
+                   if _G.virtualtimer ~= nil and _G.virtualtimer.timer_id_for_buf[buf] ~= nil then
+                       result = " " .. result
+                   end
+
+                   return result
                end
 
                local MiniTabline = require("mini.tabline")
@@ -177,6 +189,9 @@ require("lazy").setup({
                vim.keymap.set("n", "<leader>.", function()
                    MiniVisits.select_path('')
                end)
+
+               local MiniNotify = require('mini.notify')
+               MiniNotify.setup({ })
            end
       },
       { 'vimwiki/vimwiki',
@@ -445,6 +460,22 @@ require("lazy").setup({
            opts = { }
       },
 
+      -- virtualtimer ---------------------------------------------------------------------------------------------
+      { dir = "~/virtualtimer",
+           dependencies = { 'nvim-mini/mini.nvim' },
+           opts = {},
+           config = function(_, opts)
+               require("virtualtimer").setup(opts)
+               local modes = { 'n', 'x' }
+               for _, mode in ipairs(modes) do
+                   vim.api.nvim_set_keymap(mode, '<leader>pp', ':VtParse<CR>', { noremap = true })
+                   vim.api.nvim_set_keymap(mode, '<leader>ps', ':VtStart<CR>', { noremap = true })
+                   vim.api.nvim_set_keymap(mode, '<leader>pq', ':VtStop<CR>',  { noremap = true })
+                   vim.api.nvim_set_keymap(mode, '<leader>pc', ':VtClear<CR>', { noremap = true })
+               end
+           end
+      },
+
       -- treectl --------------------------------------------------------------------------------------------------
       { 'MunifTanjim/nui.nvim',
            include_in_minimal = true
@@ -458,7 +489,7 @@ require("lazy").setup({
                vim.api.nvim_set_keymap('n', '<leader>[', '<Cmd>Treectl<CR>', { noremap = true, silent = true })
                vim.api.nvim_set_keymap('n', '<leader>]', '<Cmd>TreectlNewBuf<CR>', { noremap = true, silent = true })
            end
-      }
+      },
   }),
   install = { colorscheme = { "habamax" } },
   checker = { enabled = false }
