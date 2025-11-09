@@ -222,6 +222,9 @@ require("lazy").setup({
                local MiniAlign = require('mini.align')
                MiniAlign.setup({ })
 
+               local MiniSplitjoin = require('mini.splitjoin')
+               MiniSplitjoin.setup({ })
+
                local MiniNotify = require('mini.notify')
                MiniNotify.setup({ })
 
