@@ -1,0 +1,14 @@
+⧉  two joined squares
+🗔 desktop window
+⨕  integral around a point operator
+⨐  circulation function
+♩  quarter note
+♪  eighth note
+♫  beamed eighth notes
+♬  beamed sixteenth notes
+♭  music flat sign
+♮  music natural sign
+♯  music sharp sign
+⛕  alternate one-way left way traffic
+ꜿ  latin capital letter reversed c with dot
+€  euro symbol

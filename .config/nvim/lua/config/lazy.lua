@@ -89,7 +89,7 @@ require("lazy").setup({
       -- plugins --------------------------------------------------------------------------------------------------
       { 'nvim-mini/mini.nvim',
            opts = {},
-           config = function(_, opts)
+           config = function(_, _)
                local MiniTrailspace = require('mini.trailspace')
                MiniTrailspace.setup({ })
 
@@ -179,6 +179,36 @@ require("lazy").setup({
                vim.keymap.set("n", "<leader>h", function()
                    MiniPick.builtin.help()
                end)
+               local function char_from_reference_line(str)
+                   local index = string.find(str, " ")
+                   if index == nil then
+                       error("could not split on space in reference line")
+                   end
+                   return string.sub(str, 1, index - 1)
+               end
+               local function pick_from_reference(path)
+                   local selection = MiniPick.builtin.cli(
+                       { command = { 'cat', path } },
+                       { source = { choose = function() end, name = "Symbols"} }
+                   )
+                   if selection == nil then
+                       return
+                   end
+                   vim.api.nvim_put({ char_from_reference_line(selection) }, "c", true, true)
+               end
+               local REFERENCE_DIR = os.getenv("HOME") .. '/dotfiles/reference/'
+               vim.keymap.set('n', '<leader>se', function()
+                   pick_from_reference(REFERENCE_DIR .. 'emojis.txt')
+               end)
+               vim.keymap.set('n', '<leader>sn', function()
+                   pick_from_reference(REFERENCE_DIR .. 'nerdfont.txt')
+               end)
+               vim.keymap.set('n', '<leader>ss', function()
+                   pick_from_reference(REFERENCE_DIR .. 'symbols.txt')
+               end)
+               vim.keymap.set('n', '<leader>sc', function()
+                   pick_from_reference(REFERENCE_DIR .. 'cool.txt')
+               end)
 
                local MiniVisits = require('mini.visits')
                MiniVisits.setup({ })
@@ -189,8 +219,64 @@ require("lazy").setup({
                local MiniPairs = require('mini.pairs')
                MiniPairs.setup({ })
 
+               local MiniAlign = require('mini.align')
+               MiniAlign.setup({ })
+
                local MiniNotify = require('mini.notify')
                MiniNotify.setup({ })
+
+               local MiniDiff = require('mini.diff')
+               MiniDiff.setup({
+                   view = {
+                       style = 'sign',
+                       signs = { add = '▒', change = '▒', delete = '▒' },
+                       priority = 0,
+                   },
+               })
+               vim.keymap.set("n", "``", function()
+                   MiniDiff.toggle_overlay()
+               end)
+
+               local MiniGit = require('mini.git')
+               MiniGit.setup({ })
+
+               local MiniClue = require('mini.clue')
+               MiniClue.setup({
+                   triggers = {
+                       -- Leader triggers
+                       { mode = 'n', keys = '<Leader>' },
+                       { mode = 'x', keys = '<Leader>' },
+                       -- Built-in completion
+                       { mode = 'i', keys = '<C-x>' },
+                       -- `g` key
+                       { mode = 'n', keys = 'g' },
+                       { mode = 'x', keys = 'g' },
+                       -- Marks
+                       { mode = 'n', keys = "'" },
+                       { mode = 'n', keys = '`' },
+                       { mode = 'x', keys = "'" },
+                       { mode = 'x', keys = '`' },
+                       -- Registers
+                       { mode = 'n', keys = '"' },
+                       { mode = 'x', keys = '"' },
+                       { mode = 'i', keys = '<C-r>' },
+                       { mode = 'c', keys = '<C-r>' },
+                       -- Window commands
+                       { mode = 'n', keys = '<C-w>' },
+                       -- `z` key
+                       { mode = 'n', keys = 'z' },
+                       { mode = 'x', keys = 'z' },
+                   },
+                   clues = {
+                       -- Enhance this by adding descriptions for <Leader> mapping groups
+                       MiniClue.gen_clues.builtin_completion(),
+                       MiniClue.gen_clues.g(),
+                       MiniClue.gen_clues.marks(),
+                       MiniClue.gen_clues.registers(),
+                       MiniClue.gen_clues.windows(),
+                       MiniClue.gen_clues.z(),
+                   },
+               })
            end
       },
       { 'vimwiki/vimwiki',
@@ -240,8 +326,7 @@ require("lazy").setup({
                vim.keymap.set("n", "<leader>:", "<cmd>Telescope<cr>")
            end,
            tag = '0.1.8'
-       },
-      { 'tpope/vim-fugitive' },
+      },
       { 'neovim/nvim-lspconfig' },
       { 'mason-org/mason.nvim',
            opts = {}
@@ -324,17 +409,6 @@ require("lazy").setup({
                end
            end
       },
-      { '2kabhishek/nerdy.nvim',
-           opts = {
-               max_recents = 30,
-               add_default_keybindings = true,
-               copy_to_clipboard = false,
-           },
-           config = function(_, opts)
-               require("nerdy").setup(opts)
-               vim.keymap.set('n', '<leader>sn', "<cmd>Nerdy<CR>")
-           end,
-      },
       { "folke/todo-comments.nvim",
            dependencies = {
                "nvim-lua/plenary.nvim"
@@ -397,7 +471,6 @@ require("lazy").setup({
            }
       },
       { 'psliwka/termcolors.nvim' }, -- :TermcolorsShow to output terminal color scheme
-      { 'Makaze/AnsiEsc' }, -- :AnsiEsc to toggle colorize according to escape seqeunces
       { 'folke/snacks.nvim',
            opts = { }
       },
@@ -454,9 +527,6 @@ require("lazy").setup({
                -- toggle keymappings for venn using <leader>v
                vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true })
            end
-      },
-      { 'lewis6991/gitsigns.nvim',
-           opts = { }
       },
 
       -- virtualtimer ---------------------------------------------------------------------------------------------

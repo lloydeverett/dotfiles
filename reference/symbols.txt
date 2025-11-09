@@ -1,0 +1,70 @@
+“        opening double quote           quote                left
+”        closing double quote           quote                right
+‘        opening single quote           quote                left
+’        closing single quote           quote                apostrophe,right
+—        em dash                        punctuation          long
+–        en dash                        punctuation
+‒        figure dash                    punctuation          number,dash
+−        minus                          punctuation          minus
+…        ellipsis                       punctuation          dot,..
+︙       vertical ellipsis              punctuation          dot,..
+         non-breaking space             punctuation
+±        plus/minus                     math
+×        multiplication                 math                 multiply,times
+÷        division                       math                 divide
+≤        less than or equal to          math
+≥        greater than or equal to       math
+≠        not equal to                   math
+≈        approximately                  math                 almost
+°        degree                         math                 temperature,angle
+℉        degree fahrenheit              math                 temperature
+℃        degree celsius                 math                 temperature
+№        numero                         math                 number
+¢        cents                          math
+½        half                           math                 1/2
+⅓        third                          math                 1/3
+⅔        two thirds                     math                 2/3
+¼        quarter                        math                 1/4
+¾        three quarters                 math                 3/4
+′        prime                          math                 feet,minutes
+″        double prime                   math                 inches,seconds
+‱        basis point                    math                 bps,bip,bp
+¹        superscript 1                  ordinal
+²        superscript 2                  ordinal
+³        superscript 3                  ordinal
+⁴        superscript 4                  ordinal
+⁵        superscript 5                  ordinal
+⁶        superscript 6                  ordinal
+⁷        superscript 7                  ordinal
+⁸        superscript 8                  ordinal
+⁹        superscript 9                  ordinal
+⁰        superscript 0                  ordinal
+ª        feminine ordinal indicator     ordinal              a
+º        masculine ordinal indicator    ordinal              o,neutral
+§        section                        symbol
+†        dagger                         symbol               cross,footnote
+‡        double dagger                  symbol               cross,footnote
+&        ampersand                      symbol               and
+®        registered                     symbol               r,trademark
+©        copyright                      symbol
+™        trademark                      symbol               tm
+←        left arrow                     misc
+→        right arrow                    misc
+↑        up arrow                       misc
+↓        down arrow                     misc
+↖        upper left arrow               misc
+↗        upper right arrow              misc
+↙        lower left arrow               misc
+↘        lower right arrow              misc
+•        bullet                         misc                 dot,list,point
+▸        triangluar bullet              misc                 arrow,point,list
+·        middle dot                     misc
+〰       wavy dash                      misc                 wave,squiggle
+​   zero-width space               misc
+$        dollar                         currency             money,currency
+€        euro                           currency             money,currency
+£        pound                          currency             money,currency
+¥        yen                            currency             money,currency
+元       yuan                           currency             money,currency
+₿        bitcoin                        currency             money,currency
+¢        cent                           currency             money,currency

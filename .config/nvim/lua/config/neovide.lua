@@ -36,11 +36,11 @@ if vim.g.neovide then
     vim.keymap.set('t', '<D-v>', '<C-\\><C-n>"+pi') -- paste terminal mode
     vim.keymap.set('i', '<D-v>', '<Esc>"+pi')       -- paste insert mode
     vim.keymap.set('n', '<D-->', function()         -- zoom out
-        font_size = font_size - 1
+        font_size = font_size - 0.5
         update_font_size()
     end, { noremap = true, silent = true })
     vim.keymap.set('n', '<D-=>', function()         -- zoom in
-        font_size = font_size + 1
+        font_size = font_size + 0.5
         update_font_size()
     end, { noremap = true, silent = true })
 end
