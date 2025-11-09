@@ -86,6 +86,7 @@ require("lazy").setup({
            config = function(_, _)
                if vim.g.neovide then
                    --  HACK: termguicolors fix: set everforest first
+                   --        (otherwise custom highlights misbehave for some reason)
                    vim.cmd("colorscheme everforest")
                    vim.cmd("colorscheme thorn")
                end
