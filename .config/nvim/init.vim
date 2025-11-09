@@ -21,6 +21,7 @@ set termguicolors
 set ssop-=options
 set ssop-=folds
 set fillchars=eob:\ 
+set noshowmode
 
 " plugin setup
 lua require('config.lazy')
