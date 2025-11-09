@@ -71,14 +71,14 @@ require("lazy").setup({
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.g.gruvbox_material_background = 'medium'
+               if not vim.g.neovide then
+                   vim.cmd("colorscheme gruvbox-material")
+               end
            end
       },
       { 'sainnhe/everforest',
            config = function(_, _)
                vim.g.everforest_background = 'hard'
-               if not vim.g.neovide then
-                   vim.cmd("colorscheme everforest")
-               end
            end
       },
       { 'jpwol/thorn.nvim',
