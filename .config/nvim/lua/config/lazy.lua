@@ -76,14 +76,24 @@ require("lazy").setup({
       { 'sainnhe/everforest',
            config = function(_, _)
                vim.g.everforest_background = 'hard'
-               -- vim.g.everforest_transparent_background = 1
-               vim.cmd("colorscheme everforest")
+               if not vim.g.neovide then
+                   vim.cmd("colorscheme everforest")
+               end
            end
       },
       { 'jpwol/thorn.nvim',
-           opts = {}
+           opts = {},
+           config = function(_, _)
+               if vim.g.neovide then
+                   --  HACK: termguicolors fix: set everforest first
+                   vim.cmd("colorscheme everforest")
+                   vim.cmd("colorscheme thorn")
+               end
+           end
       },
-      { 'Shatur/neovim-ayu'
+      { 'kvrohit/rasmus.nvim'
+      },
+      { 'davidosomething/vim-colors-meh'
       },
 
       -- plugins --------------------------------------------------------------------------------------------------
@@ -215,9 +225,6 @@ require("lazy").setup({
                vim.keymap.set("n", "<leader>.", function()
                    MiniVisits.select_path('')
                end)
-
-               local MiniPairs = require('mini.pairs')
-               MiniPairs.setup({ })
 
                local MiniAlign = require('mini.align')
                MiniAlign.setup({ })

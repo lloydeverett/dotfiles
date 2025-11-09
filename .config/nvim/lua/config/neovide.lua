@@ -1,7 +1,7 @@
 
 local default_cmd_height = 1
 vim.o.cmdheight = default_cmd_height
-local font_size = 16
+local font_size = 15
 local font_name = "CaskaydiaMono Nerd Font Mono"
     -- alt: "Operator Mono Lig"
     -- alt: "0xProto Nerd Font Mono"

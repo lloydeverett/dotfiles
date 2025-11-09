@@ -51,6 +51,7 @@ local function apply_custom_highlights()
     local normal_hl_rule = vim.api.nvim_get_hl(0, { name = "Normal" })
     local function_hl_rule = vim.api.nvim_get_hl(0, { name = "Function" })
     local statement_hl_rule = vim.api.nvim_get_hl(0, { name = "Statement" })
+    local diffchange_hl_rule = vim.api.nvim_get_hl(0, { name = "DiffChange" })
     local hl_rules = vim.api.nvim_get_hl(0, { })
     for k, v in pairs(hl_rules) do
         if vim.g.colors_name == "thorn" then
@@ -66,6 +67,14 @@ local function apply_custom_highlights()
                 v.force = true
                 vim.api.nvim_set_hl(0, k, v)
             end
+            if k == "TabLineSel" then
+                v.fg = diffchange_hl_rule.fg
+                v.ctermfg = diffchange_hl_rule.ctermfg
+                v.bg = diffchange_hl_rule.bg
+                v.ctermbg = diffchange_hl_rule.ctermbg
+                v.force = true
+                vim.api.nvim_set_hl(0, k, v)
+            end
         end
         if k == "VimwikiLink" then
             v.fg = normal_hl_rule.fg
@@ -74,6 +83,11 @@ local function apply_custom_highlights()
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
+    end
+
+    -- additional patch for thorn
+    if vim.g.colors_name == "thorn" then
+        vim.cmd("hi! link MiniStatusLineModeNormal TabLineSel")
     end
 end
 
