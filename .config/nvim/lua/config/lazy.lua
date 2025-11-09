@@ -68,9 +68,6 @@ vim.o.wildignore = wildignore
 require("lazy").setup({
   spec = postprocess_spec({
       -- color schemes --------------------------------------------------------------------------------------------
-      { "vague-theme/vague.nvim" },
-      { "kamwitsta/vinyl.nvim" },
-      { "webhooked/kanso.nvim" },
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.g.gruvbox_material_background = 'medium'
@@ -86,8 +83,7 @@ require("lazy").setup({
       { 'jpwol/thorn.nvim',
            opts = {}
       },
-      { "zenbones-theme/zenbones.nvim",
-           dependencies = "rktjmp/lush.nvim",
+      { 'Shatur/neovim-ayu'
       },
 
       -- plugins --------------------------------------------------------------------------------------------------
@@ -189,6 +185,9 @@ require("lazy").setup({
                vim.keymap.set("n", "<leader>.", function()
                    MiniVisits.select_path('')
                end)
+
+               local MiniPairs = require('mini.pairs')
+               MiniPairs.setup({ })
 
                local MiniNotify = require('mini.notify')
                MiniNotify.setup({ })
