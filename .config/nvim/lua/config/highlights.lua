@@ -88,6 +88,9 @@ local function apply_custom_highlights()
     -- additional patch for thorn
     if vim.g.colors_name == "thorn" then
         vim.cmd("hi! link MiniStatusLineModeNormal TabLineSel")
+        vim.cmd("hi! link MiniStatusLineModeInsert DiffAdd")
+        vim.cmd("hi! link VertSplit LineNr")
+        vim.cmd("hi! link WinSeparator LineNr")
     end
 end
 
