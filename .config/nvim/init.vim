@@ -22,6 +22,7 @@ set ssop-=options
 set ssop-=folds
 set fillchars=eob:\ 
 set noshowmode
+set shortmess+=I
 aunmenu PopUp.How-to\ disable\ mouse
 aunmenu PopUp.-2-
 
