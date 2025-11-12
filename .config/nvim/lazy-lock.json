@@ -15,6 +15,7 @@
   "mini.nvim": { "branch": "main", "commit": "9101b9e0af5d4781260c7d8c131c170c71d281f2" },
   "multicursor.nvim": { "branch": "1.0", "commit": "0c6ceae228bf209e8b8717df9de500770c4e7022" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
+  "nvim": { "branch": "main", "commit": "951d0c459f5d7fff8e90e0c0803dad8faf5180ff" },
   "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },
   "nvim-lspconfig": { "branch": "master", "commit": "e688b486fe9291f151eae7e5c0b5a5c4ef980847" },
   "oil.nvim": { "branch": "master", "commit": "919e155fdf38e9148cdb5304faaaf53c20d703ea" },
@@ -29,6 +30,6 @@
   "thorn.nvim": { "branch": "main", "commit": "1cb2dc997cf6600832b37405d1ddb1628542aa7f" },
   "todo-comments.nvim": { "branch": "main", "commit": "19d461ddd543e938eb22505fb03fa878800270b6" },
   "venn.nvim": { "branch": "main", "commit": "b09c2f36ddf70b498281845109bedcf08a7e0de0" },
-  "vim-colors-meh": { "branch": "master", "commit": "e8620eb2d869b7021bfdeaa6cdd7e4fcc7f14d3f" },
-  "vimwiki": { "branch": "dev", "commit": "72792615e739d0eb54a9c8f7e0a46a6e2407c9e8" }
+  "vimwiki": { "branch": "dev", "commit": "72792615e739d0eb54a9c8f7e0a46a6e2407c9e8" },
+  "vis": { "branch": "master", "commit": "6a87efbfbd97238716b602c2b53564aa6329b5de" }
 }
