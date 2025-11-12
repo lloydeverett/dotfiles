@@ -20,6 +20,8 @@ set undodir=~/.local/share/nvim/undo/
 set termguicolors
 set ssop-=options
 set ssop-=folds
+set listchars=tab:,nbsp:~
+set list
 set fillchars=eob:\ 
 set noshowmode
 set shortmess+=I
@@ -62,8 +64,21 @@ lua require('config.terminals')
 
 " evaluate lua file shortcut
 lua <<EOF
-vim.keymap.set("n", "<leader>gf", function()
+vim.keymap.set("n", "<leader>gl", function()
     vim.cmd("luafile " .. vim.fn.expand("<cWORD>"))
+end, { noremap = true })
+EOF
+
+" like gf but create file if it doesn't exist
+lua <<EOF
+vim.keymap.set("n", "<leader>gf", function()
+    local word = vim.fn.expand("<cWORD>")
+
+    if string.sub(word, 1, 2) == "./" then
+        word = vim.fn.expand("%:p:h") .. string.sub(word, 2)
+    end
+
+    vim.cmd("e " .. word)
 end, { noremap = true })
 EOF
 
