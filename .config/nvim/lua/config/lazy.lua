@@ -81,20 +81,19 @@ require("lazy").setup({
                vim.g.everforest_background = 'hard'
            end
       },
-      { 'jpwol/thorn.nvim',
-           opts = {},
+      { 'jpwol/thorn.nvim'
+      },
+      { 'everviolet/nvim',
            config = function(_, _)
                if vim.g.neovide then
                    --  HACK: termguicolors fix: set everforest first
                    --        (otherwise custom highlights misbehave for some reason)
                    vim.cmd("colorscheme everforest")
-                   vim.cmd("colorscheme thorn")
+                   vim.cmd("colorscheme evergarden-fall")
                end
            end
       },
       { 'kvrohit/rasmus.nvim'
-      },
-      { 'davidosomething/vim-colors-meh'
       },
 
       -- plugins --------------------------------------------------------------------------------------------------
@@ -539,6 +538,8 @@ require("lazy").setup({
                vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true })
            end
       },
+      { 'vim-scripts/vis'
+      },
 
       -- virtualtimer ---------------------------------------------------------------------------------------------
       { dir = "~/virtualtimer",
@@ -559,6 +560,11 @@ require("lazy").setup({
       -- based ----------------------------------------------------------------------------------------------------
       { dir = "~/based",
            opts = {},
+           config = function(_, opts)
+               require("based").setup(opts)
+               vim.api.nvim_set_keymap('n', '<C-S-Left>', '<Cmd>BasedHueShiftLeft<CR>', { noremap = true, silent = true })
+               vim.api.nvim_set_keymap('n', '<C-S-Right>', '<Cmd>BasedHueShiftRight<CR>', { noremap = true, silent = true })
+           end
       },
 
       -- treectl --------------------------------------------------------------------------------------------------

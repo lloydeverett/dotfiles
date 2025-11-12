@@ -100,3 +100,13 @@ vim.api.nvim_create_autocmd('ColorScheme', {
     callback = apply_custom_highlights,
 })
 
+vim.cmd("BasedSetBaseline")
+
+if vim.g.colors_name == "thorn" then
+    require('based').set_channel_adj(0, 0, -16)
+end
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+    callback = function() vim.cmd("BasedSetBaseline") end,
+})
+
