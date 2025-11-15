@@ -71,9 +71,9 @@ require("lazy").setup({
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.g.gruvbox_material_background = 'medium'
-               if not vim.g.neovide then
-                   vim.cmd("colorscheme gruvbox-material")
-               end
+               -- if not vim.g.neovide then
+               --     vim.cmd("colorscheme gruvbox-material")
+               -- end
            end
       },
       { 'sainnhe/everforest',
@@ -83,14 +83,21 @@ require("lazy").setup({
       },
       { 'jpwol/thorn.nvim'
       },
-      { 'everviolet/nvim',
-           config = function(_, _)
-               if vim.g.neovide then
-                   --  HACK: termguicolors fix: set everforest first
-                   --        (otherwise custom highlights misbehave for some reason)
-                   vim.cmd("colorscheme everforest")
-                   vim.cmd("colorscheme evergarden-fall")
-               end
+      { 'everviolet/nvim', name="evergarden",
+           opts = {
+               theme = {
+                   variant = "fall",
+                   accent = "green"
+               }
+           },
+           config = function(_, opts)
+               -- if vim.g.neovide then
+               --  HACK: termguicolors fix: set everforest first
+               --        (otherwise custom highlights misbehave for some reason)
+               vim.cmd("colorscheme everforest")
+               require("evergarden").setup(opts)
+               vim.cmd("colorscheme evergarden")
+               -- end
            end
       },
       { 'kvrohit/rasmus.nvim'

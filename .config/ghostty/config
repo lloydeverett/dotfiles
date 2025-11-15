@@ -24,7 +24,8 @@ font-family = "CaskaydiaMono Nerd Font Mono"
 font-size = 15
 font-thicken = true
 
-theme = /Users/lloyd/dotfiles/.config/ghostty/themes/gruvbox-material
+# theme = /Users/lloyd/dotfiles/.config/ghostty/themes/gruvbox-material
+theme = /Users/lloyd/dotfiles/.config/ghostty/themes/evergarden-fall-lime.yml
 window-step-resize = true
 window-padding-x = 4
 
