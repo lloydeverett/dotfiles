@@ -56,8 +56,14 @@ nnoremap <silent> <C-l> <cmd>wincmd l<cr>
 " file shortcuts
 nnoremap <leader>wp :e ~/sync/wiki/personal.md<cr>
 nnoremap <leader>wo :e ~/sync/wiki/work.md<cr>
+nnoremap <leader>wd :e ~/sync/wiki/diary/<cr>
 nnoremap <leader>cc :e ~/.config/nvim/init.vim<cr>
 nnoremap <leader>cl :e ~/.config/nvim/lua/config/lazy.lua<cr>
+lua <<EOF
+vim.keymap.set("n", "<leader>wt", function()
+    vim.cmd("e ~/sync/wiki/diary/" .. os.date("%Y-%m-%d") .. ".md")
+end, { noremap = true })
+EOF
 
 " terminal keymappings
 lua require('config.terminals')
