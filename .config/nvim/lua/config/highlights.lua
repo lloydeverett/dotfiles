@@ -76,7 +76,7 @@ local function apply_custom_highlights()
                 vim.api.nvim_set_hl(0, k, v)
             end
         end
-        if k == "VimwikiLink" then
+        if k == "VimwikiLink" or k == "VimwikiWeblink1" then
             v.fg = normal_hl_rule.fg
             v.ctermfg = normal_hl_rule.ctermfg
             v.underline = true

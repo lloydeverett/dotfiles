@@ -1,10 +1,14 @@
 
+local index = 1
+
 local function open_terminal_in_buffer_dir()
     local dir = vim.fn.expand("%:p:h")
     if dir:find("oil://", 1, true) == 1 then
         dir = dir:sub(#"oil://" + 1)
     end
     vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
+    vim.api.nvim_buf_set_name(0, "term" .. index .. "://" .. dir)
+    index = index + 1
 end
 
 local function open_split()
@@ -20,7 +24,6 @@ end
 
 set_keymap("-", function()
     _G["" .. "MiniFiles"].open(vim.api.nvim_buf_get_name(0))
-    -- vim.cmd("Oil")
 end)
 set_keymap("=", function()
     open_terminal_in_buffer_dir()
@@ -28,7 +31,6 @@ set_keymap("=", function()
 end)
 set_keymap("_", function()
     open_split()
-    -- vim.cmd("Oil")
     _G["" .. "MiniFiles"].open(vim.api.nvim_buf_get_name(0))
 end)
 set_keymap("+", function()
