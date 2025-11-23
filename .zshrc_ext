@@ -1,9 +1,11 @@
 
-eval "$(zoxide init zsh --cmd cd)"
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh --cmd cd)"
+fi
 
 set -o vi                                                # VI editing mode
 
-export PATH="$PATH:/Users/lloyd/dotfiles/scripts"
+export PATH="$PATH:$HOME/dotfiles/scripts"
 
 alias lg='lazygit'
 alias vim='nvim'
