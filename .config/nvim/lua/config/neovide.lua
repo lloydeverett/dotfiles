@@ -1,6 +1,4 @@
 
-local default_cmd_height = 1
-vim.o.cmdheight = default_cmd_height
 local font_size = 15
 local font_name = "CaskaydiaMono Nerd Font Mono"
     -- alt: "Operator Mono Lig"
@@ -21,14 +19,6 @@ if vim.g.neovide then
     vim.g.neovide_padding_right = padding_x
     vim.g.neovide_opacity = 0.9
     vim.g.neovide_window_blurred = true
-    vim.o.cmdheight = 0
-    vim.keymap.set('n', ';', function()
-        if vim.o.cmdheight == 0 then
-            vim.o.cmdheight = default_cmd_height
-        else
-            vim.o.cmdheight = 0
-        end
-    end, {noremap = true, silent = true})
     vim.keymap.set('v', '<D-c>', '"+y')             -- copy
     vim.keymap.set('n', '<D-v>', '"+p')             -- paste normal mode
     vim.keymap.set('v', '<D-v>', '"+p')             -- paste visual mode

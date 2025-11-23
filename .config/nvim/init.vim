@@ -17,7 +17,6 @@ set nowrap
 set noswapfile
 set undofile
 set undodir=~/.local/share/nvim/undo/
-set termguicolors
 set ssop-=options
 set ssop-=folds
 set listchars=tab:,nbsp:~
@@ -35,6 +34,9 @@ lua require('config.lazy')
 if $NVIM_MINIMAL != ""
     finish
 endif
+
+" reconfigure cmdheight
+lua require('config.cmdheight')
 
 " lsp setup
 lua require('config.lsp')

@@ -29,41 +29,47 @@ local function postprocess_spec(spec)
     return result
 end
 
--- don't load default color schemes so they don't show up in autocomplete
-local default_colorschemes = {
-    "blue.vim",
-    "darkblue.vim",
-    "delek.vim",
-    "desert.vim",
-    "elflord.vim",
-    "evening.vim",
-    "habamax.vim",
-    "industry.vim",
-    "koehler.vim",
-    "lunaperche.vim",
-    "morning.vim",
-    "murphy.vim",
-    "pablo.vim",
-    "peachpuff.vim",
-    "quiet.vim",
-    "retrobox.vim",
-    "ron.vim",
-    "shine.vim",
-    "slate.vim",
-    "sorbet.vim",
-    "torte.vim",
-    "wildcharm.vim",
-    "zaibatsu.vim",
-    "zellner.vim",
-}
-local wildignore = ""
-for _, v in ipairs(default_colorschemes) do
-    if wildignore ~= "" then
-        wildignore = wildignore .. ","
+local is_tty = os.getenv("TERM") == "linux"
+if not is_tty then
+    vim.cmd("set termguicolors")
+    -- hide default color schemes
+    local default_colorschemes = {
+        "blue.vim",
+        "darkblue.vim",
+        "delek.vim",
+        "desert.vim",
+        "elflord.vim",
+        "evening.vim",
+        "habamax.vim",
+        "industry.vim",
+        "koehler.vim",
+        "lunaperche.vim",
+        "morning.vim",
+        "murphy.vim",
+        "pablo.vim",
+        "peachpuff.vim",
+        "quiet.vim",
+        "retrobox.vim",
+        "ron.vim",
+        "shine.vim",
+        "slate.vim",
+        "sorbet.vim",
+        "torte.vim",
+        "wildcharm.vim",
+        "zaibatsu.vim",
+        "zellner.vim",
+    }
+    local wildignore = ""
+    for _, v in ipairs(default_colorschemes) do
+        if wildignore ~= "" then
+            wildignore = wildignore .. ","
+        end
+        wildignore = wildignore .. v
     end
-    wildignore = wildignore .. v
+    vim.o.wildignore = wildignore
+else
+    vim.cmd("colorscheme retrobox")
 end
-vim.o.wildignore = wildignore
 
 require("lazy").setup({
   spec = postprocess_spec({
@@ -74,20 +80,26 @@ require("lazy").setup({
                -- if not vim.g.neovide then
                --     vim.cmd("colorscheme gruvbox-material")
                -- end
-           end
+           end,
+           enabled = not is_tty
       },
       { 'sainnhe/everforest',
            config = function(_, _)
                vim.g.everforest_background = 'hard'
-           end
+           end,
+           enabled = not is_tty
       },
-      { 'jpwol/thorn.nvim'
+      { 'jpwol/thorn.nvim',
+           enabled = not is_tty
       },
       { 'everviolet/nvim', name="evergarden",
            opts = {
                theme = {
                    variant = "fall",
                    accent = "green"
+               },
+               editor = {
+                   transparent_background = true
                }
            },
            config = function(_, opts)
@@ -98,9 +110,11 @@ require("lazy").setup({
                require("evergarden").setup(opts)
                vim.cmd("colorscheme evergarden")
                -- end
-           end
+           end,
+           enabled = not is_tty
       },
-      { 'kvrohit/rasmus.nvim'
+      { 'kvrohit/rasmus.nvim',
+           enabled = not is_tty
       },
 
       -- plugins --------------------------------------------------------------------------------------------------
