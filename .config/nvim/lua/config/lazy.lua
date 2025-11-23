@@ -404,7 +404,11 @@ require("lazy").setup({
                })
            end
       },
-      { 'tbabej/taskwiki' },
+      { 'tbabej/taskwiki',
+           enabled = function()
+               return os.getenv("RPI") ~= "1"
+           end
+      },
       { 'declancm/cinnamon.nvim',
            opts = {},
            config = function(_, opts)

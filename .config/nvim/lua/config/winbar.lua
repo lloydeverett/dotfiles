@@ -7,7 +7,7 @@ vim.api.nvim_create_autocmd("FileType", {
         local year, month, day = string.match(path, day_pattern)
         if year ~= nil and month ~= nil and day ~= nil then
             local timestamp = os.time({ year = year, month = month, day = day })
-            vim.wo.winbar = "󰃶 " .. os.date("%A, %d %B %Y", timestamp)
+            vim.wo.winbar = " " .. os.date("%A, %d %B %Y", timestamp)
             return
         end
 
@@ -16,7 +16,7 @@ vim.api.nvim_create_autocmd("FileType", {
         year, month = string.match(path, month_pattern)
         if year ~= nil and month ~= nil then
             local timestamp = os.time({ year = year, month = month, day = 1 })
-            vim.wo.winbar = "󰃶 " .. os.date("%B %Y", timestamp)
+            vim.wo.winbar = " " .. os.date("%B %Y", timestamp)
             return
         end
     end,
