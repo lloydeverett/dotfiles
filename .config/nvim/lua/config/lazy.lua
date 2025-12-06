@@ -251,9 +251,6 @@ require("lazy").setup({
                    MiniVisits.select_path('')
                end)
 
-               local MiniColors = require('mini.colors')
-               MiniColors.setup({ })
-
                local MiniAlign = require('mini.align')
                MiniAlign.setup({ })
 

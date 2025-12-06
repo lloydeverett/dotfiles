@@ -18,37 +18,35 @@
 -- terminal_color_15           #d3c6aa            #d4be98       #d7d7d7
 
 local function apply_custom_highlights()
-    local color_scheme = MiniColors.get_colorscheme()
-    color_scheme:add_terminal_colors({ force = false }) -- force = false prevents overwriting if already present
     local function term_palette_color(index)
-        return color_scheme.terminal[index]
+        return vim.g["terminal_color_" .. index]
     end
 
     -- highlight for conceal
-    vim.cmd('hi Conceal guifg='                   .. term_palette_color(10))
+    vim.api.nvim_set_hl(0, "Conceal", { fg = term_palette_color(10), force = true })
 
     -- highlights for checkboxes
-    vim.cmd('hi link todoDone VimwikiCheckBoxDone')
-    vim.cmd('hi link todoCheckbox Todo')
+    vim.api.nvim_set_hl(0, "todoDone", { link = "VimwikiCheckBoxDone", force = true })
+    vim.api.nvim_set_hl(0, "todoCheckbox", { link = "Todo", force = true })
 
     -- customise vimwiki highlights
-    vim.cmd('hi VimwikiBold gui=bold guifg='      .. term_palette_color(1))
-    vim.cmd('hi VimwikiItalic gui=italic guifg='  .. term_palette_color(5))
-    vim.cmd('hi VimwikiHeader1 gui=bold guifg='   .. term_palette_color(2))
-    vim.cmd('hi VimwikiList guifg='               .. term_palette_color(10))
-    vim.cmd('hi VimwikiListTodo guifg='           .. term_palette_color(10))
+    vim.api.nvim_set_hl(0, "VimwikiBold", { fg = term_palette_color(1), bold = true, force = true })
+    vim.api.nvim_set_hl(0, "VimwikiItalic", { fg = term_palette_color(5), italic = true, force = true })
+    vim.api.nvim_set_hl(0, "VimwikiHeader1", { fg = term_palette_color(2), bold = true, force = true })
+    vim.api.nvim_set_hl(0, "VimwikiList", { fg = term_palette_color(10), force = true })
+    vim.api.nvim_set_hl(0, "VimwikiListTodo", { fg = term_palette_color(10), force = true })
 
     -- ensure Underlined is defined correctly
-    vim.cmd('hi def Underlined cterm=underline gui=underline')
+    vim.api.nvim_set_hl(0, "Underlined", { underline = true, force = true })
 
     -- style todo dates
     vim.cmd('hi def todoUnderlineA cterm=underline gui=underline guisp=' .. term_palette_color(2))
     vim.cmd('hi def todoUnderlineB cterm=underline gui=underline guisp=' .. term_palette_color(2))
-    vim.cmd('hi link TodoDate todoUnderlineA')
-    vim.cmd('hi link TodoDateMonth todoUnderlineB')
+    vim.api.nvim_set_hl(0, "TodoDate", { link = "todoUnderlineA", force = true })
+    vim.api.nvim_set_hl(0, "TodoDateMonth", { link = "todoUnderlineB", force = true })
 
     -- make sure trailspace is obvious
-    vim.cmd('hi link MiniTrailspace MiniHipatternsFixme')
+    vim.api.nvim_set_hl(0, "MiniTrailspace", { link = "MiniHipatternsFixme", force = true })
 
     -- patch misc rules dynamically based on other highlights
     local normal_hl_rule = vim.api.nvim_get_hl(0, { name = "Normal" })
@@ -102,10 +100,10 @@ local function apply_custom_highlights()
 
     -- additional patch for thorn
     if vim.g.colors_name == "thorn" then
-        vim.cmd("hi! link MiniStatusLineModeNormal TabLineSel")
-        vim.cmd("hi! link MiniStatusLineModeInsert DiffAdd")
-        vim.cmd("hi! link VertSplit LineNr")
-        vim.cmd("hi! link WinSeparator LineNr")
+        vim.api.nvim_set_hl(0, "MiniStatusLineModeNormal", { link = "TabLineSel", force = true })
+        vim.api.nvim_set_hl(0, "MiniStatusLineModeInsert", { link = "DiffAdd", force = true })
+        vim.api.nvim_set_hl(0, "VertSplit", { link = "LineNr", force = true })
+        vim.api.nvim_set_hl(0, "WinSeparator", { link = "LineNr", force = true })
     end
 end
 
