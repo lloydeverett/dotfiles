@@ -99,7 +99,7 @@ tnoremap <Esc> <C-\><C-n>
 tnoremap <C-Esc> <Esc>
 
 " alternative binding for toggling todo items (for Blink on iOS)
-nnoremap <silent> <S-Space> :VimwikiListToggle<CR>
+nnoremap <silent> <C-X> :VimwikiToggleListItem<CR>
 
 " shortcut for :put call
 nnoremap <leader>H :put=execute('hi')
