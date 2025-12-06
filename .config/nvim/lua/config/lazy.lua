@@ -99,7 +99,7 @@ require("lazy").setup({
                    accent = "green"
                },
                editor = {
-                   transparent_background = true
+                   transparent_background = not vim.g.neovide
                }
            },
            config = function(_, opts)
@@ -163,8 +163,7 @@ require("lazy").setup({
                local default_section_git = MiniStatusline.section_git
                MiniStatusline.section_git = function(args)
                    local result = default_section_git(args)
-                   result = result:gsub("%( ", "[")
-                   result = result:gsub("%)", "]")
+                   result = result:gsub("%( M%)", "󱥸")
                    return result
                end
 
