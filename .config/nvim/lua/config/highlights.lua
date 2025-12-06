@@ -1,46 +1,49 @@
 
 -- color reference          everforest   gruvbox-material         thorn
--- g:terminal_color_0          #414b50            #5a524c       #252530
--- g:terminal_color_1          #e67e80            #ea6962       #d8647e
--- g:terminal_color_2          #a7c080            #a9b665       #7fa563
--- g:terminal_color_3          #dbbc7f            #d8a657       #f3be7c
--- g:terminal_color_4          #7fbbb3            #7daea3       #6e94b2
--- g:terminal_color_5          #d699b6            #d3869b       #bb9dbd
--- g:terminal_color_6          #83c092            #89b482       #aeaed1
--- g:terminal_color_7          #d3c6aa            #d4be98       #cdcdcd
--- g:terminal_color_8          #414b50            #5a524c       #606079
--- g:terminal_color_9          #e67e80            #ea6962       #e08398
--- g:terminal_color_10         #a7c080            #a9b665       #99b782
--- g:terminal_color_11         #dbbc7f            #d8a657       #f5cb96
--- g:terminal_color_12         #7fbbb3            #7daea3       #8ba9c1
--- g:terminal_color_13         #d699b6            #d3869b       #c9b1ca
--- g:terminal_color_14         #83c092            #89b482       #bebeda
--- g:terminal_color_15         #d3c6aa            #d4be98       #d7d7d7
--- markdownH1                  #e67e80            #ea6962       #d9add4
--- markdownH2                  #e69875            #e78a4e       #86bfd0
--- markdownH3                  #dbbc7f            #d8a657       #86bfd0
--- markdownH4                  #a7c080            #a9b665       #86bfd0
--- markdownH5                  #7fbbb3            #7daea3       #86bfd0
--- markdownH6                  #d699b6            #d3869b       #86bfd0
+-- terminal_color_0            #414b50            #5a524c       #252530
+-- terminal_color_1            #e67e80            #ea6962       #d8647e
+-- terminal_color_2            #a7c080            #a9b665       #7fa563
+-- terminal_color_3            #dbbc7f            #d8a657       #f3be7c
+-- terminal_color_4            #7fbbb3            #7daea3       #6e94b2
+-- terminal_color_5            #d699b6            #d3869b       #bb9dbd
+-- terminal_color_6            #83c092            #89b482       #aeaed1
+-- terminal_color_7            #d3c6aa            #d4be98       #cdcdcd
+-- terminal_color_8            #414b50            #5a524c       #606079
+-- terminal_color_9            #e67e80            #ea6962       #e08398
+-- terminal_color_10           #a7c080            #a9b665       #99b782
+-- terminal_color_11           #dbbc7f            #d8a657       #f5cb96
+-- terminal_color_12           #7fbbb3            #7daea3       #8ba9c1
+-- terminal_color_13           #d699b6            #d3869b       #c9b1ca
+-- terminal_color_14           #83c092            #89b482       #bebeda
+-- terminal_color_15           #d3c6aa            #d4be98       #d7d7d7
 
 local function apply_custom_highlights()
+    local color_scheme = MiniColors.get_colorscheme()
+    color_scheme:add_terminal_colors({ force = false }) -- force = false prevents overwriting if already present
+    local function term_palette_color(index)
+        return color_scheme.terminal[index]
+    end
+
     -- highlight for conceal
-    vim.cmd('hi Conceal guifg='                   .. vim.g['terminal_color_10'])
+    vim.cmd('hi Conceal guifg='                   .. term_palette_color(10))
 
     -- highlights for checkboxes
     vim.cmd('hi link todoDone VimwikiCheckBoxDone')
     vim.cmd('hi link todoCheckbox Todo')
 
     -- customise vimwiki highlights
-    vim.cmd('hi VimwikiBold gui=bold guifg='      .. vim.g['terminal_color_1'])
-    vim.cmd('hi VimwikiItalic gui=italic guifg='  .. vim.g['terminal_color_5'])
-    vim.cmd('hi VimwikiHeader1 gui=bold guifg='   .. vim.g['terminal_color_2'])
-    vim.cmd('hi VimwikiList guifg='               .. vim.g['terminal_color_10'])
-    vim.cmd('hi VimwikiListTodo guifg='           .. vim.g['terminal_color_10'])
+    vim.cmd('hi VimwikiBold gui=bold guifg='      .. term_palette_color(1))
+    vim.cmd('hi VimwikiItalic gui=italic guifg='  .. term_palette_color(5))
+    vim.cmd('hi VimwikiHeader1 gui=bold guifg='   .. term_palette_color(2))
+    vim.cmd('hi VimwikiList guifg='               .. term_palette_color(10))
+    vim.cmd('hi VimwikiListTodo guifg='           .. term_palette_color(10))
+
+    -- ensure Underlined is defined correctly
+    vim.cmd('hi def Underlined cterm=underline gui=underline')
 
     -- style todo dates
-    vim.cmd('hi def todoUnderlineA cterm=underline gui=underline guisp=' .. vim.g['terminal_color_2'])
-    vim.cmd('hi def todoUnderlineB cterm=underline gui=underline guisp=' .. vim.g['terminal_color_2'])
+    vim.cmd('hi def todoUnderlineA cterm=underline gui=underline guisp=' .. term_palette_color(2))
+    vim.cmd('hi def todoUnderlineB cterm=underline gui=underline guisp=' .. term_palette_color(2))
     vim.cmd('hi link TodoDate todoUnderlineA')
     vim.cmd('hi link TodoDateMonth todoUnderlineB')
 

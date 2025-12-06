@@ -103,13 +103,8 @@ require("lazy").setup({
                }
            },
            config = function(_, opts)
-               -- if vim.g.neovide then
-               --  HACK: termguicolors fix: set everforest first
-               --        (otherwise custom highlights misbehave for some reason)
-               vim.cmd("colorscheme everforest")
                require("evergarden").setup(opts)
                vim.cmd("colorscheme evergarden")
-               -- end
            end,
            enabled = not is_tty
       },
@@ -163,6 +158,13 @@ require("lazy").setup({
                        result = " " .. result
                    end
 
+                   return result
+               end
+               local default_section_git = MiniStatusline.section_git
+               MiniStatusline.section_git = function(args)
+                   local result = default_section_git(args)
+                   result = result:gsub("%( ", "[")
+                   result = result:gsub("%)", "]")
                    return result
                end
 
@@ -246,6 +248,9 @@ require("lazy").setup({
                vim.keymap.set("n", "<leader>.", function()
                    MiniVisits.select_path('')
                end)
+
+               local MiniColors = require('mini.colors')
+               MiniColors.setup({ })
 
                local MiniAlign = require('mini.align')
                MiniAlign.setup({ })
@@ -485,7 +490,6 @@ require("lazy").setup({
                prompt_end = '%% ',
            }
       },
-      { 'psliwka/termcolors.nvim' }, -- :TermcolorsShow to output terminal color scheme
       { 'folke/snacks.nvim',
            opts = { }
       },
