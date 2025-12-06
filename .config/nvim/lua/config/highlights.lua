@@ -100,11 +100,5 @@ if os.getenv("TERM") ~= "linux" then
     vim.api.nvim_create_autocmd('ColorScheme', {
         callback = apply_custom_highlights,
     })
-
-    vim.cmd("BasedSetBaseline")
-
-    vim.api.nvim_create_autocmd('ColorScheme', {
-        callback = function() vim.cmd("BasedSetBaseline") end,
-    })
 end
 

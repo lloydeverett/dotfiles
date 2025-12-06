@@ -44,12 +44,10 @@ lua require('config.lsp')
 " neovide-specific setup
 lua require('config.neovide')
 
-" custom mappings
+" tab and window management
 nnoremap <silent> <C-S-H> <cmd>tabprev<cr>
 nnoremap <silent> <C-S-L> <cmd>tabnext<cr>
 nnoremap <silent> <C-Q> <cmd>wincmd q<cr>
-
-" window switching
 nnoremap <silent> <C-h> <cmd>wincmd h<cr>
 nnoremap <silent> <C-j> <cmd>wincmd j<cr>
 nnoremap <silent> <C-k> <cmd>wincmd k<cr>
@@ -99,6 +97,9 @@ nnoremap <silent> <Esc> :noh<CR><Esc>
 " normal mode in terminal via esc
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-Esc> <Esc>
+
+" alternative binding for toggling todo items (for Blink on iOS)
+nnoremap <silent> <S-Space> :VimwikiListToggle<CR>
 
 " shortcut for :put call
 nnoremap <leader>H :put=execute('hi')

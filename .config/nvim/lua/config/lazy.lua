@@ -545,6 +545,24 @@ require("lazy").setup({
       },
       { 'vim-scripts/vis'
       },
+      { 'jbyuki/quickmath.nvim',
+           config = function(_, opts)
+               local function quickmath_buftype()
+                    vim.cmd("Quickmath")
+                    vim.cmd("setlocal buftype=")
+               end
+               vim.api.nvim_create_user_command(
+                   "QuickmathBuftype",
+                   quickmath_buftype,
+                   { }
+               )
+               vim.api.nvim_create_user_command(
+                   "Qm",
+                   quickmath_buftype,
+                   { }
+               )
+           end
+      },
 
       -- virtualtimer ---------------------------------------------------------------------------------------------
       { dir = "~/virtualtimer",
@@ -559,16 +577,6 @@ require("lazy").setup({
                    vim.api.nvim_set_keymap(mode, '<leader>pq', ':VtStop<CR>',  { noremap = true })
                    vim.api.nvim_set_keymap(mode, '<leader>pc', ':VtClear<CR>', { noremap = true })
                end
-           end
-      },
-
-      -- based ----------------------------------------------------------------------------------------------------
-      { dir = "~/based",
-           opts = {},
-           config = function(_, opts)
-               require("based").setup(opts)
-               vim.api.nvim_set_keymap('n', '<C-S-Left>', '<Cmd>BasedHueShiftLeft<CR>', { noremap = true, silent = true })
-               vim.api.nvim_set_keymap('n', '<C-S-Right>', '<Cmd>BasedHueShiftRight<CR>', { noremap = true, silent = true })
            end
       },
 
