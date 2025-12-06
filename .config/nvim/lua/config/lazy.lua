@@ -104,6 +104,9 @@ require("lazy").setup({
            },
            config = function(_, opts)
                require("evergarden").setup(opts)
+               if vim.g.neovide then
+                   vim.g.bgcolor = "#101010"
+               end
                vim.cmd("colorscheme evergarden")
            end,
            enabled = not is_tty

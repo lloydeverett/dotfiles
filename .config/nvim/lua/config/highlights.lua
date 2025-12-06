@@ -86,6 +86,18 @@ local function apply_custom_highlights()
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
+        if k == "VimwikiLink" or k == "VimwikiWeblink1" then
+            v.fg = normal_hl_rule.fg
+            v.ctermfg = normal_hl_rule.ctermfg
+            v.underline = true
+            v.force = true
+            vim.api.nvim_set_hl(0, k, v)
+        end
+        if k == "Normal" and vim.g.bgcolor ~= nil then
+            v.bg = vim.g.bgcolor
+            v.force = true
+            vim.api.nvim_set_hl(0, k, v)
+        end
     end
 
     -- additional patch for thorn
