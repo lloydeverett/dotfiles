@@ -96,6 +96,11 @@ local function apply_custom_highlights()
             v.force = true
             vim.api.nvim_set_hl(0, k, v)
         end
+        if k == "Search" or k == "CurSearch" then
+            v.italic = false
+            v.force = true
+            vim.api.nvim_set_hl(0, k, v)
+        end
     end
 
     -- additional patch for thorn

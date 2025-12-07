@@ -7,7 +7,7 @@ else
     vim.o.cmdheight = default_cmd_height
 end
 
-vim.keymap.set('n', '<leader>;', function()
+vim.keymap.set('n', "<leader>'", function()
     if vim.o.cmdheight == 0 then
         vim.o.cmdheight = default_cmd_height
     else
