@@ -1,21 +1,21 @@
 
--- color reference          everforest   gruvbox-material         thorn
--- terminal_color_0            #414b50            #5a524c       #252530
--- terminal_color_1            #e67e80            #ea6962       #d8647e
--- terminal_color_2            #a7c080            #a9b665       #7fa563
--- terminal_color_3            #dbbc7f            #d8a657       #f3be7c
--- terminal_color_4            #7fbbb3            #7daea3       #6e94b2
--- terminal_color_5            #d699b6            #d3869b       #bb9dbd
--- terminal_color_6            #83c092            #89b482       #aeaed1
--- terminal_color_7            #d3c6aa            #d4be98       #cdcdcd
--- terminal_color_8            #414b50            #5a524c       #606079
--- terminal_color_9            #e67e80            #ea6962       #e08398
--- terminal_color_10           #a7c080            #a9b665       #99b782
--- terminal_color_11           #dbbc7f            #d8a657       #f5cb96
--- terminal_color_12           #7fbbb3            #7daea3       #8ba9c1
--- terminal_color_13           #d699b6            #d3869b       #c9b1ca
--- terminal_color_14           #83c092            #89b482       #bebeda
--- terminal_color_15           #d3c6aa            #d4be98       #d7d7d7
+-- color reference               everforest   gruvbox-material    evergarden
+-- vim.g["terminal_color_0"]        #414b50            #5a524c       #374145
+-- vim.g["terminal_color_1"]        #e67e80            #ea6962       #F57F82
+-- vim.g["terminal_color_2"]        #a7c080            #a9b665       #CBE3B3
+-- vim.g["terminal_color_3"]        #dbbc7f            #d8a657       #F5D098
+-- vim.g["terminal_color_4"]        #7fbbb3            #7daea3       #B2CAED
+-- vim.g["terminal_color_5"]        #d699b6            #d3869b       #F3C0E5
+-- vim.g["terminal_color_6"]        #83c092            #89b482       #B3E3CA
+-- vim.g["terminal_color_7"]        #d3c6aa            #d4be98       #96B4AA
+-- vim.g["terminal_color_8"]        #414b50            #5a524c       #6F8788
+-- vim.g["terminal_color_9"]        #e67e80            #ea6962       #F57F82
+-- vim.g["terminal_color_10"]       #a7c080            #a9b665       #CBE3B3
+-- vim.g["terminal_color_11"]       #dbbc7f            #d8a657       #F5D098
+-- vim.g["terminal_color_12"]       #7fbbb3            #7daea3       #B2CAED
+-- vim.g["terminal_color_13"]       #d699b6            #d3869b       #F3C0E5
+-- vim.g["terminal_color_14"]       #83c092            #89b482       #B3E3CA
+-- vim.g["terminal_color_15"]       #d3c6aa            #d4be98       #ADC9BC
 
 local function apply_custom_highlights()
     local function term_palette_color(index)
