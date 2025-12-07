@@ -152,17 +152,41 @@ require("lazy").setup({
                MiniStatusline.section_diff = function()
                    return ""
                end
+               local conflicts_timer_callback = function()
+                   local job = vim.fn.jobstart(
+                       { "/bin/bash", "-c", "find $HOME/sync/wiki | grep sync-conflict-" },
+                       {
+                           on_stdout = function(job_id, data, event)
+                               -- ignore
+                           end,
+                           on_exit = function(job_id, code, event)
+                               vim.g.sync_conflicts_found = code == 0
+                           end
+                       }
+                   )
+               end
+               conflicts_timer_callback()
                MiniStatusline.section_location = function(_)
                    local result = '%l|%v'
 
                    -- prepend timer icon when using virtualtimer
                    local buf = vim.api.nvim_get_current_buf()
                    if _G.virtualtimer ~= nil and _G.virtualtimer.timer_id_for_buf[buf] ~= nil then
-                       result = " " .. result
+                       result = "[] " .. result
+                   end
+
+                   -- prepend sync conflicts marker if global is set
+                   if vim.g.sync_conflicts_found then
+                       result = "[󰈽] " .. result
                    end
 
                    return result
                end
+               local conflicts_timer = vim.fn.timer_start(
+                   5 * 60 * 1000,
+                   conflicts_timer_callback,
+                   { ["repeat"] = -1 } -- -1 means infinite repeat
+               )
                local default_section_git = MiniStatusline.section_git
                MiniStatusline.section_git = function(args)
                    local result = default_section_git(args)
