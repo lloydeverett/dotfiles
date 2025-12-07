@@ -1,0 +1,4 @@
+#!/bin/bash
+
+PYTHONPATH=/Users/lloyd/dotfiles/vibase python3 /Users/lloyd/dotfiles/vibase/src/vibase.py "$@"
+
