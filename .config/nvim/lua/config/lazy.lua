@@ -168,16 +168,21 @@ require("lazy").setup({
                conflicts_timer_callback()
                MiniStatusline.section_location = function(_)
                    local result = '%l|%v'
+                   local prepend_str = ""
 
                    -- prepend timer icon when using virtualtimer
                    local buf = vim.api.nvim_get_current_buf()
                    if _G.virtualtimer ~= nil and _G.virtualtimer.timer_id_for_buf[buf] ~= nil then
-                       result = "[] " .. result
+                       prepend_str = prepend_str .. "[]"
                    end
 
                    -- prepend sync conflicts marker if global is set
                    if vim.g.sync_conflicts_found then
-                       result = "[󰈽] " .. result
+                       prepend_str = prepend_str .. "[󰈽]"
+                   end
+
+                   if prepend_str ~= "" then
+                       result = prepend_str .. " " .. result
                    end
 
                    return result
