@@ -110,6 +110,11 @@ local function apply_custom_highlights()
         vim.api.nvim_set_hl(0, "VertSplit", { link = "LineNr", force = true })
         vim.api.nvim_set_hl(0, "WinSeparator", { link = "LineNr", force = true })
     end
+
+    -- additional patch for evergarden
+    if vim.g.colors_name ~= nil and vim.g.colors_name:sub(1, #"evergarden") == "evergarden" then
+        vim.api.nvim_set_hl(0, "@annotation", { link = "@comment.todo", force = true })
+    end
 end
 
 if os.getenv("TERM") ~= "linux" then
