@@ -201,6 +201,10 @@ require("lazy").setup({
 
                local MiniTabline = require("mini.tabline")
                MiniTabline.setup({ tabpage_section = 'right' })
+               local default_make_tabline_string = MiniTabline.make_tabline_string
+               MiniTabline.make_tabline_string = function()
+                   return os.date("%H:%M") .. " " .. default_make_tabline_string()
+               end
 
                local MiniHipatterns = require("mini.hipatterns")
                MiniHipatterns.setup({
