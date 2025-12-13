@@ -47,5 +47,8 @@ format_exit_status() {
     echo ""
   fi
 }
-PROMPT='%B$(format_exit_status)%F{green}%n%f %F{blue}%1~%f $(format_current_git_branch)%# %b'
+if [[ -z "${PROMPT_ACCENT}" ]]; then
+  export PROMPT_ACCENT="green"
+fi
+PROMPT='%B$(format_exit_status)%F{'"$PROMPT_ACCENT"'}%n%f %F{blue}%1~%f $(format_current_git_branch)%# %b'
 
