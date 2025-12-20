@@ -6,10 +6,16 @@ vim.cmd('set autochdir')
 vim.api.nvim_create_autocmd({ 'TermRequest' }, {
     desc = 'Handles OSC 7 dir change requests',
     callback = function(ev)
-        local cwd = ev.data.sequence:sub(ev.data.sequence:find("file://") + #"file://")
-        if cwd then
-            vim.api.nvim_set_current_dir(cwd)
+        local find_pattern = "file://"
+        local index = ev.data.sequence:find(find_pattern)
+        if not index then
+            return
         end
+        local cwd = ev.data.sequence:sub(index + #find_pattern)
+        if not cwd then
+            return
+        end
+        vim.api.nvim_set_current_dir(cwd)
     end,
 })
 --  NOTE: the above requires the following in .zshrc:
