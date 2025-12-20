@@ -23,7 +23,6 @@ set listchars=tab:,nbsp:~
 set list
 set fillchars=eob:\ 
 set noshowmode
-set numberwidth=6
 set shortmess+=I
 aunmenu PopUp.How-to\ disable\ mouse
 aunmenu PopUp.-2-

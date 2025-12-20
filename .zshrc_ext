@@ -52,3 +52,10 @@ if [[ -z "${PROMPT_ACCENT}" ]]; then
 fi
 PROMPT='%B$(format_exit_status)%F{'"$PROMPT_ACCENT"'}%n%f %F{blue}%1~%f $(format_current_git_branch)%# %b'
 
+function print_osc7() {
+    printf '\033]7;file://%s\033\\' "$PWD"
+}
+precmd_functions+=(print_osc7)
+
+export FNF_COLORS="fg:-1,ghost:7:2,gutter-1,hl:6,info:7:2,marker:2,prompt:6:1,pointer:1:1,query:-1,score:7:2,sel-bg:0,sel-fg:7:1,separator:7:2"
+

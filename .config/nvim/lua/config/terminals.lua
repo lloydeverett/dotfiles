@@ -1,13 +1,34 @@
 
+-- let cwd follow wherever our buffer is
+vim.cmd('set autochdir')
+
+-- sync vim cwd with terminal cwd
+vim.api.nvim_create_autocmd({ 'TermRequest' }, {
+    desc = 'Handles OSC 7 dir change requests',
+    callback = function(ev)
+        local cwd = ev.data.sequence:sub(ev.data.sequence:find("file://") + #"file://")
+        if cwd then
+            vim.api.nvim_set_current_dir(cwd)
+        end
+    end,
+})
+--  NOTE: the above requires the following in .zshrc:
+--            function print_osc7() {
+--                printf '\033]7;file://%s\033\\' "$PWD"
+--            }
+--            precmd_functions+=(print_osc7)
+--        or in .bashrc:
+--            function print_osc7() {
+--                printf '\033]7;file://%s\033\\' "$PWD"
+--            }
+--            PROMPT_COMMAND='print_osc7'
+
 local index = 1
 
-local function open_terminal_in_buffer_dir()
-    local dir = vim.fn.expand("%:p:h")
-    if dir:find("oil://", 1, true) == 1 then
-        dir = dir:sub(#"oil://" + 1)
-    end
-    vim.cmd('terminal cd "' .. dir .. '" && $SHELL')
-    vim.api.nvim_buf_set_name(0, "term" .. index .. "://" .. dir)
+local function open_terminal()
+    local cwd = vim.fn.getcwd()
+    vim.cmd('terminal $SHELL')
+    vim.api.nvim_buf_set_name(0, "term" .. index .. "://" .. cwd)
     index = index + 1
 end
 
@@ -26,16 +47,15 @@ set_keymap("-", function()
     _G["" .. "MiniFiles"].open(vim.api.nvim_buf_get_name(0))
 end)
 set_keymap("=", function()
-    open_terminal_in_buffer_dir()
+    open_terminal()
     vim.cmd("startinsert")
 end)
 set_keymap("_", function()
     open_split()
-    _G["" .. "MiniFiles"].open(vim.api.nvim_buf_get_name(0))
 end)
 set_keymap("+", function()
     open_split()
-    open_terminal_in_buffer_dir()
+    open_terminal()
     vim.cmd("startinsert")
 end)
 
