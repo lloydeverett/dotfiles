@@ -13,8 +13,6 @@ alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias ls='ls --color=auto'
 alias taskui='taskwarrior-tui'
-alias nvcd='nvr -c "cd ${PWD}"'
-alias ,='nvr -c "cd ${PWD}"'
 
 HISTSIZE=5000                                            # Number of history lines kept in memory
 SAVEHIST=5000                                            # Number of history lines saved to disk
@@ -58,4 +56,6 @@ function print_osc7() {
 precmd_functions+=(print_osc7)
 
 export FNF_COLORS="fg:-1,ghost:7:2,gutter-1,hl:6,info:7:2,marker:2,prompt:6:1,pointer:1:1,query:-1,score:7:2,sel-bg:0,sel-fg:7:1,separator:7:2"
+
+export COSMO="$HOME/cosmocc"
 

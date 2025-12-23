@@ -50,7 +50,7 @@ local function set_keymap(key, fn)
 end
 
 set_keymap("-", function()
-    _G["" .. "MiniFiles"].open(vim.api.nvim_buf_get_name(0))
+    _G["" .. "MiniFiles"].open()
 end)
 set_keymap("=", function()
     open_terminal()
