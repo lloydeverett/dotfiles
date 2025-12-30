@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pgrep -f "/bin/bash ./neovideme-apply" | xargs kill
+sleep 0.1
+

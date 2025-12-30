@@ -1,4 +1,21 @@
 
+local hostname = (function()
+    local error_message = "Failed to obtain hostname for OSC parsing."
+    local shell = os.getenv("SHELL")
+    local handle = io.popen(shell .. " -i -c 'echo $HOST'")
+    if handle == nil then
+        vim.notify(error_message)
+        return nil
+    end
+    local output = handle:read("*a"):gsub("%s", "")
+    if output == "" then
+        vim.notify(error_message)
+        return nil
+    end
+    handle:close()
+    return output
+end)()
+
 -- let cwd follow wherever our buffer is
 vim.cmd('set autochdir')
 
@@ -6,12 +23,15 @@ vim.cmd('set autochdir')
 vim.api.nvim_create_autocmd({ 'TermRequest' }, {
     desc = 'Handles OSC 7 dir change requests',
     callback = function(ev)
-        local find_pattern = "file://"
-        local index = ev.data.sequence:find(find_pattern)
+        if hostname == nil then
+            return
+        end
+        local find_pattern = "file://" .. hostname .. "/"
+        local index = ev.data.sequence:find(find_pattern, 1, true)
         if not index then
             return
         end
-        local cwd = ev.data.sequence:sub(index + #find_pattern)
+        local cwd = '/' .. ev.data.sequence:sub(index + #find_pattern)
         if not cwd then
             return
         end
@@ -20,14 +40,16 @@ vim.api.nvim_create_autocmd({ 'TermRequest' }, {
 })
 --  NOTE: the above requires the following in .zshrc:
 --            function print_osc7() {
---                printf '\033]7;file://%s\033\\' "$PWD"
+--                printf '\033]7;file://%s%s\033\\' "$HOST" "$PWD"
 --            }
 --            precmd_functions+=(print_osc7)
+--            export HOST="$HOST"
 --        or in .bashrc:
 --            function print_osc7() {
---                printf '\033]7;file://%s\033\\' "$PWD"
+--                printf '\033]7;file://%s%s\033\\' "$HOST" "$PWD"
 --            }
 --            PROMPT_COMMAND='print_osc7'
+--            export HOST="$HOST"
 
 local index = 1
 

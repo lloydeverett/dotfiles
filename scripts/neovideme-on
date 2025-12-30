@@ -1,0 +1,13 @@
+#!/bin/bash
+
+pgrep -f "/bin/bash ./neovideme-apply" > /dev/null
+
+if [ $? -ne 0 ]; then
+    {
+        cd /Users/lloyd/dotfiles/scripts/
+        nohup /bin/bash ./neovideme-apply > /dev/null &
+    }
+else
+    exit 1
+fi
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+while true; do
+    FOCUSED_APP=$(osascript -e 'tell application "System Events" to name of (processes where frontmost is true)' | tr '[:upper:]' '[:lower:]')
+    if [ "$FOCUSED_APP" != "neovide" ] && [ "$FOCUSED_APP" != "music" ] && [ "$FOCUSED_APP" != "spotify" ] ; then
+        open /Applications/Neovide.app
+    fi
+    sleep 5
+done
+

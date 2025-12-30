@@ -77,9 +77,6 @@ require("lazy").setup({
       { 'sainnhe/gruvbox-material',
            config = function(_, _)
                vim.g.gruvbox_material_background = 'medium'
-               -- if not vim.g.neovide then
-               --     vim.cmd("colorscheme gruvbox-material")
-               -- end
            end,
            enabled = not is_tty
       },
@@ -104,14 +101,10 @@ require("lazy").setup({
            },
            config = function(_, opts)
                require("evergarden").setup(opts)
-               if vim.g.neovide then
-                   vim.g.bgcolor = "#101010"
-               end
-               vim.cmd("colorscheme evergarden")
            end,
            enabled = not is_tty
       },
-      { 'kvrohit/rasmus.nvim',
+      { "wooosh/bw.vim",
            enabled = not is_tty
       },
 
@@ -195,7 +188,8 @@ require("lazy").setup({
                local default_section_git = MiniStatusline.section_git
                MiniStatusline.section_git = function(args)
                    local result = default_section_git(args)
-                   result = result:gsub("%( M%)", "󱥸")
+                   result = result:gsub("%( ", "(")
+                   result = result:gsub(" %)", ")")
                    return result
                end
 
@@ -471,7 +465,11 @@ require("lazy").setup({
            dependencies = {
                "nvim-lua/plenary.nvim"
            },
-           opts = { }
+           opts = {
+               highlight = {
+                   comments_only = false
+               }
+           }
       },
       { "jake-stewart/multicursor.nvim",
           branch = "1.0",
@@ -586,24 +584,6 @@ require("lazy").setup({
            end
       },
       { 'vim-scripts/vis'
-      },
-      { 'jbyuki/quickmath.nvim',
-           config = function(_, opts)
-               local function quickmath_buftype()
-                    vim.cmd("Quickmath")
-                    vim.cmd("setlocal buftype=")
-               end
-               vim.api.nvim_create_user_command(
-                   "QuickmathBuftype",
-                   quickmath_buftype,
-                   { }
-               )
-               vim.api.nvim_create_user_command(
-                   "Qm",
-                   quickmath_buftype,
-                   { }
-               )
-           end
       },
       { 'kristijanhusak/vim-dadbod-ui',
            dependencies = {

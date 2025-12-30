@@ -8,7 +8,8 @@ set -o vi                                                # VI editing mode
 export PATH="$PATH:$HOME/dotfiles/scripts"
 
 alias lg='lazygit'
-alias vim='nvim'
+alias vim='nvr'
+alias nvim='nvr'
 alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias ls='ls --color=auto'
@@ -51,7 +52,7 @@ fi
 PROMPT='%B$(format_exit_status)%F{'"$PROMPT_ACCENT"'}%n%f %F{blue}%1~%f $(format_current_git_branch)%# %b'
 
 function print_osc7() {
-    printf '\033]7;file://%s\033\\' "$PWD"
+    printf '\033]7;file://%s%s\033\\' "$HOST" "$PWD"
 }
 precmd_functions+=(print_osc7)
 

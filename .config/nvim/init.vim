@@ -30,6 +30,9 @@ aunmenu PopUp.-2-
 " plugin setup
 lua require('config.lazy')
 
+" set colorscheme
+lua require('config.colorscheme')
+
 " early exit if environment variable is set
 if $NVIM_MINIMAL != ""
     finish

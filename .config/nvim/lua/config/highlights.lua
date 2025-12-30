@@ -19,7 +19,15 @@
 
 local function apply_custom_highlights()
     local function term_palette_color(index)
+        if vim.g["terminal_color_" .. index] == nil then
+            return "#ffffff"
+        end
         return vim.g["terminal_color_" .. index]
+    end
+
+    -- bg color patch for certain colorschemes
+    if vim.g.colors_name == "evergarden" or vim.g.colors_name == "bw" then
+        vim.g.bgcolor = "#101010"
     end
 
     -- highlight for conceal
