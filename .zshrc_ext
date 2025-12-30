@@ -8,8 +8,8 @@ set -o vi                                                # VI editing mode
 export PATH="$PATH:$HOME/dotfiles/scripts"
 
 alias lg='lazygit'
-alias vim='nvr'
-alias nvim='nvr'
+alias vim='nvr -s'
+alias nvim='nvr -s'
 alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias ls='ls --color=auto'
