@@ -197,7 +197,7 @@ require("lazy").setup({
                MiniTabline.setup({ tabpage_section = 'right' })
                local default_make_tabline_string = MiniTabline.make_tabline_string
                MiniTabline.make_tabline_string = function()
-                   return os.date("%H:%M") .. " " .. default_make_tabline_string()
+                   return os.date("  %H:%M") .. " " .. default_make_tabline_string()
                end
 
                local MiniHipatterns = require("mini.hipatterns")
@@ -292,7 +292,7 @@ require("lazy").setup({
                    view = {
                        style = 'sign',
                        signs = { add = '▒', change = '▒', delete = '▒' },
-                       priority = 0,
+                       priority = 100,
                    },
                })
                vim.keymap.set("n", "``", function()

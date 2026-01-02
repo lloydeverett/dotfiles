@@ -24,6 +24,8 @@ set list
 set fillchars=eob:\ 
 set noshowmode
 set shortmess+=I
+set signcolumn=yes:2
+set numberwidth=4
 aunmenu PopUp.How-to\ disable\ mouse
 aunmenu PopUp.-2-
 
