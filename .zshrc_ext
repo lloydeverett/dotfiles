@@ -8,8 +8,8 @@ set -o vi                                                # VI editing mode
 export PATH="$PATH:$HOME/dotfiles/scripts"
 
 alias lg='lazygit'
-alias vim='nvr -s'
-alias nvim='nvr -s'
+alias vim='/opt/homebrew/bin/nvim'
+alias nvim='/opt/homebrew/bin/nvim'
 alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias ls='ls --color=auto'
@@ -59,4 +59,6 @@ precmd_functions+=(print_osc7)
 export FNF_COLORS="fg:-1,ghost:7:2,gutter-1,hl:6,info:7:2,marker:2,prompt:6:1,pointer:1:1,query:-1,score:7:2,sel-bg:0,sel-fg:7:1,separator:7:2"
 
 export COSMO="$HOME/cosmocc"
+
+export EDITOR="nvim"
 
