@@ -32,11 +32,6 @@ bindkey "^[OA" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 bindkey "^[OB" down-line-or-beginning-search
 
-if [[ -S /dev/incus/sock ]]; then
-  INCUS_INSTANCE=$(curl -s --max-time 1 --unix-socket /dev/incus/sock \
-    incus/1.0/meta-data | awk '/^local-hostname:/{print $2}')
-fi
-
 setopt PROMPT_SUBST
 format_current_git_branch() {
   local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
@@ -52,7 +47,7 @@ format_exit_status() {
   fi
 }
 format_hostname() {
-  [[ -n $INCUS_INSTANCE ]] && echo "$INCUS_INSTANCE "
+  [[ -e /dev/incus/sock ]] && echo "$HOST "
 }
 if [[ -z "${PROMPT_ACCENT}" ]]; then
   export PROMPT_ACCENT="green"
