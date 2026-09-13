@@ -10,10 +10,7 @@ export PATH="$PATH:$HOME/.local/bin"
 
 alias lg='lazygit'
 alias vim='nvim'
-alias dvim='dtach -A /tmp/nvim.socket -r winch nvim'
-alias dnvim='dtach -A /tmp/nvim.socket -r winch nvim'
 alias ls='ls --color=auto'
-alias taskui='taskwarrior-tui'
 
 HISTSIZE=5000                                            # Number of history lines kept in memory
 SAVEHIST=5000                                            # Number of history lines saved to disk
@@ -64,4 +61,42 @@ export FNF_COLORS="fg:-1,ghost:7:2,gutter-1,hl:6,info:7:2,marker:2,prompt:6:1,po
 export COSMO="$HOME/cosmocc"
 
 export EDITOR="nvim"
+
+inc() {
+  emulate -L zsh
+  setopt err_return no_unset pipefail local_options
+
+  if [[ -z "${1:-}" ]]; then
+    print -u2 "usage: enter <container> [user]"
+    incus list >&2
+    return 1
+  fi
+
+  local container="$1"
+  local username="${2:-${USER:-$(id -un)}}"
+
+  # Prefer the native client; fall back to driving the daemon from inside the VM.
+  local -a incus_cmd
+  if (( ${+commands[incus]} )); then
+    incus_cmd=(incus)
+  else
+    incus_cmd=(limactl shell "${VM:-incus}" -- incus)
+  fi
+
+  "${incus_cmd[@]}" exec "$container" -- sh -euc '
+    user="$1"
+    if ! id "$user" >/dev/null 2>&1; then
+      shell=/bin/sh
+      [ -x /bin/bash ] && shell=/bin/bash
+      useradd -m -s "$shell" "$user"
+    fi
+    mkdir -p /etc/sudoers.d
+    printf "%s ALL=(ALL) NOPASSWD:ALL\n" "$user" > "/etc/sudoers.d/90-$user"
+    chmod 440 "/etc/sudoers.d/90-$user"
+  ' sh "$username"
+
+  "${incus_cmd[@]}" exec "$container" -- su -l "$username"
+}
+
+alias zj='zellij attach primary || zellij -s primary'
 
