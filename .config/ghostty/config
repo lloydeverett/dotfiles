@@ -26,13 +26,15 @@ font-thicken = true
 
 # theme = /Users/lloyd/dotfiles/.config/ghostty/themes/gruvbox-material
 theme = /Users/lloyd/dotfiles/.config/ghostty/themes/evergarden-fall-lime.yml
-window-step-resize = true
+window-step-resize = false
 window-padding-x = 4
 
-# background-opacity = 0.95
-# background-blur-radius = 0
+background-opacity = 0.9
+background-blur-radius = 30
 
 mouse-scroll-multiplier = 1.0
+
+macos-option-as-alt = true
 
 #
 # # Spacing around the equals sign does not matter.
