@@ -66,6 +66,8 @@ inc() {
   emulate -L zsh
   setopt err_return no_unset pipefail local_options
 
+  local TERM=xterm-256color; export TERM
+
   if [[ -z "${1:-}" ]]; then
     print -u2 "usage: enter <container> [user]"
     incus list >&2
