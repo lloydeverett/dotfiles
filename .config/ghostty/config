@@ -21,16 +21,18 @@
 # # separated by equals signs.
 # font-family = 0xProto Nerd Font
 font-family = "CaskaydiaMono Nerd Font Mono"
-font-size = 15
+font-size = 14
 font-thicken = true
 
 # theme = /Users/lloyd/dotfiles/.config/ghostty/themes/gruvbox-material
 theme = /Users/lloyd/dotfiles/.config/ghostty/themes/evergarden-fall-lime.yml
 window-step-resize = false
-window-padding-x = 4
+window-padding-x = 0
 
-background-opacity = 0.9
-background-blur-radius = 30
+background-opacity = 1.0
+background-blur-radius = 0
+
+cursor-style-blink = true
 
 mouse-scroll-multiplier = 1.0
 
